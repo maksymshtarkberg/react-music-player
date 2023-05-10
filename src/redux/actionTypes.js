@@ -1,0 +1,14 @@
+export const ADD_TODO = "ADD_TODO";
+export const SET_IS_LOADED = "SET_IS_LOADED";
+export const SET_IS_PLAYING = "SET_IS_PLAYING";
+export const SET_SONG_URL = "SET_SONG_URL";
+export const SET_SONG_NAME = "SET_SONG_NAME";
+export const SET_ARTIST_NAME = "SET_ARTIST_NAME";
+export const SET_ALBUM_NAME = "SET_ALBUM_NAME";
+export const SET_CURRENT_TRACK_INDEX = "SET_CURRENT_TRACK_INDEX";
+export const SET_VOLUME = "SET_VOLUME";
+export const SET_SECONDS = "SET_SECONDS";
+export const SET_TIME = "SET_TIME";
+export const SET_CURR_TIME = "SET_CURR_TIME";
+export const SET_SONG_FILE = "SET_SONG_FILE";
+export const SET_IS_LOADED_SONG = "SET_IS_LOADED_SONG";

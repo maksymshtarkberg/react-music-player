@@ -1,0 +1,129 @@
+body {
+  background-color: #e5e5e5;
+}
+
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+.component {
+  background-color: white;
+  width: 35%;
+  max-width: 600px;
+  margin: 20px;
+  border: 0.1px solid black;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.musicCover {
+  border-radius: 10%;
+}
+
+.playButton {
+  background: none;
+  border: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.subTitle {
+  margin-top: -1em;
+  color: #4f4f4f;
+}
+
+.time {
+  margin: 0 auto;
+  width: 80%;
+  display: flex;
+  justify-content: space-between;
+  color: #828282;
+  font-size: smaller;
+}
+
+.timeline {
+  width: 80%;
+  background-color: #27ae60;
+}
+
+input[type="range"] {
+  background-color: #27ae60;
+}
+
+@media (max-width: 900px) {
+  .component {
+    width: 50%;
+  }
+}
+
+.component .rhap_container {
+  padding-top: 20px;
+}
+
+.component .rhap_container,
+.rhap_container *:focus {
+  box-shadow: none;
+  background: #f7f7f9;
+  border-radius: 10px;
+}
+
+.rhap_controls-section {
+  margin-bottom: 15px;
+}
+
+.rhap_progress-section {
+  height: 20px;
+  padding-bottom: 20px;
+}
+
+.rhap_main-controls-button {
+  width: 56px;
+  height: 56px;
+  display: block;
+}
+
+.rhap_main-controls-button svg {
+  color: #ff5555;
+  width: 100%;
+  height: 100%;
+}
+
+.rhap_controls-section .rhap_additional-controls {
+  flex: 1 0;
+}
+
+.rhap_progress-filled {
+  background: linear-gradient(
+    90deg,
+    rgba(247, 131, 131, 1) 0%,
+    rgba(253, 29, 29, 1) 50%,
+    rgba(252, 176, 69, 1) 100%
+  );
+}
+
+.rhap_progress-bar .rhap_progress-indicator {
+  background: rgb(246, 65, 65);
+}
+
+.rhap_button-clear.rhap_volume-button {
+  color: #ff5555;
+}
+
+.rhap_volume-bar-area .rhap_volume-bar .rhap_volume-indicator {
+  background: rgb(246, 65, 65);
+  z-index: 10;
+}
+
+.rhap_volume-bar .rhap_volume-filled {
+  background: linear-gradient(
+    90deg,
+    rgba(247, 131, 131, 1) 0%,
+    rgba(253, 29, 29, 1) 50%,
+    rgba(252, 176, 69, 1) 100%
+  );
+}
+
+.rhap_additional-controls .rhap_repeat-button {
+  color: #ff5555;
+}

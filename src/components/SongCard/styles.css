@@ -1,0 +1,10 @@
+.songCard {
+  height: 60px;
+  display: flex;
+}
+
+.songCard_selected {
+  height: 60px;
+  display: flex;
+  background-color: gray;
+}
