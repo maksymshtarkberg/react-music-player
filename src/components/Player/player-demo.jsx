@@ -277,7 +277,7 @@ const Player = ({
         sec: Math.floor(newValue % 60),
       });
       console.log(newValue);
-      audioPlayer.current.currentTime = seconds;
+      audioPlayer.current.currentTime = newValue;
     }
   };
 
