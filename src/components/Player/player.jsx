@@ -216,4 +216,4 @@ const mapStatetoProps = (state) => ({
   songArtist: state.songReducer.songArtist,
 });
 
-export default connect(mapStatetoProps, {})(Player);
+export default connect(mapStatetoProps, { setSongId })(Player);

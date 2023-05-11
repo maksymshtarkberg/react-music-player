@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { styled, Typography, Slider, Paper, Stack, Box } from "@mui/material";
 import { connect } from "react-redux";
+import axios from "axios";
 import {
   setIsLoadedSong,
   setSongUrl,
@@ -8,6 +9,7 @@ import {
   setTime,
   setCurrTime,
   setSeconds,
+  setIsPlaying,
 } from "../../redux/actions";
 // #region ------------ ICONS ---------
 import VolumeDownIcon from "@mui/icons-material/VolumeDown";
@@ -60,7 +62,8 @@ const Player = ({
   songArtist,
   songName,
   todosRedux,
-  isLoaded,
+  isPlaying,
+  setIsPlaying,
   setIsLoadedSong,
   setSongUrl,
   setCurrentTrackIndex,
@@ -71,29 +74,42 @@ const Player = ({
   currTime,
   setSeconds,
   seconds,
+  songId,
+  isLoadedSong,
 }) => {
   const playlist = [...todosRedux];
   // console.log(playlist.length);
   const audioPlayer = useRef();
   const currTimeRef = useRef(currTime);
 
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [volume, setVolume] = useState(30);
+  const [volume, setVolume] = useState(100);
   const [mute, setMute] = useState(false);
 
   useEffect(() => {
+    fetchSong();
+    console.log(playlist);
+  }, [currentTrackIndex, todosRedux]);
+
+  const fetchSong = async () => {
     if (currentTrackIndex >= playlist.length) {
       setCurrentTrackIndex(0);
     }
-    const fetchSong = async () => {
-      const __URL__ = "http://localhost:1337";
 
-      const streamURL = `${__URL__}/api/v1/song/${currentTrackIndex}/listen`;
-      setIsLoadedSong(true);
-      setSongUrl(streamURL);
-    };
-    fetchSong();
-  }, [currentTrackIndex]);
+    const songIdTrack = playlist[currentTrackIndex]._id;
+    const __URL__ = "http://localhost:1337";
+    const URL = `${__URL__}/api/v1/song/${songIdTrack}/file`;
+    const { data } = await axios.get(URL, {
+      responseType: "blob",
+    });
+
+    const blob = new Blob([data], { type: "audio/mp3" });
+    // const file = new File([blob], `${songIdTrack}.mp3`, {
+    //   type: "audio/mp3",
+    // });
+    const audioUrl = window.URL.createObjectURL(blob);
+    setSongUrl(audioUrl);
+    setIsLoadedSong(true);
+  };
 
   useEffect(() => {
     if (songUrl) {
@@ -107,7 +123,7 @@ const Player = ({
   // console.log(songUrl);
 
   useEffect(() => {
-    if (audioPlayer.current.duration) {
+    const handleLoadedMetadata = () => {
       const sec = audioPlayer.current.duration;
       const min = Math.floor(sec / 60);
       const secRemain = Math.floor(sec % 60);
@@ -116,8 +132,20 @@ const Player = ({
         min: min,
         sec: secRemain,
       });
-    }
-  }, [audioPlayer?.current?.readyState]);
+    };
+    handleLoadedMetadata();
+    // audioPlayer.current.addEventListener(
+    //   "loadedmetadata",
+    //   handleLoadedMetadata
+    // );
+
+    // return () => {
+    //   audioPlayer.current.removeEventListener(
+    //     "loadedmetadata",
+    //     handleLoadedMetadata
+    //   );
+    // };
+  }, [audioPlayer?.current?.readyState, songUrl]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -145,7 +173,7 @@ const Player = ({
       }
     }, 1000);
     return () => clearInterval(interval);
-  }, [songUrl, currTime]);
+  }, [songUrl, currTime, audioPlayer]);
 
   // useEffect(() => {
   //   if (audioPlayer.current) {
@@ -268,16 +296,15 @@ const Player = ({
   };
 
   const HandleTimeChange = (e) => {
+    const newValue = parseFloat(e.target.value);
     if (audioPlayer.current) {
-      const newValue = parseFloat(e.target.value);
-
       setSeconds(newValue);
       setCurrTime({
         min: Math.floor(newValue / 60),
         sec: Math.floor(newValue % 60),
       });
-      console.log(newValue);
-      audioPlayer.current.currentTime = seconds;
+
+      audioPlayer.current.currentTime = parseFloat(newValue);
     }
   };
 
@@ -418,11 +445,13 @@ const mapStatetoProps = (state) => ({
   songUrl: state.songReducer.songUrl,
   songName: state.songReducer.songName,
   songArtist: state.songReducer.songArtist,
-  isLoaded: state.todos.isLoaded,
+  isPlaying: state.songReducer.isPlaying,
   currentTrackIndex: state.playerReducer.currentTrackIndex,
   time: state.playerReducer.time,
   currTime: state.playerReducer.currTime,
   seconds: state.playerReducer.seconds,
+  songId: state.songReducer.songId,
+  isLoadedSong: state.songReducer.isLoadedSong,
 });
 
 export default connect(mapStatetoProps, {
@@ -432,4 +461,5 @@ export default connect(mapStatetoProps, {
   setTime,
   setCurrTime,
   setSeconds,
+  setIsPlaying,
 })(Player);

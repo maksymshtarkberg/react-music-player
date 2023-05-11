@@ -13,6 +13,7 @@ import {
   SET_CURR_TIME,
   SET_SONG_FILE,
   SET_IS_LOADED_SONG,
+  SET_SONG_ID,
 } from "./actionTypes";
 
 export const addTodo = (todos) => ({
@@ -80,4 +81,8 @@ export const setSongFile = (songFile) => ({
 export const setIsLoadedSong = (isLoadedSong) => ({
   type: SET_IS_LOADED_SONG,
   payload: isLoadedSong,
+});
+export const setSongId = (songId) => ({
+  type: SET_SONG_ID,
+  payload: songId,
 });

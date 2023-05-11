@@ -2,6 +2,7 @@ import conn from "../config/db.js";
 import fs from "fs";
 import mongodb from "mongodb";
 import path from "path";
+import sendSeekable from "send-seekable";
 
 // @desc    Add a new song
 // @route   POST /api/v1/song/upload
@@ -224,8 +225,13 @@ export const getSongByIndex = async (req, res) => {
     });
 
     const downloadStream = bucket.openDownloadStream(song.file);
+
     res.set("Content-Type", "audio/mp3");
-    downloadStream.pipe(res);
+    res.set("Accept-Ranges", "bytes");
+
+    sendSeekable(req, res, () => {
+      downloadStream.pipe(res);
+    });
   } catch (error) {
     console.log(error);
     return res.json({ error: error.message, status: "error" });

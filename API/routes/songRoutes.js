@@ -1,5 +1,7 @@
 import express from "express";
 import multer from "multer";
+import sendSeekable from "send-seekable";
+
 import {
   addSong,
   deleteSong,
@@ -14,6 +16,6 @@ const router = express.Router();
 router.post("/upload", upload.single("file"), addSong);
 router.delete("/delete/:id", deleteSong);
 router.get("/:id/file", getSongFile);
-router.get("/:index/listen", getSongByIndex);
+router.get("/:index/listen", sendSeekable, getSongByIndex);
 
 export default router;

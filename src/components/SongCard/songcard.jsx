@@ -13,11 +13,14 @@ import {
   setSongFile,
   setIsLoadedSong,
   setCurrentTrackIndex,
+  setSongId,
+  setIsLoaded,
 } from "../../redux/actions";
 import { connect } from "react-redux";
 import "./styles.css";
 
 const SongCard = ({
+  songIdCur,
   songId,
   title,
   artistName,
@@ -32,6 +35,9 @@ const SongCard = ({
   currentTrackIndex,
   setCurrentTrackIndex,
   trackIndex,
+  setSongId,
+  todosRedux,
+  setIsLoaded,
 }) => {
   const token = localStorage.getItem("access_token");
   let decoded;
@@ -40,18 +46,25 @@ const SongCard = ({
   }
 
   // useEffect(() => {
-  //   fetchSong();
-  // }, [isLoadedSong]);
+  //   setSongId(todosRedux[currentTrackIndex]._id, () => {
+  //     fetchSong();
+  //   });
+  // }, [currentTrackIndex, todosRedux]);
 
   // const fetchSong = async () => {
-  //   const __URL__ = "http://localhost:1337";
-  //   const { data } = await axios.get(`${__URL__}/api/v1/songs`);
-
-  //   setIsLoadedSong(true);
-  //   const song = data.songs[currentTrackIndex];
-  //   console.log(song);
-
-  //   // setSongUrl()
+  //   // setCurrentTrackIndex(currentTrackIndex);
+  //   // const song = todosRedux[currentTrackIndex];
+  //   // setIsLoaded(true);
+  //   // setSongId(song._id);
+  //   const URL = `http://localhost:1337/api/v1/song/${songId}/file`;
+  //   const { data } = await axios.get(URL, {
+  //     responseType: "blob",
+  //   });
+  //   const blob = new Blob([data], { type: "audio/mp3" }); // создаем Blob из данных и указываем тип
+  //   const file = new File([blob], `${songId}.mp3`, { type: "audio/mp3" });
+  //   const audioUrl = window.URL.createObjectURL(file);
+  //   setSongUrl(audioUrl);
+  //   setIsLoaded(true);
   // };
 
   const handlePlay = async () => {
@@ -65,11 +78,12 @@ const SongCard = ({
     // const blob = new Blob([data], { type: "audio/mp3" }); // создаем Blob из данных и указываем тип
     // const file = new File([blob], `${songId}.mp3`, { type: "audio/mp3" });
     // const audioUrl = window.URL.createObjectURL(file);
-    // setSongUrl(streamURL);
+    // setSongUrl(audioUrl);
     setCurrentTrackIndex(trackIndex);
     setSongName(title);
     setArtistName(artistName);
     setAlbumName(album);
+    setSongId(songIdCur);
   };
 
   return (
@@ -89,10 +103,12 @@ const SongCard = ({
 };
 
 const mapStatetoProps = (state) => ({
-  // songSrcRedux: state.songReducer,
+  todosRedux: state.todos.todos,
   songUrl: state.songReducer.songUrl,
   isLoadedSong: state.songReducer.isLoadedSong,
   currentTrackIndex: state.playerReducer.currentTrackIndex,
+  songId: state.songReducer.songId,
+  songUrl: state.songReducer.songUrl,
 });
 
 export default connect(mapStatetoProps, {
@@ -104,4 +120,6 @@ export default connect(mapStatetoProps, {
   setSongFile,
   setIsLoadedSong,
   setCurrentTrackIndex,
+  setSongId,
+  setIsLoaded,
 })(SongCard);

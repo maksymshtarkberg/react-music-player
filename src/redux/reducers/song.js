@@ -6,6 +6,7 @@ import {
   SET_IS_PLAYING,
   SET_SONG_FILE,
   SET_IS_LOADED_SONG,
+  SET_SONG_ID,
 } from "../actionTypes";
 
 const initialState = {
@@ -16,6 +17,7 @@ const initialState = {
   isPlaying: false,
   songFile: null,
   isLoadedSong: false,
+  songId: "",
 };
 
 const songReducer = (state = initialState, action) => {
@@ -34,6 +36,8 @@ const songReducer = (state = initialState, action) => {
       return { ...state, songFile: action.payload };
     case SET_IS_LOADED_SONG:
       return { ...state, loadedSong: action.payload };
+    case SET_SONG_ID:
+      return { ...state, songId: action.payload };
     default:
       return state;
   }

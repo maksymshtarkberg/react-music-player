@@ -12,3 +12,4 @@ export const SET_TIME = "SET_TIME";
 export const SET_CURR_TIME = "SET_CURR_TIME";
 export const SET_SONG_FILE = "SET_SONG_FILE";
 export const SET_IS_LOADED_SONG = "SET_IS_LOADED_SONG";
+export const SET_SONG_ID = "SET_SONG_ID";
