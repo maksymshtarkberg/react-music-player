@@ -1,0 +1,166 @@
+.modal {
+  color: hsl(220, 50%, 90%);
+  background: linear-gradient(to right, hsl(210, 30%, 20%), hsl(255, 30%, 25%));
+  box-shadow: hsla(236, 50%, 50%, 0.3) 0.4rem 0.4rem 10.2rem 0.2rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 800px;
+  border: 0;
+  padding: 16px;
+  border-radius: 20px;
+  overflow-y: auto;
+  max-height: 80vh;
+}
+
+.modal::-webkit-scrollbar {
+  width: 5px;
+  border-radius: 10px;
+}
+.modal::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+}
+.modal::-webkit-scrollbar-track {
+  background-color: transparent;
+  border-radius: 10px;
+  border: 1px solid transparent;
+}
+.modal::-webkit-scrollbar-track:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.btn {
+  position: absolute;
+  margin: 5px;
+  padding: 20px 70px;
+  border-radius: 60px;
+  border: none;
+
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-blend-mode: multiply;
+  background-size: cover;
+  cursor: pointer;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  font-family: Titillium Web monospace;
+  font-size: 30px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 28px;
+  color: transparent;
+  -webkit-transition: background-position 0.9s transform;
+  transition: background-position 0.9s transform;
+
+  -webkit-box-shadow: -1px -5px 15px #41465b, 5px 5px 15px #ffde76,
+    inset 5px 5px 10px #ffde76, inset -5px -5px 10px #ffde76;
+  box-shadow: -1px -5px 15px #bc8c46, 5px 5px 15px #bc8c46,
+    inset 5px 5px 10px #bc8c46, inset -5px -5px 10px #bc8c46;
+}
+
+.btn:hover {
+  -webkit-box-shadow: 1px 1px 13px #20232e, -1px -1px 13px #545b78;
+  box-shadow: 1px 1px 13px #20232e, -1px -1px 13px #545b78;
+  color: transparent;
+  -webkit-transition: 500ms;
+  transition: 500ms;
+}
+
+.btn:active {
+  -webkit-box-shadow: 1px 1px 13px #20232e, -1px -1px 33px #545b78;
+  box-shadow: 1px 1px 13px #20232e, -1px -1px 33px #545b78;
+  color: transparent;
+  -webkit-transition: background-position 2s transform;
+  transition: background-position 2s transform;
+  animation: shake 0.7s;
+  background-position: bottom center;
+  font-size: 25px;
+}
+
+.MuiBox-root .MuiSvgIcon-root {
+  display: flex;
+  margin-left: auto;
+  margin-right: 20px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.spinner {
+  bottom: -52px;
+  position: absolute;
+  background-image: linear-gradient(
+    135deg,
+    rgba(249, 72, 111, 0) 24.59%,
+    #f9486f 85.31%
+  );
+  width: 35px;
+  height: 35px;
+  animation: spinning82341 1.7s linear infinite;
+  text-align: center;
+  border-radius: 50px;
+  filter: blur(1px);
+  box-shadow: 0px -5px 20px 0px rgb(186, 66, 255),
+    0px 5px 20px 0px rgb(0, 225, 255);
+  margin-left: 127px;
+  display: none;
+}
+
+.spinner1 {
+  background-color: rgb(36, 36, 36);
+  width: 35px;
+  height: 35px;
+  border-radius: 50px;
+  filter: blur(10px);
+}
+.spin-box {
+  position: relative;
+}
+
+.disp-block {
+  display: block;
+}
+
+@media (max-width: 820px) {
+  .modal {
+    width: 90%;
+    padding: 10px;
+    border-radius: 10px;
+  }
+
+  .btn {
+    right: 0;
+    margin-right: 80px;
+    padding: 10px 40px;
+    font-size: 20px;
+    -webkit-box-shadow: -1px -2px 8px #41465b, 2px 2px 8px #ffde76,
+      inset 2px 2px 5px #ffde76, inset -2px -2px 5px #ffde76;
+    box-shadow: -1px -5px 15px #bc8c46, 5px 5px 15px #bc8c46,
+      inset 5px 5px 10px #bc8c46, inset -5px -5px 10px #bc8c46;
+  }
+
+  .btn:active {
+    -webkit-box-shadow: 1px 1px 8px #20232e, -1px -1px 20px #545b78;
+    box-shadow: 1px 1px 8px #20232e, -1px -1px 20px #545b78;
+    font-size: 15px;
+  }
+
+  .spinner {
+    bottom: -45px;
+    margin-left: 165px;
+  }
+
+  .MuiBox-root .MuiSvgIcon-root {
+    margin-right: 10px;
+    margin-top: 5px;
+  }
+
+  .disp-block {
+    display: block;
+  }
+}

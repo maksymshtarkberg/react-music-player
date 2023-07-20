@@ -1,0 +1,59 @@
+.menu {
+  white-space: nowrap;
+}
+
+.menu li {
+  list-style: none;
+  color: #424241;
+  margin-top: 11px;
+}
+
+.menu p {
+  color: #9f9e9b;
+}
+
+.menu__player li:nth-child(2) {
+  background-image: url(../../assets/play-icon.svg);
+  background-repeat: no-repeat;
+  background-position: left center;
+  padding-left: 22px;
+  cursor: pointer;
+}
+
+.menu__player li:nth-child(3) {
+  background-image: url(../../assets/upload-song.svg);
+  background-repeat: no-repeat;
+  background-position: left center;
+  padding-left: 22px;
+  cursor: pointer;
+}
+
+.menu__media li:nth-child(2) {
+  background-image: url(../../assets/songs-icon.svg);
+  background-repeat: no-repeat;
+  background-position: left center;
+  padding-left: 22px;
+  cursor: pointer;
+}
+.menu__media li:nth-child(3) {
+  background-image: url(../../assets/last-added-icon.svg);
+  background-repeat: no-repeat;
+  background-position: left center;
+  padding-left: 22px;
+  cursor: pointer;
+}
+.menu__media li:nth-child(4) {
+  background-image: url(../../assets/artists-icon.svg);
+  background-repeat: no-repeat;
+  background-position: left center;
+  padding-left: 22px;
+  cursor: pointer;
+}
+
+.menu__playlist li:nth-child(2) {
+  background-image: url(../../assets/playlists-icon.svg);
+  background-repeat: no-repeat;
+  background-position: left center;
+  padding-left: 22px;
+  cursor: pointer;
+}

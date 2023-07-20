@@ -227,7 +227,7 @@ export const getSongByIndex = async (req, res) => {
     const downloadStream = bucket.openDownloadStream(song.file);
 
     res.set("Content-Type", "audio/mp3");
-    res.set("Accept-Ranges", "bytes");
+    // res.set("Accept-Ranges", "bytes");
 
     sendSeekable(req, res, () => {
       downloadStream.pipe(res);

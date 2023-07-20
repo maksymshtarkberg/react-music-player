@@ -1,16 +1,13 @@
 // import Player from "./components/Player/player";
-import Player from "./components/Player/player-demo";
-import Songs from "./pages/Songs";
-import UploadSong from "./pages/UploadSong";
+import MainPlayer from "./containers/Main-Player/main-player";
+import Menu from "./components/Navigation/menu";
 import "./App.css";
 
 function App() {
   return (
     <div className="container">
-      {/* <UploadSong /> */}
-
-      <Player />
-      <Songs />
+      <Menu />
+      <MainPlayer />
     </div>
   );
 }

@@ -31,9 +31,10 @@ import { TimelapseRounded } from "@mui/icons-material";
 // #region -------- Styled Components -----------------------------------------
 const Div = styled("div")(({ theme }) => ({
   backgroundColor: "grey",
-  height: "100vh",
-  width: "100vw",
+  height: "100%",
+  width: "100%",
   paddingTop: theme.spacing(6),
+  paddingBottom: theme.spacing(6),
 }));
 
 const CustomPaper = styled(Paper)(({ theme }) => ({
@@ -76,6 +77,7 @@ const Player = ({
   seconds,
   songId,
   isLoadedSong,
+  isLoaded,
 }) => {
   const playlist = [...todosRedux];
   // console.log(playlist.length);
@@ -84,41 +86,47 @@ const Player = ({
 
   const [volume, setVolume] = useState(100);
   const [mute, setMute] = useState(false);
+  const [isLoadingSong, setIsLoadingSong] = useState(false);
 
   useEffect(() => {
-    fetchSong();
-    console.log(playlist);
-  }, [currentTrackIndex, todosRedux]);
+    if (isLoaded) {
+      fetchSong();
+    }
+  }, [isLoaded, currentTrackIndex, todosRedux]);
 
   const fetchSong = async () => {
-    if (currentTrackIndex >= playlist.length) {
-      setCurrentTrackIndex(0);
+    try {
+      if (currentTrackIndex >= playlist.length) {
+        setCurrentTrackIndex(0);
+      }
+
+      const songIdTrack = playlist[currentTrackIndex]._id;
+      console.log(songIdTrack);
+      const __URL__ = "http://localhost:1337";
+      const URL = `${__URL__}/api/v1/song/${songIdTrack}/file`;
+      const { data } = await axios.get(URL, {
+        responseType: "blob",
+      });
+
+      const blob = new Blob([data], { type: "audio/mp3" });
+      const audioUrl = window.URL.createObjectURL(blob);
+
+      setSongUrl(audioUrl);
+      setIsLoadedSong(true);
+      setIsLoadingSong(false);
+    } catch (error) {
+      console.error(error);
     }
-
-    const songIdTrack = playlist[currentTrackIndex]._id;
-    const __URL__ = "http://localhost:1337";
-    const URL = `${__URL__}/api/v1/song/${songIdTrack}/file`;
-    const { data } = await axios.get(URL, {
-      responseType: "blob",
-    });
-
-    const blob = new Blob([data], { type: "audio/mp3" });
-    // const file = new File([blob], `${songIdTrack}.mp3`, {
-    //   type: "audio/mp3",
-    // });
-    const audioUrl = window.URL.createObjectURL(blob);
-    setSongUrl(audioUrl);
-    setIsLoadedSong(true);
   };
 
   useEffect(() => {
-    if (songUrl) {
+    if (songUrl && !isLoadingSong) {
       audioPlayer.current.src = songUrl;
       audioPlayer.current.load();
       audioPlayer.current.play();
       setIsPlaying(true);
     }
-  }, [songUrl]);
+  }, [songUrl, currentTrackIndex, isLoadingSong]);
 
   // console.log(songUrl);
 
@@ -134,17 +142,6 @@ const Player = ({
       });
     };
     handleLoadedMetadata();
-    // audioPlayer.current.addEventListener(
-    //   "loadedmetadata",
-    //   handleLoadedMetadata
-    // );
-
-    // return () => {
-    //   audioPlayer.current.removeEventListener(
-    //     "loadedmetadata",
-    //     handleLoadedMetadata
-    //   );
-    // };
   }, [audioPlayer?.current?.readyState, songUrl]);
 
   useEffect(() => {
@@ -174,57 +171,6 @@ const Player = ({
     }, 1000);
     return () => clearInterval(interval);
   }, [songUrl, currTime, audioPlayer]);
-
-  // useEffect(() => {
-  //   if (audioPlayer.current) {
-  //     audioPlayer.current.volume = volume / 100;
-  //   }
-
-  //   const handleLoadedMetadata = () => {
-  //     const _duration = Math.floor(audioPlayer?.current?.duration);
-  //     const _elapsed = Math.floor(audioPlayer?.current?.currentTime);
-  //     // console.log(audioPlayer?.current?.currentTime);
-  //     setDuration(_duration);
-  //     setElapsed(_elapsed); // Обновляем состояние elapsed при загрузке метаданных
-  //   };
-
-  //   audioPlayer.current.addEventListener(
-  //     "loadedmetadata",
-  //     handleLoadedMetadata
-  //   );
-
-  //   const handleDurationChange = () => {
-  //     const _duration = Math.floor(audioPlayer?.current?.duration);
-  //     setDuration(_duration);
-  //   };
-
-  //   audioPlayer.current.addEventListener(
-  //     "durationchange",
-  //     handleDurationChange
-  //   );
-
-  //   const handleTimeUpdate = () => {
-  //     const _elapsed = Math.floor(audioPlayer?.current?.currentTime);
-  //     setElapsed(_elapsed); // Обновляем состояние elapsed при изменении времени проигрывания
-  //     elapsedRef.current = _elapsed;
-  //   };
-
-  //   audioPlayer.current.addEventListener("timeupdate", handleTimeUpdate);
-
-  //   return () => {
-  //     audioPlayer.current.removeEventListener(
-  //       "loadedmetadata",
-  //       handleLoadedMetadata
-  //     );
-  //     audioPlayer.current.removeEventListener(
-  //       "durationchange",
-  //       handleDurationChange
-  //     );
-  //     audioPlayer.current.removeEventListener("timeupdate", handleTimeUpdate);
-  //   };
-  // }, [songUrl, audioPlayer, volume]);
-
-  // console.log(elapsedRef);
 
   function formatTime(time) {
     if (time && !isNaN(time)) {
@@ -269,25 +215,23 @@ const Player = ({
     }
   };
 
-  const toggleSkipForward = () => {
-    if (audioPlayer.current) {
-      audioPlayer.current.pause();
-      const nextIndex = currentTrackIndex + 1;
-      setCurrentTrackIndex(nextIndex % playlist.length);
-      audioPlayer.current.play();
-      setIsPlaying(true);
-    }
+  const toggleSkipForward = async () => {
+    await audioPlayer.current.pause();
+    setIsPlaying(false);
+    setIsLoadingSong(true);
+    const nextIndex = currentTrackIndex + 1;
+    setCurrentTrackIndex(nextIndex % playlist.length);
   };
 
-  const toggleSkipBackward = () => {
+  const toggleSkipBackward = async () => {
     if (audioPlayer.current) {
-      audioPlayer.current.pause();
+      await audioPlayer.current.pause();
+      setIsPlaying(false);
+      setIsLoadingSong(true);
       if (currentTrackIndex > 0) {
         setCurrentTrackIndex(currentTrackIndex - 1);
-        audioPlayer.current.play();
       }
     }
-    setIsPlaying(true);
   };
 
   const handleVolumeChange = (newValue) => {
@@ -306,6 +250,11 @@ const Player = ({
 
       audioPlayer.current.currentTime = parseFloat(newValue);
     }
+  };
+
+  const SongOnEnded = () => {
+    setSongUrl(null);
+    setCurrentTrackIndex(currentTrackIndex + 1); // Обновляем текущий индекс трека в Redux
   };
 
   function VolumeBtns() {
@@ -339,7 +288,7 @@ const Player = ({
         key={songUrl}
         ref={audioPlayer}
         muted={mute}
-        onEnded={() => setCurrentTrackIndex(currentTrackIndex + 1)}
+        onEnded={SongOnEnded}
       />
       <CustomPaper>
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -425,9 +374,9 @@ const Player = ({
           }}
         >
           <Typography sx={{ color: "lime" }}>{formatTime(seconds)}</Typography>
-          <input
-            type="range"
-            value={(seconds = undefined ? 0 : seconds)}
+          <PSlider
+            thumbless="true"
+            value={seconds || 0}
             max={audioPlayer.current ? audioPlayer.current.duration : 0}
             onChange={HandleTimeChange}
           />
@@ -442,6 +391,7 @@ const Player = ({
 
 const mapStatetoProps = (state) => ({
   todosRedux: state.todos.todos,
+  isLoaded: state.todos.isLoaded,
   songUrl: state.songReducer.songUrl,
   songName: state.songReducer.songName,
   songArtist: state.songReducer.songArtist,

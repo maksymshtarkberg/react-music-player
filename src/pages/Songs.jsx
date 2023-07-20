@@ -38,6 +38,7 @@ const Songs = ({
         todosRedux.map((song, index) => {
           return (
             <SongCard
+              key={index}
               songIdCur={song._id}
               trackIndex={index}
               title={song.title}

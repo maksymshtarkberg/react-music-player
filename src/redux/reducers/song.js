@@ -35,7 +35,7 @@ const songReducer = (state = initialState, action) => {
     case SET_SONG_FILE:
       return { ...state, songFile: action.payload };
     case SET_IS_LOADED_SONG:
-      return { ...state, loadedSong: action.payload };
+      return { ...state, isLoadedSong: action.payload };
     case SET_SONG_ID:
       return { ...state, songId: action.payload };
     default:

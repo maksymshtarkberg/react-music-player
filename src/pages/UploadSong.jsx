@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
+import "./upload-songs.css";
 // import { redirect } from "react-router-dom";
 
 const UploadSong = () => {
@@ -61,70 +62,70 @@ const UploadSong = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen py-10 text-white px-5 bg-slate-800 space-y-5 pb-10 lg:p-20">
-      <h1 className="text-center text-2xl lg:text-4xl">Upload Song</h1>
+    <div className="upload-songs">
+      <h1 className="upload-songs__head">Upload Song</h1>
 
       <form
         onSubmit={handleSubmit}
         encType="multipart/form-data"
-        className="flex flex-col lg:m-5 text-xl space-y-5"
+        className="upload-songs__table"
       >
-        <div className="flex flex-col space-y-2 lg:px-5">
-          <label className="px-2" htmlFor="title">
+        <div className="upload-songs__title fl-dr">
+          <label className="" htmlFor="title">
             Title
           </label>
           <input
             type="text"
             name="title"
-            className=" px-5 text-sm bg-slate-100 border-b-blue-200 border-b-2 rounded-md text-gray-900 placeholder:text-gray-900 h-10 outline-none"
-            placeholder="Blank Space"
+            className="upload-songs__insert"
+            placeholder="Song Name"
             onChange={(e) => setTitle(e.target.value)}
             required
           />
         </div>
-        <div className="flex flex-col space-y-2 lg:px-5">
-          <label className="px-2" htmlFor="title">
-            Description
-          </label>
-          <input
-            type="text"
-            name="title"
-            className=" px-5 text-sm bg-slate-100 border-b-blue-200 border-b-2 rounded-md placeholder:text-gray-900 text-gray-900  h-10 outline-none"
-            placeholder="This song is about a dangerous man who's not marriage material"
-            onChange={(e) => setDescription(e.target.value)}
-            required
-          />
-        </div>
-        <div className="flex flex-col space-y-2 lg:px-5">
-          <label className="px-2" htmlFor="title">
+        <div className="fl-dr">
+          <label className="" htmlFor="title">
             Artist
           </label>
           <input
             type="text"
             name="title"
-            className=" px-5 text-sm bg-slate-100 border-b-blue-200 border-b-2 rounded-md placeholder:text-gray-900 text-gray-900 h-10 outline-none"
-            placeholder="Taylor Swift"
+            className="upload-songs__insert"
+            placeholder="Artist Name"
             onChange={(e) => setArtist(e.target.value)}
             required
           />
         </div>
-        <div className="flex flex-col space-y-2 lg:px-5">
+        <div className="fl-dr">
           <label className="px-2" htmlFor="title">
-            Cover Album
+            Album
           </label>
           <input
             type="text"
             name="title"
-            className=" px-5 text-sm bg-slate-100 border-b-blue-200 border-b-2 rounded-md placeholder:text-gray-900 text-gray-900 h-10 outline-none"
-            placeholder="1989"
+            className="upload-songs__insert"
+            placeholder="Album"
             onChange={(e) => setAlbum(e.target.value)}
             required
           />
         </div>
-
-        <div className="flex flex-col space-y-2 lg:px-5">
+        <div className="upload-songs__description fl-dr">
+          <label className="" htmlFor="title">
+            Description
+          </label>
+          <input
+            type="text"
+            name="title"
+            className="upload-songs__insert"
+            placeholder="This song is about..."
+            onChange={(e) => setDescription(e.target.value)}
+            required
+          />
+        </div>
+        <div className="fl-dr">
           <label htmlFor="audioFile">Audio File</label>
           <input
+            className="file-input"
             onChange={handleFileChange}
             type="file"
             name="file"
@@ -132,13 +133,15 @@ const UploadSong = () => {
             required
           />
         </div>
-        <button
-          className="bg-[#ffd700] text-[#7d0000] text-sm  py-1 rounded-xl w-32 lg:mx-4"
-          type="submit"
-          //   disabled={localStorage.getItem("access_token") ? false : true}
-        >
-          Submit
-        </button>
+        <div className="upload-songs__btn">
+          <button
+            className="button"
+            type="submit"
+            //   disabled={localStorage.getItem("access_token") ? false : true}
+          >
+            Submit
+          </button>
+        </div>
       </form>
     </div>
   );

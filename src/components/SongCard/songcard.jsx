@@ -39,33 +39,11 @@ const SongCard = ({
   todosRedux,
   setIsLoaded,
 }) => {
-  const token = localStorage.getItem("access_token");
-  let decoded;
-  if (token) {
-    decoded = decodeToken(token);
-  }
-
-  // useEffect(() => {
-  //   setSongId(todosRedux[currentTrackIndex]._id, () => {
-  //     fetchSong();
-  //   });
-  // }, [currentTrackIndex, todosRedux]);
-
-  // const fetchSong = async () => {
-  //   // setCurrentTrackIndex(currentTrackIndex);
-  //   // const song = todosRedux[currentTrackIndex];
-  //   // setIsLoaded(true);
-  //   // setSongId(song._id);
-  //   const URL = `http://localhost:1337/api/v1/song/${songId}/file`;
-  //   const { data } = await axios.get(URL, {
-  //     responseType: "blob",
-  //   });
-  //   const blob = new Blob([data], { type: "audio/mp3" }); // создаем Blob из данных и указываем тип
-  //   const file = new File([blob], `${songId}.mp3`, { type: "audio/mp3" });
-  //   const audioUrl = window.URL.createObjectURL(file);
-  //   setSongUrl(audioUrl);
-  //   setIsLoaded(true);
-  // };
+  // const token = localStorage.getItem("access_token");
+  // let decoded;
+  // if (token) {
+  //   decoded = decodeToken(token);
+  // }
 
   const handlePlay = async () => {
     // const __URL__ = "http://localhost:1337";
