@@ -1,0 +1,13 @@
+.playlist-button {
+  background-color: rgba(188, 140, 70, 1);
+  border: 0;
+  width: 98px;
+  height: 35px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.playlist-create {
+  display: flex;
+  justify-content: space-around;
+}

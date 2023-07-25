@@ -50,10 +50,15 @@
   cursor: pointer;
 }
 
-.menu__playlist li:nth-child(2) {
+.menu__playlist li {
   background-image: url(../../assets/playlists-icon.svg);
   background-repeat: no-repeat;
   background-position: left center;
   padding-left: 22px;
   cursor: pointer;
+}
+
+.menu__playlist-box {
+  display: flex;
+  position: relative;
 }

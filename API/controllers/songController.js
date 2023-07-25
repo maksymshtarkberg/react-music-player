@@ -90,10 +90,10 @@ export const deleteSong = async (req, res) => {
       res.status(404);
       throw new Error("Song not found");
     }
-    if (song.uploadedBy !== req.userId) {
-      res.status(401);
-      throw new Error("Unauthorized");
-    }
+    // if (song.uploadedBy !== req.userId) {
+    //   res.status(401);
+    //   throw new Error("Unauthorized");
+    // }
     const deleteSong = await collection.deleteOne({
       _id: new mongodb.ObjectId(id),
     });
