@@ -5,8 +5,8 @@ import "./main-player.css";
 const MainPlayer = () => {
   return (
     <div className="main-player">
-      <Player />
       <Songs />
+      <Player />
     </div>
   );
 };

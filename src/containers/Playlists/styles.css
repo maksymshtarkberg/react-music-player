@@ -5,9 +5,15 @@
   height: 35px;
   border-radius: 10px;
   cursor: pointer;
+  transition: background-color 0.3s, opacity 0.3s;
 }
 
 .playlist-create {
   display: flex;
   justify-content: space-around;
+}
+
+.playlist-button:hover {
+  background-color: rgba(188, 140, 70, 0.9);
+  opacity: 0.9;
 }

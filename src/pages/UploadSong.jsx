@@ -3,7 +3,7 @@ import axios from "axios";
 import "./upload-songs.css";
 // import { redirect } from "react-router-dom";
 
-const UploadSong = () => {
+const UploadSong = ({ onUploadSong, close }) => {
   // we are using this to close the sidebar when we land on this page
 
   // we are using this to upload the file
@@ -58,6 +58,8 @@ const UploadSong = () => {
     // if the file is uploaded successfully, we will redirect the user to the home page with alert message
     if (result.status === 201) {
       alert("File uploaded successfully");
+      onUploadSong();
+      close();
     }
   };
 

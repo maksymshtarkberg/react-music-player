@@ -6,7 +6,7 @@ import UploadSong from "../../pages/UploadSong";
 
 import "./styles.css";
 
-export default function BasicModal({ modalShow, setModalShow }) {
+export default function BasicModal({ modalShow, setModalShow, onUploadSong }) {
   const handleClose = () => setModalShow(false);
 
   return (
@@ -24,7 +24,12 @@ export default function BasicModal({ modalShow, setModalShow }) {
       >
         <Box sx={{ overflowY: "auto", height: 600 }} className="modal">
           <CloseRoundedIcon className="modal-cross" onClick={handleClose} />
-          <UploadSong showModal={modalShow} setShowModal={setModalShow} />
+          <UploadSong
+            close={handleClose}
+            onUploadSong={onUploadSong}
+            showModal={modalShow}
+            setShowModal={setModalShow}
+          />
         </Box>
       </Modal>
     </>

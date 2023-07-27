@@ -1,22 +1,86 @@
 .songCard {
   height: 60px;
   display: flex;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: background-color 0.1s;
+  background-color: transparent;
+}
+.songCard img {
+  border-radius: 10px;
+}
+
+.songCard_selected img {
+  border-radius: 10px;
+}
+
+.songCard:hover {
+  transition-delay: 0.1s;
+  background-color: #b7b0b0;
 }
 
 .songCard_selected {
   height: 60px;
   display: flex;
-  background-color: gray;
+  background-color: #d9d4d4;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: background-color 0.1s;
+}
+
+.songCard_selected:hover {
+  transition-delay: 0.1s;
+  background-color: #b7b0b0;
 }
 
 .songCard__addtoplaylist ul {
   list-style: none;
   position: absolute;
+  top: -10px;
   z-index: 1;
+  height: 108px;
+  overflow-y: scroll;
+}
+
+.songCard__addtoplaylist ul::-webkit-scrollbar {
+  width: 8px;
+}
+.songCard__addtoplaylist ul::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+  border-radius: 5px;
+}
+.songCard__addtoplaylist ul::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  background-color: #888;
+}
+.songCard__addtoplaylist ul::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
 }
 
 .songCard__addtoplaylist {
-  margin-left: auto;
   display: flex;
   position: relative;
+  align-items: center;
+}
+
+.songCard__artist {
+  margin: 0 auto;
+  align-self: center;
+}
+
+.songCard__title {
+  align-self: center;
+  margin-left: 30px;
+}
+
+.songCard__chooseplaylist {
+  border-radius: 24px;
+  border: 1px solid var(--color-primary, #1bf869);
+  background: #ccc2c2;
+  padding: 4px 12px;
+  margin-bottom: 5px;
+}
+
+.songCard__chooseplaylist:hover {
+  background-color: #e0d4d4;
 }

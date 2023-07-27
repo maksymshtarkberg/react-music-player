@@ -1,6 +1,7 @@
 .main-player {
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
   width: 100%;
   margin-top: auto;
+  margin-right: 40px;
 }

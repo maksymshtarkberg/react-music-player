@@ -92,7 +92,7 @@ const Player = ({
     if (isLoaded) {
       fetchSong();
     }
-  }, [isLoaded, currentTrackIndex, todosRedux]);
+  }, [todosRedux, isLoaded, currentTrackIndex]);
 
   const fetchSong = async () => {
     try {
@@ -128,8 +128,6 @@ const Player = ({
     }
   }, [songUrl, currentTrackIndex, isLoadingSong]);
 
-  // console.log(songUrl);
-
   useEffect(() => {
     const handleLoadedMetadata = () => {
       const sec = audioPlayer.current.duration;
@@ -155,7 +153,7 @@ const Player = ({
             min,
             sec,
           };
-          // Обновляем состояния только при изменении времени
+
           if (
             currTime.min !== currTimeRef.current.min ||
             currTime.sec !== currTimeRef.current.sec
@@ -216,21 +214,25 @@ const Player = ({
   };
 
   const toggleSkipForward = async () => {
-    await audioPlayer.current.pause();
-    setIsPlaying(false);
-    setIsLoadingSong(true);
-    const nextIndex = currentTrackIndex + 1;
-    setCurrentTrackIndex(nextIndex % playlist.length);
+    if (!isLoadingSong) {
+      await audioPlayer.current.pause();
+      setIsPlaying(false);
+      setIsLoadingSong(true);
+      const nextIndex = currentTrackIndex + 1;
+      setCurrentTrackIndex(nextIndex % playlist.length);
+      setSongUrl(null);
+    }
   };
 
   const toggleSkipBackward = async () => {
-    if (audioPlayer.current) {
+    if (!isLoadingSong) {
       await audioPlayer.current.pause();
       setIsPlaying(false);
       setIsLoadingSong(true);
       if (currentTrackIndex > 0) {
         setCurrentTrackIndex(currentTrackIndex - 1);
       }
+      setSongUrl(null);
     }
   };
 
@@ -254,7 +256,7 @@ const Player = ({
 
   const SongOnEnded = () => {
     setSongUrl(null);
-    setCurrentTrackIndex(currentTrackIndex + 1); // Обновляем текущий индекс трека в Redux
+    setCurrentTrackIndex(currentTrackIndex + 1);
   };
 
   function VolumeBtns() {
@@ -290,6 +292,7 @@ const Player = ({
         muted={mute}
         onEnded={SongOnEnded}
       />
+
       <CustomPaper>
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
           <Stack
@@ -303,7 +306,6 @@ const Player = ({
             }}
           >
             <VolumeBtns />
-
             <PSlider
               min={0}
               max={100}
@@ -356,6 +358,7 @@ const Player = ({
               sx={{ color: "lime", "&:hover": { color: "white" } }}
               onClick={toggleSkipForward}
             />
+            <p>{`${songArtist} - ${songName}`}</p>
           </Stack>
 
           <Stack

@@ -9,6 +9,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 import { useEffect } from "react";
 
+import AudioDownloader from "../AudioDownloader/audioDownloader";
+
 import {
   setSongUrl,
   setSongName,
@@ -49,6 +51,8 @@ const SongCard = ({
   playlistCurrentId,
   playlistIsOpened,
   setPlaylist,
+  onSongDelete,
+  onSongDeletePlaylist,
 }) => {
   const [playlistOpen, setPlaylistOpen] = useState(false);
   const [songDeleteRenderind, setSongDeleteRenderind] = useState(false);
@@ -67,10 +71,21 @@ const SongCard = ({
 
     setPlaylistOpen(true);
   };
+
+  const handleClosePlaylist = () => {
+    setPlaylistOpen(false);
+  };
+
+  useEffect(() => {
+    document.addEventListener("click", handleClosePlaylist);
+    return () => {
+      document.removeEventListener("click", handleClosePlaylist);
+    };
+  }, []);
+
   const fetchPlaylists = async () => {
     const __URL__ = "http://localhost:1337";
     const { data } = await axios.get(`${__URL__}/api/v1/playlist`);
-    // setPlaylists(data["playlists"]);
     setPlaylist(data["playlists"]);
   };
 
@@ -137,6 +152,7 @@ const SongCard = ({
       if (status == 200) {
         setSongDeleteRenderind(true);
         alert("Song removed from the playlist");
+        onSongDeletePlaylist();
       }
     } else {
       const __URL__ = "http://localhost:1337";
@@ -146,6 +162,7 @@ const SongCard = ({
       if (status == 200) {
         setSongDeleteRenderind(true);
         alert("Song removed from the player");
+        onSongDelete();
       }
     }
     setSongDeleteRenderind(false);
@@ -158,16 +175,16 @@ const SongCard = ({
         "songCard" + (currentTrackIndex === trackIndex ? "_selected" : "")
       }
     >
-      <img src={musicbg} alt="" />
-      <div>
-        <div>{title}</div>
-        <div>{artistName}</div>
-      </div>
+      <img src={musicbg} alt="/" />
+
+      <div className="songCard__title">{title}</div>
+      <div className="songCard__artist">{artistName}</div>
+
       <div className="songCard__addtoplaylist">
         <button
           style={{
             marginLeft: "auto",
-            marginRight: 100,
+            marginRight: 70,
             alignSelf: "center",
             cursor: "pointer",
             zIndex: 1,
@@ -198,6 +215,7 @@ const SongCard = ({
           </ul>
         )}
         <IconButton
+          sx={{ marginRight: 2 }}
           onClick={(event) =>
             handleDeletePlaylistSong(
               event,
@@ -211,6 +229,10 @@ const SongCard = ({
         >
           <DeleteIcon />
         </IconButton>
+        <AudioDownloader
+          songIdTrack={songIdCur}
+          fileName={`${artistName} - ${title}`}
+        />
       </div>
     </div>
   );

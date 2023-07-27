@@ -101,7 +101,11 @@ const Menu = ({
       <ul className="menu__player">
         <p>Player</p>
         <li onClick={fetchSongs}>Listen</li>
-        <BasicModal modalShow={modalShow} setModalShow={setModalShow} />
+        <BasicModal
+          modalShow={modalShow}
+          setModalShow={setModalShow}
+          onUploadSong={fetchSongs}
+        />
         <li onClick={HandleClickOpen}>Upload song</li>
       </ul>
       <ul className="menu__media">
@@ -110,30 +114,31 @@ const Menu = ({
         <li>Last added</li>
         <li>Artists</li>
       </ul>
+      <PlaylistModal />
       <ul className="menu__playlist">
+        <p className="menu__playlist-title">Playlists</p>
         <div className="menu__playlist-box">
-          <PlaylistModal />
-          <p>Playlists</p>
-        </div>
-        {playlists ? (
-          playlists.map((playlist) => (
-            <li
-              key={playlist._id}
-              onClick={() => handleSetPlaylistOn(playlist)}
-            >
-              {playlist.playlistName}
-
-              <IconButton
-                onClick={() => handleDelete(playlist._id)}
-                aria-label="delete"
+          {playlists ? (
+            playlists.map((playlist) => (
+              <li
+                key={playlist._id}
+                onClick={() => handleSetPlaylistOn(playlist)}
               >
-                <DeleteIcon />
-              </IconButton>
-            </li>
-          ))
-        ) : (
-          <li>Loading playlists...</li>
-        )}
+                {playlist.playlistName}
+
+                <IconButton
+                  sx={{ marginLeft: "auto" }}
+                  onClick={() => handleDelete(playlist._id)}
+                  aria-label="delete"
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </li>
+            ))
+          ) : (
+            <li>Loading playlists...</li>
+          )}
+        </div>
       </ul>
     </div>
   );
