@@ -55,7 +55,6 @@
 .menu__playlist-box {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   height: 200px;
   overflow-x: auto;
 }

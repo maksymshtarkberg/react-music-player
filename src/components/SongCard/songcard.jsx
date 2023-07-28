@@ -6,7 +6,7 @@ import axios from "axios";
 
 import { IconButton } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-
+import playing from "../../assets/playingsong.gif";
 import { useEffect } from "react";
 
 import AudioDownloader from "../AudioDownloader/audioDownloader";
@@ -23,6 +23,7 @@ import {
   setSongId,
   setIsLoaded,
   setPlaylist,
+  setIsLoadingSong,
 } from "../../redux/actions";
 import { connect } from "react-redux";
 import "./styles.css";
@@ -53,13 +54,18 @@ const SongCard = ({
   setPlaylist,
   onSongDelete,
   onSongDeletePlaylist,
+  setIsLoadingSong,
+  isPlaying,
+  isLoadingSong,
 }) => {
   const [playlistOpen, setPlaylistOpen] = useState(false);
   const [songDeleteRenderind, setSongDeleteRenderind] = useState(false);
+  const [showPlayingImage, setShowPlayingImage] = useState(false);
 
   const handlePlay = async () => {
-    setSongUrl(null);
     setCurrentTrackIndex(trackIndex);
+    setIsLoadingSong(true);
+    setSongUrl("");
     setSongName(title);
     setArtistName(artistName);
     setAlbumName(album);
@@ -168,6 +174,17 @@ const SongCard = ({
     setSongDeleteRenderind(false);
   };
 
+  useEffect(() => {
+    if (!isLoadingSong && isPlaying && currentTrackIndex === trackIndex) {
+      setShowPlayingImage(true);
+    } else {
+      const timer = setTimeout(() => {
+        setShowPlayingImage(false);
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [currentTrackIndex, isPlaying, !isLoadingSong]);
+
   return (
     <div
       onClick={handlePlay}
@@ -175,7 +192,11 @@ const SongCard = ({
         "songCard" + (currentTrackIndex === trackIndex ? "_selected" : "")
       }
     >
-      <img src={musicbg} alt="/" />
+      <img
+        style={{ height: "60px", width: "80px" }}
+        src={showPlayingImage ? playing : musicbg}
+        alt="SongCover"
+      />
 
       <div className="songCard__title">{title}</div>
       <div className="songCard__artist">{artistName}</div>
@@ -248,6 +269,8 @@ const mapStatetoProps = (state) => ({
   playlists: state.playlistReducer.playlists,
   playlistCurrentId: state.playlistReducer.playlistCurrentId,
   playlistIsOpened: state.playlistReducer.playlistIsOpened,
+  isPlaying: state.songReducer.isPlaying,
+  isLoadingSong: state.playerReducer.isLoadingSong,
 });
 
 export default connect(mapStatetoProps, {
@@ -262,4 +285,5 @@ export default connect(mapStatetoProps, {
   setSongId,
   setIsLoaded,
   setPlaylist,
+  setIsLoadingSong,
 })(SongCard);

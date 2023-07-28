@@ -4,6 +4,7 @@ import {
   SET_SECONDS,
   SET_TIME,
   SET_CURR_TIME,
+  SET_IS_LOADING_SONG,
 } from "../actionTypes";
 
 const initialState = {
@@ -18,6 +19,7 @@ const initialState = {
     min: "",
     sec: "",
   },
+  isLoadingSong: false,
 };
 
 const playerReducer = (state = initialState, action) => {
@@ -46,6 +48,11 @@ const playerReducer = (state = initialState, action) => {
       return {
         ...state,
         currTime: action.payload,
+      };
+    case SET_IS_LOADING_SONG:
+      return {
+        ...state,
+        isLoadingSong: action.payload,
       };
     default:
       return state;

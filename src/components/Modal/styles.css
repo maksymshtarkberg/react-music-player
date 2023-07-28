@@ -91,37 +91,6 @@
   cursor: pointer;
 }
 
-.spinner {
-  bottom: -52px;
-  position: absolute;
-  background-image: linear-gradient(
-    135deg,
-    rgba(249, 72, 111, 0) 24.59%,
-    #f9486f 85.31%
-  );
-  width: 35px;
-  height: 35px;
-  animation: spinning82341 1.7s linear infinite;
-  text-align: center;
-  border-radius: 50px;
-  filter: blur(1px);
-  box-shadow: 0px -5px 20px 0px rgb(186, 66, 255),
-    0px 5px 20px 0px rgb(0, 225, 255);
-  margin-left: 127px;
-  display: none;
-}
-
-.spinner1 {
-  background-color: rgb(36, 36, 36);
-  width: 35px;
-  height: 35px;
-  border-radius: 50px;
-  filter: blur(10px);
-}
-.spin-box {
-  position: relative;
-}
-
 .disp-block {
   display: block;
 }

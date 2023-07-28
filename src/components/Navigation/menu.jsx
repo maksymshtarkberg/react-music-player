@@ -15,6 +15,7 @@ import {
   setPlaylistIsOpened,
   setCurrentTrackIndex,
   setSongUrl,
+  setIsLoadingSong,
 } from "../../redux/actions";
 
 import "./menu.css";
@@ -30,6 +31,8 @@ const Menu = ({
   setPlaylistIsOpened,
   setCurrentTrackIndex,
   setSongUrl,
+  setIsLoadingSong,
+  playlistCurrentId,
 }) => {
   const [modalShow, setModalShow] = useState(false);
 
@@ -38,13 +41,15 @@ const Menu = ({
   };
 
   const fetchSongs = async () => {
+    setIsLoadingSong(true);
+    setSongUrl("");
     setPlaylistIsOpened(false);
     setCurrentTrackIndex(0);
     const __URL__ = "http://localhost:1337";
     const { data } = await axios.get(`${__URL__}/api/v1/songs`);
     addTodo(data["songs"]);
     // console.log(data.songs);
-
+    setPlaylistCurrentId("");
     setIsLoaded(true);
   };
 
@@ -61,8 +66,6 @@ const Menu = ({
       fetchPlaylists();
       setPlaylistLoaded(false);
     }
-
-    console.log(playlists);
   }, [playlists, playlistsisLoaded]);
 
   // delete playlist
@@ -84,15 +87,18 @@ const Menu = ({
   };
 
   const handleSetPlaylistOn = (playlist) => {
-    setPlaylistIsOpened(true);
-    setSongUrl(null);
-    if (playlist.songs.length != 0) {
-      addTodo(playlist.songs);
-      setPlaylistCurrentId(playlist._id);
-    } else {
-      addTodo(playlist.songs);
-      setPlaylistCurrentId(playlist._id);
-      setSongUrl(null);
+    if (playlist._id !== playlistCurrentId) {
+      setIsLoadingSong(true);
+      setPlaylistIsOpened(true);
+      setSongUrl("");
+      if (playlist.songs.length != 0) {
+        addTodo(playlist.songs);
+        setPlaylistCurrentId(playlist._id);
+      } else {
+        addTodo(playlist.songs);
+        setPlaylistCurrentId(playlist._id);
+        setSongUrl("");
+      }
     }
   };
 
@@ -147,6 +153,7 @@ const Menu = ({
 const mapStatetoProps = (state) => ({
   playlists: state.playlistReducer.playlists,
   playlistsisLoaded: state.playlistReducer.playlistsisLoaded,
+  playlistCurrentId: state.playlistReducer.playlistCurrentId,
 });
 
 export default connect(mapStatetoProps, {
@@ -158,4 +165,5 @@ export default connect(mapStatetoProps, {
   setPlaylistIsOpened,
   setCurrentTrackIndex,
   setSongUrl,
+  setIsLoadingSong,
 })(Menu);

@@ -10,7 +10,12 @@ import {
   setCurrTime,
   setSeconds,
   setIsPlaying,
+  setSongName,
+  setArtistName,
+  setIsLoadingSong,
 } from "../../redux/actions";
+import Loader from "../Loader/loader";
+
 // #region ------------ ICONS ---------
 import VolumeDownIcon from "@mui/icons-material/VolumeDown";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
@@ -23,10 +28,7 @@ import FastForwardIcon from "@mui/icons-material/FastForward";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import SkipNextIcon from "@mui/icons-material/SkipNext";
 import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
-import { TimelapseRounded } from "@mui/icons-material";
 // #endregion ------------ ICONS ---------
-
-// #endregion ---------------------------------------------------------------
 
 // #region -------- Styled Components -----------------------------------------
 const Div = styled("div")(({ theme }) => ({
@@ -78,6 +80,10 @@ const Player = ({
   songId,
   isLoadedSong,
   isLoaded,
+  setSongName,
+  setArtistName,
+  setIsLoadingSong,
+  isLoadingSong,
 }) => {
   const playlist = [...todosRedux];
   // console.log(playlist.length);
@@ -86,7 +92,6 @@ const Player = ({
 
   const [volume, setVolume] = useState(100);
   const [mute, setMute] = useState(false);
-  const [isLoadingSong, setIsLoadingSong] = useState(false);
 
   useEffect(() => {
     if (isLoaded) {
@@ -101,7 +106,7 @@ const Player = ({
       }
 
       const songIdTrack = playlist[currentTrackIndex]._id;
-      console.log(songIdTrack);
+
       const __URL__ = "http://localhost:1337";
       const URL = `${__URL__}/api/v1/song/${songIdTrack}/file`;
       const { data } = await axios.get(URL, {
@@ -112,6 +117,8 @@ const Player = ({
       const audioUrl = window.URL.createObjectURL(blob);
 
       setSongUrl(audioUrl);
+      setSongName(playlist[currentTrackIndex].title);
+      setArtistName(playlist[currentTrackIndex].artist);
       setIsLoadedSong(true);
       setIsLoadingSong(false);
     } catch (error) {
@@ -220,7 +227,7 @@ const Player = ({
       setIsLoadingSong(true);
       const nextIndex = currentTrackIndex + 1;
       setCurrentTrackIndex(nextIndex % playlist.length);
-      setSongUrl(null);
+      setSongUrl("");
     }
   };
 
@@ -232,7 +239,7 @@ const Player = ({
       if (currentTrackIndex > 0) {
         setCurrentTrackIndex(currentTrackIndex - 1);
       }
-      setSongUrl(null);
+      setSongUrl("");
     }
   };
 
@@ -255,7 +262,7 @@ const Player = ({
   };
 
   const SongOnEnded = () => {
-    setSongUrl(null);
+    setSongUrl("");
     setCurrentTrackIndex(currentTrackIndex + 1);
   };
 
@@ -294,7 +301,14 @@ const Player = ({
       />
 
       <CustomPaper>
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Box
+          sx={{
+            position: "relative",
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
+          {isLoadingSong || songUrl === "" ? <Loader /> : null}
           <Stack
             direction="row"
             spacing={1}
@@ -349,7 +363,6 @@ const Player = ({
                 onClick={togglePlay}
               />
             )}
-
             <FastForwardIcon
               sx={{ color: "lime", "&:hover": { color: "white" } }}
               onClick={toggleForward}
@@ -358,7 +371,30 @@ const Player = ({
               sx={{ color: "lime", "&:hover": { color: "white" } }}
               onClick={toggleSkipForward}
             />
-            <p>{`${songArtist} - ${songName}`}</p>
+
+            {songUrl ? (
+              <div style={{ position: "relative" }}>
+                <p
+                  style={{
+                    position: "absolute",
+                    whiteSpace: "nowrap",
+                    top: "-23px",
+                  }}
+                >{`${songArtist} - ${songName}`}</p>
+              </div>
+            ) : (
+              <div style={{ position: "relative" }}>
+                <p
+                  style={{
+                    position: "absolute",
+                    whiteSpace: "nowrap",
+                    top: "-23px",
+                  }}
+                >
+                  Loading song...
+                </p>
+              </div>
+            )}
           </Stack>
 
           <Stack
@@ -405,6 +441,7 @@ const mapStatetoProps = (state) => ({
   seconds: state.playerReducer.seconds,
   songId: state.songReducer.songId,
   isLoadedSong: state.songReducer.isLoadedSong,
+  isLoadingSong: state.playerReducer.isLoadingSong,
 });
 
 export default connect(mapStatetoProps, {
@@ -415,4 +452,7 @@ export default connect(mapStatetoProps, {
   setCurrTime,
   setSeconds,
   setIsPlaying,
+  setSongName,
+  setArtistName,
+  setIsLoadingSong,
 })(Player);

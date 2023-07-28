@@ -18,6 +18,7 @@ import {
   SET_PLAYLIST_LOADED,
   SET_PLAYLIST_CURRENT_ID,
   SET_PLAYLIST_IS_OPENED,
+  SET_IS_LOADING_SONG,
 } from "./actionTypes";
 
 export const addTodo = (todos) => ({
@@ -106,4 +107,8 @@ export const setPlaylistCurrentId = (playlistCurrentId) => ({
 export const setPlaylistIsOpened = (playlistIsOpened) => ({
   type: SET_PLAYLIST_IS_OPENED,
   payload: playlistIsOpened,
+});
+export const setIsLoadingSong = (isLoadingSong) => ({
+  type: SET_IS_LOADING_SONG,
+  payload: isLoadingSong,
 });

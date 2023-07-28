@@ -84,3 +84,19 @@
 .songCard__chooseplaylist:hover {
   background-color: #e0d4d4;
 }
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.img-animation {
+  animation: fadeIn 0.5s; /* Здесь 1s - это продолжительность анимации, можно изменить по вашему усмотрению */
+}
