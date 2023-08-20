@@ -34,7 +34,6 @@ const Songs = ({
   const fetchSongs = async () => {
     const { data } = await axios.get(`${__URL__}/api/v1/songs`);
     addTodo(data["songs"]);
-    // console.log(data.songs);
 
     setIsLoaded(true);
   };

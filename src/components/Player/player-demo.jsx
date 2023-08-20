@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { styled, Typography, Slider, Paper, Stack, Box } from "@mui/material";
 import { connect } from "react-redux";
 import axios from "axios";
+import * as THREE from "three";
+
 import {
   setIsLoadedSong,
   setSongUrl,
@@ -36,7 +38,6 @@ const Div = styled("div")(({ theme }) => ({
   height: "100%",
   width: "100%",
   paddingTop: theme.spacing(6),
-  paddingBottom: theme.spacing(6),
 }));
 
 const CustomPaper = styled(Paper)(({ theme }) => ({
@@ -84,6 +85,7 @@ const Player = ({
   setArtistName,
   setIsLoadingSong,
   isLoadingSong,
+  canvasRef,
 }) => {
   const playlist = [...todosRedux];
   // console.log(playlist.length);
@@ -92,6 +94,7 @@ const Player = ({
 
   const [volume, setVolume] = useState(100);
   const [mute, setMute] = useState(false);
+  const [analyserConnected, setAnalylerConnected] = useState(false);
 
   useEffect(() => {
     if (isLoaded) {
@@ -130,6 +133,10 @@ const Player = ({
     if (songUrl && !isLoadingSong) {
       audioPlayer.current.src = songUrl;
       audioPlayer.current.load();
+
+      /**
+       * Auto-start playing
+       */
       audioPlayer.current.play();
       setIsPlaying(true);
     }
@@ -177,6 +184,129 @@ const Player = ({
     return () => clearInterval(interval);
   }, [songUrl, currTime, audioPlayer]);
 
+  /**
+   * Visualizer THREE.js
+   */
+
+  useEffect(() => {
+    let audioContext = new window.AudioContext();
+    let analyser = audioContext.createAnalyser();
+    let source;
+
+    const canvasWidth = 1300;
+    const canvasHeight = 300;
+
+    const listener = new THREE.AudioListener();
+    const sound = new THREE.Audio(listener);
+    const canvas = canvasRef.current;
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(
+      75,
+      canvasWidth / canvasHeight,
+      0.1,
+      1000
+    );
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+    const sphereGeometry = new THREE.SphereGeometry(1, 64, 64);
+    const sphereMaterial = new THREE.MeshBasicMaterial({
+      color: 0xffffff, // Белый цвет
+      roughness: 0.0, // Устанавливаем минимальную шероховатость
+      metalness: 1.0, // Устанавливаем максимальную металличность
+      envMap: scene.background, // Используем фон сцены как окружающую карту (для отражений)
+    });
+    const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+    sphere.castShadow = true; // Разрешаем отбрасывание тени
+    sphere.receiveShadow = true;
+    renderer.setSize(canvasWidth, canvasHeight);
+
+    scene.background = new THREE.Color(0x111111);
+    scene.add(camera);
+    scene.add(sphere);
+
+    sphere.position.set(0, 0, 0);
+
+    camera.position.z = 5;
+
+    const wireframe = new THREE.WireframeGeometry(sphereGeometry);
+    const lineMaterial = new THREE.LineBasicMaterial({
+      color: 0x000000, // Цвет линий (сегментов)
+      linewidth: 2,
+    });
+
+    const lineSegments = new THREE.LineSegments(wireframe, lineMaterial);
+    sphere.add(lineSegments);
+
+    const ambientLight = new THREE.AmbientLight(0x808080, 1);
+    scene.add(ambientLight);
+
+    const directionalLight = new THREE.DirectionalLight(0x00ff00, 1);
+    directionalLight.position.set(1, 1, 1);
+    scene.add(directionalLight);
+
+    const pointLight = new THREE.PointLight(0xffffff, 1);
+    camera.add(pointLight);
+    pointLight.position.set(0, 0, 5);
+
+    const light = new THREE.PointLight(0xffffff, 1);
+    light.position.copy(camera.position); // Позиция света совпадает с позицией камеры
+    scene.add(light);
+
+    const connectAudio = () => {
+      source = audioContext.createMediaElementSource(audioPlayer.current);
+      source.connect(analyser);
+      analyser.connect(audioContext.destination);
+      console.log(source);
+    };
+
+    async function loadAudio() {
+      await audioContext.resume();
+    }
+
+    connectAudio();
+
+    // Загрузка аудио и воспроизведение
+    if (songUrl) {
+      const audioLoader = new THREE.AudioLoader();
+      audioLoader.load(songUrl, function (buffer) {
+        sound.setBuffer(buffer);
+
+        // const canvasContext = canvas.getContext("2d");
+
+        // Анимация анализа
+        const animateSphere = () => {
+          requestAnimationFrame(animateSphere);
+
+          if (analyser) {
+            const frequencyData = new Uint8Array(analyser.frequencyBinCount);
+            analyser.getByteFrequencyData(frequencyData);
+
+            const averageFrequency =
+              frequencyData.reduce((a, b) => a + b, 0) / frequencyData.length;
+            const scaleFactor = 1 + averageFrequency / 128; // Масштабируем шар в зависимости от средней частоты
+
+            sphere.scale.set(scaleFactor, scaleFactor, scaleFactor);
+            sphere.rotation.y += 0.005 + averageFrequency / 2000;
+          }
+
+          // Дополнительные анимационные действия с шаром
+
+          renderer.render(scene, camera);
+        };
+
+        animateSphere();
+      });
+    }
+
+    isPlaying && loadAudio();
+
+    // Очистка аудиоконтекста при размонтировании компонента
+    return () => {
+      if (audioContext.state === "running") {
+        audioContext.close();
+      }
+    };
+  }, [songUrl]);
+
   function formatTime(time) {
     if (time && !isNaN(time)) {
       const minutes =
@@ -198,12 +328,15 @@ const Player = ({
       if (!isPlaying) {
         audioPlayer.current.play();
         setIsPlaying(true);
+        setAnalylerConnected(true);
       } else {
         audioPlayer.current.pause();
         setIsPlaying(false);
+        setAnalylerConnected(false);
       }
     }
   };
+
   const toggleForward = () => {
     if (audioPlayer.current) {
       audioPlayer.current.pause();
@@ -223,18 +356,18 @@ const Player = ({
   const toggleSkipForward = async () => {
     if (!isLoadingSong) {
       await audioPlayer.current.pause();
-      setIsPlaying(false);
+      setSongUrl("");
       setIsLoadingSong(true);
       const nextIndex = currentTrackIndex + 1;
       setCurrentTrackIndex(nextIndex % playlist.length);
-      setSongUrl("");
+      setIsPlaying(true);
     }
   };
 
   const toggleSkipBackward = async () => {
     if (!isLoadingSong) {
       await audioPlayer.current.pause();
-      setIsPlaying(false);
+      setIsPlaying(true);
       setIsLoadingSong(true);
       if (currentTrackIndex > 0) {
         setCurrentTrackIndex(currentTrackIndex - 1);
@@ -299,7 +432,6 @@ const Player = ({
         muted={mute}
         onEnded={SongOnEnded}
       />
-
       <CustomPaper>
         <Box
           sx={{

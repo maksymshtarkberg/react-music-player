@@ -87,6 +87,7 @@ const Menu = ({
   };
 
   const handleSetPlaylistOn = (playlist) => {
+    setCurrentTrackIndex(0);
     if (playlist._id !== playlistCurrentId) {
       setIsLoadingSong(true);
       setPlaylistIsOpened(true);
