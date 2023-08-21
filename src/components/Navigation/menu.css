@@ -6,8 +6,12 @@
 
 .menu li {
   list-style: none;
-  color: #424241;
+  color: #fff;
   margin-top: 11px;
+}
+
+.menu li:hover {
+  color: #212228;
 }
 
 .menu p {
@@ -83,6 +87,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  align-self: center;
   background-image: url(../../assets/playlists-icon.svg);
   background-repeat: no-repeat;
   background-position: left center;
@@ -91,11 +96,18 @@
   margin-top: 5px;
   border-radius: 12px;
   border: 1px solid #000;
-  background-color: #c8c8c8;
+  background: radial-gradient(
+    151.92% 127.02% at 15.32% 21.04%,
+    rgba(165, 239, 255, 0.2) 0%,
+    rgba(244, 253, 255, 0.18) 38.88%,
+    rgba(193, 230, 255, 0.1) 78.35%,
+    rgba(70, 144, 212, 0) 100%
+  );
   transition: background-color 0.2s;
 }
 
 .menu__playlist li:hover {
   transition-delay: 0.1s;
-  background-color: #f5efef;
+  background: linear-gradient(106deg, #485972 0%, #212228 100%);
+  border-radius: 12px;
 }

@@ -45,6 +45,7 @@
 
 .upload-songs__insert::placeholder {
   text-align: center;
+  color: hsl(220, 50%, 90%);
 }
 
 .upload-songs__insert:focus {

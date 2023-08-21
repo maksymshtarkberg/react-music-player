@@ -45,7 +45,10 @@ const AudioDownloader = ({ songIdTrack, fileName }) => {
         transition: "opacity 0.3s ease-in-out, background-color 0.2s",
         opacity: isDownloading ? 0.5 : hover ? 0.8 : 1,
         backgroundColor: hover ? "#C8C8C8" : "transparent",
-        borderRadius: 10,
+        marginRight: "10px",
+        paddingBottom: "5px",
+        paddingTop: "5px",
+        borderRadius: 6,
       }}
       onClick={(event) => !isDownloading && downloadAudio(event)}
       onMouseEnter={() => setHover(true)}

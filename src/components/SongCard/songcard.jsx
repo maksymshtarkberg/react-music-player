@@ -30,24 +30,18 @@ import "./styles.css";
 
 const SongCard = ({
   songIdCur,
-  songId,
   title,
   artistName,
   album,
-  songSrc,
   file,
   setSongUrl,
   setSongName,
   setArtistName,
   setAlbumName,
-  setIsLoadedSong,
-  isLoadedSong,
   currentTrackIndex,
   setCurrentTrackIndex,
   trackIndex,
   setSongId,
-  todosRedux,
-  setIsLoaded,
   playlists,
   playlistCurrentId,
   playlistIsOpened,
@@ -57,11 +51,15 @@ const SongCard = ({
   setIsLoadingSong,
   isPlaying,
   isLoadingSong,
+  setIsPlaying,
 }) => {
   const [playlistOpen, setPlaylistOpen] = useState(false);
   const [songDeleteRenderind, setSongDeleteRenderind] = useState(false);
   const [showPlayingImage, setShowPlayingImage] = useState(false);
 
+  /**
+   * Playing the song by click on song in the tracklist
+   */
   const handlePlay = async () => {
     setCurrentTrackIndex(trackIndex);
     setIsLoadingSong(true);
@@ -70,8 +68,12 @@ const SongCard = ({
     setArtistName(artistName);
     setAlbumName(album);
     setSongId(songIdCur);
+    setIsPlaying(true);
   };
 
+  /**
+   * Adding song to playlist only by one time
+   */
   const handleAddToPlaylist = (event) => {
     event.stopPropagation();
 
@@ -165,7 +167,7 @@ const SongCard = ({
       const { data, status } = await axios.delete(
         `${__URL__}/api/v1/song/delete/${songIdCur}?file=${file}`
       );
-      if (status == 200) {
+      if (status === 200) {
         setSongDeleteRenderind(true);
         alert("Song removed from the player");
         onSongDelete();
@@ -174,6 +176,9 @@ const SongCard = ({
     setSongDeleteRenderind(false);
   };
 
+  /**
+   * Turning on gif amimation when song is playing
+   */
   useEffect(() => {
     if (!isLoadingSong && isPlaying && currentTrackIndex === trackIndex) {
       setShowPlayingImage(true);

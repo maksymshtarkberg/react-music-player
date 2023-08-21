@@ -1,4 +1,9 @@
 .container {
   display: flex;
   height: 100vh;
+  background: linear-gradient(to right, hsl(210, 30%, 20%), hsl(255, 30%, 25%));
+}
+
+.MuiSvgIcon-root {
+  color: #fff;
 }

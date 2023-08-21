@@ -9,7 +9,10 @@ const MainPlayer = () => {
   return (
     <div className="main-player">
       <div style={{ width: "100%", height: "100%" }}>
-        <canvas ref={canvasRef} style={{ width: "100%", height: "100%" }} />
+        <canvas
+          ref={canvasRef}
+          style={{ width: "100%", height: "100%", borderRadius: 12 }}
+        />
       </div>
 
       <Songs />

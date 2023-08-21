@@ -4,7 +4,7 @@
   cursor: pointer;
   border-radius: 10px;
   transition: background-color 0.1s;
-  background-color: transparent;
+  background: linear-gradient(106deg, #485972 0%, #212228 100%);
 }
 .songCard img {
   border-radius: 10px;
@@ -16,13 +16,19 @@
 
 .songCard:hover {
   transition-delay: 0.1s;
-  background-color: #b7b0b0;
+  background: linear-gradient(106deg, #686d74 0%, #494a4f 100%);
 }
 
 .songCard_selected {
   height: 60px;
   display: flex;
-  background-color: #d9d4d4;
+  background: radial-gradient(
+    151.92% 127.02% at 15.32% 21.04%,
+    rgba(165, 239, 255, 0.2) 0%,
+    rgba(244, 253, 255, 0.18) 38.88%,
+    rgba(193, 230, 255, 0.1) 78.35%,
+    rgba(70, 144, 212, 0) 100%
+  );
   cursor: pointer;
   border-radius: 10px;
   transition: background-color 0.1s;
@@ -30,7 +36,7 @@
 
 .songCard_selected:hover {
   transition-delay: 0.1s;
-  background-color: #b7b0b0;
+  background: linear-gradient(106deg, #686d74 0%, #494a4f 100%);
 }
 
 .songCard__addtoplaylist ul {
@@ -75,8 +81,8 @@
 
 .songCard__chooseplaylist {
   border-radius: 24px;
-  border: 1px solid var(--color-primary, #1bf869);
-  background: #ccc2c2;
+  border: 1px solid;
+  background: linear-gradient(106deg, #485972 0%, #212228 100%);
   padding: 4px 12px;
   margin-bottom: 5px;
 }

@@ -1,11 +1,18 @@
+.css-5jnrm8-MuiStack-root > :not(style) + :not(style) {
+  margin-left: auto !important;
+}
+
 .loader {
-  position: absolute;
-  height: 0;
-  left: 450px;
+  /* position: absolute; */
+  display: flex;
+  padding-right: 20px;
+  padding-top: 10px;
+  width: 35px;
+  height: 35px;
 }
 
 .loader-svg {
-  position: absolute;
+  position: relative;
   color: #00ff00;
   -webkit-transform-origin: center;
   -ms-transform-origin: center;

@@ -37,7 +37,9 @@ const Div = styled("div")(({ theme }) => ({
   backgroundColor: "grey",
   height: "100%",
   width: "100%",
-  paddingTop: theme.spacing(6),
+  paddingTop: theme.spacing(3),
+  paddingBottom: theme.spacing(3),
+  borderRadius: 12,
 }));
 
 const CustomPaper = styled(Paper)(({ theme }) => ({
@@ -78,8 +80,6 @@ const Player = ({
   currTime,
   setSeconds,
   seconds,
-  songId,
-  isLoadedSong,
   isLoaded,
   setSongName,
   setArtistName,
@@ -94,8 +94,10 @@ const Player = ({
 
   const [volume, setVolume] = useState(100);
   const [mute, setMute] = useState(false);
-  const [analyserConnected, setAnalylerConnected] = useState(false);
 
+  /**
+   * Fetching current song by current track index
+   */
   useEffect(() => {
     if (isLoaded) {
       fetchSong();
@@ -129,19 +131,27 @@ const Player = ({
     }
   };
 
+  /**
+   * Set song file to audioRef of component
+   */
   useEffect(() => {
     if (songUrl && !isLoadingSong) {
       audioPlayer.current.src = songUrl;
       audioPlayer.current.load();
 
       /**
-       * Auto-start playing
+       * Auto-start playing when select song
        */
-      audioPlayer.current.play();
-      setIsPlaying(true);
+      if (isPlaying) {
+        audioPlayer.current.play();
+        setIsPlaying(true);
+      }
     }
   }, [songUrl, currentTrackIndex, isLoadingSong]);
 
+  /**
+   * Calculating the time of current song(duration and updating it when song is playing)
+   */
   useEffect(() => {
     const handleLoadedMetadata = () => {
       const sec = audioPlayer.current.duration;
@@ -189,11 +199,11 @@ const Player = ({
    */
 
   useEffect(() => {
-    let audioContext = new window.AudioContext();
-    let analyser = audioContext.createAnalyser();
+    let audioContext;
+    let analyser;
     let source;
 
-    const canvasWidth = 1300;
+    const canvasWidth = 1307;
     const canvasHeight = 300;
 
     const listener = new THREE.AudioListener();
@@ -209,52 +219,36 @@ const Player = ({
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
     const sphereGeometry = new THREE.SphereGeometry(1, 64, 64);
     const sphereMaterial = new THREE.MeshBasicMaterial({
-      color: 0xffffff, // Белый цвет
-      roughness: 0.0, // Устанавливаем минимальную шероховатость
-      metalness: 1.0, // Устанавливаем максимальную металличность
-      envMap: scene.background, // Используем фон сцены как окружающую карту (для отражений)
+      color: 0xffffff, // white color
+      envMap: scene.background, // using the scene's background as an environment map (for reflections)
     });
     const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-    sphere.castShadow = true; // Разрешаем отбрасывание тени
+    sphere.castShadow = true; // apply swadows
     sphere.receiveShadow = true;
     renderer.setSize(canvasWidth, canvasHeight);
 
-    scene.background = new THREE.Color(0x111111);
+    scene.background = new THREE.Color(0x000000);
     scene.add(camera);
     scene.add(sphere);
 
-    sphere.position.set(0, 0, 0);
+    // sphere.position.set(0, 0, 0);
 
-    camera.position.z = 5;
+    camera.position.z = 4;
 
     const wireframe = new THREE.WireframeGeometry(sphereGeometry);
     const lineMaterial = new THREE.LineBasicMaterial({
-      color: 0x000000, // Цвет линий (сегментов)
-      linewidth: 2,
+      color: 0x000000, // color of lines (segments)
+      linewidth: 50,
     });
 
     const lineSegments = new THREE.LineSegments(wireframe, lineMaterial);
     sphere.add(lineSegments);
 
-    const ambientLight = new THREE.AmbientLight(0x808080, 1);
-    scene.add(ambientLight);
-
-    const directionalLight = new THREE.DirectionalLight(0x00ff00, 1);
-    directionalLight.position.set(1, 1, 1);
-    scene.add(directionalLight);
-
-    const pointLight = new THREE.PointLight(0xffffff, 1);
-    camera.add(pointLight);
-    pointLight.position.set(0, 0, 5);
-
-    const light = new THREE.PointLight(0xffffff, 1);
-    light.position.copy(camera.position); // Позиция света совпадает с позицией камеры
-    scene.add(light);
-
-    const connectAudio = () => {
+    const connectAudio = async () => {
       source = audioContext.createMediaElementSource(audioPlayer.current);
       source.connect(analyser);
       analyser.connect(audioContext.destination);
+
       console.log(source);
     };
 
@@ -262,17 +256,17 @@ const Player = ({
       await audioContext.resume();
     }
 
-    connectAudio();
-
-    // Загрузка аудио и воспроизведение
+    // Loading and playback of audio
     if (songUrl) {
       const audioLoader = new THREE.AudioLoader();
       audioLoader.load(songUrl, function (buffer) {
         sound.setBuffer(buffer);
 
-        // const canvasContext = canvas.getContext("2d");
+        audioContext = new window.AudioContext();
+        analyser = audioContext.createAnalyser();
+        connectAudio();
 
-        // Анимация анализа
+        // Animation of analyser
         const animateSphere = () => {
           requestAnimationFrame(animateSphere);
 
@@ -282,13 +276,13 @@ const Player = ({
 
             const averageFrequency =
               frequencyData.reduce((a, b) => a + b, 0) / frequencyData.length;
-            const scaleFactor = 1 + averageFrequency / 128; // Масштабируем шар в зависимости от средней частоты
+            const scaleFactor = 1 + averageFrequency / 256; // Масштабируем шар в зависимости от средней частоты
 
             sphere.scale.set(scaleFactor, scaleFactor, scaleFactor);
-            sphere.rotation.y += 0.005 + averageFrequency / 2000;
+            sphere.rotation.y += 0.003 + averageFrequency / 500;
           }
 
-          // Дополнительные анимационные действия с шаром
+          // Zone to add animation with sphere
 
           renderer.render(scene, camera);
         };
@@ -299,14 +293,17 @@ const Player = ({
 
     isPlaying && loadAudio();
 
-    // Очистка аудиоконтекста при размонтировании компонента
+    // Clearing the audio context upon component unmounting
     return () => {
-      if (audioContext.state === "running") {
+      if (audioContext && audioContext.state === "running") {
         audioContext.close();
       }
     };
   }, [songUrl]);
 
+  /**
+   * Creating a time format
+   */
   function formatTime(time) {
     if (time && !isNaN(time)) {
       const minutes =
@@ -323,16 +320,17 @@ const Player = ({
     return "00:00";
   }
 
+  /**
+   * Audio controls of playing
+   */
   const togglePlay = () => {
     if (audioPlayer.current) {
       if (!isPlaying) {
-        audioPlayer.current.play();
+        audioPlayer.current.readyState === 4 && audioPlayer.current.play();
         setIsPlaying(true);
-        setAnalylerConnected(true);
       } else {
         audioPlayer.current.pause();
         setIsPlaying(false);
-        setAnalylerConnected(false);
       }
     }
   };
@@ -437,10 +435,9 @@ const Player = ({
           sx={{
             position: "relative",
             display: "flex",
-            justifyContent: "space-between",
+            justifyContent: "flex-start",
           }}
         >
-          {isLoadingSong || songUrl === "" ? <Loader /> : null}
           <Stack
             direction="row"
             spacing={1}
@@ -481,8 +478,9 @@ const Player = ({
               sx={{ color: "lime", "&:hover": { color: "white" } }}
               onClick={toggleBackward}
             />
-
-            {!isPlaying ? (
+            {isLoadingSong || songUrl === "" ? (
+              <Loader />
+            ) : !isPlaying ? (
               <PlayArrowIcon
                 fontSize={"large"}
                 sx={{ color: "lime", "&:hover": { color: "white" } }}
@@ -495,6 +493,7 @@ const Player = ({
                 onClick={togglePlay}
               />
             )}
+
             <FastForwardIcon
               sx={{ color: "lime", "&:hover": { color: "white" } }}
               onClick={toggleForward}

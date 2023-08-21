@@ -26,6 +26,7 @@ const Menu = ({
   playlists,
   playlistsisLoaded,
   addTodo,
+  todosRedux,
   setIsLoaded,
   setPlaylistCurrentId,
   setPlaylistIsOpened,
@@ -48,7 +49,6 @@ const Menu = ({
     const __URL__ = "http://localhost:1337";
     const { data } = await axios.get(`${__URL__}/api/v1/songs`);
     addTodo(data["songs"]);
-    // console.log(data.songs);
     setPlaylistCurrentId("");
     setIsLoaded(true);
   };
@@ -56,13 +56,13 @@ const Menu = ({
   const fetchPlaylists = async () => {
     const __URL__ = "http://localhost:1337";
     const { data } = await axios.get(`${__URL__}/api/v1/playlist`);
-    // setPlaylists(data["playlists"]);
+
     setPlaylist(data["playlists"]);
     setPlaylistLoaded(true);
   };
 
   useEffect(() => {
-    if (playlists && playlists.length == 0) {
+    if (playlists && playlists.length === 0) {
       fetchPlaylists();
       setPlaylistLoaded(false);
     }
@@ -92,7 +92,7 @@ const Menu = ({
       setIsLoadingSong(true);
       setPlaylistIsOpened(true);
       setSongUrl("");
-      if (playlist.songs.length != 0) {
+      if (playlist.songs.length !== 0) {
         addTodo(playlist.songs);
         setPlaylistCurrentId(playlist._id);
       } else {
@@ -101,6 +101,20 @@ const Menu = ({
         setSongUrl("");
       }
     }
+  };
+
+  const sortBySongName = () => {
+    const songs = [...todosRedux].sort((song1, song2) =>
+      song1.title.localeCompare(song2.title)
+    );
+    addTodo(songs);
+  };
+
+  const sortByArtist = () => {
+    const artists = [...todosRedux].sort((song1, song2) =>
+      song1.artist.localeCompare(song2.artist)
+    );
+    addTodo(artists);
   };
 
   return (
@@ -117,9 +131,11 @@ const Menu = ({
       </ul>
       <ul className="menu__media">
         <p>Media</p>
-        <li>Songs</li>
-        <li>Last added</li>
-        <li>Artists</li>
+        <li onClick={sortBySongName}>Songs</li>
+        {/* <li>Last added</li> Need to connect Upload file date with
+        comparing of tracklist songs or added date of file on params in
+        uploading route on backend */}
+        <li onClick={sortByArtist}>Artists</li>
       </ul>
       <PlaylistModal />
       <ul className="menu__playlist">
@@ -152,6 +168,7 @@ const Menu = ({
 };
 
 const mapStatetoProps = (state) => ({
+  todosRedux: state.todos.todos,
   playlists: state.playlistReducer.playlists,
   playlistsisLoaded: state.playlistReducer.playlistsisLoaded,
   playlistCurrentId: state.playlistReducer.playlistCurrentId,

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
 
 import SongCard from "../components/SongCard/songcard";
@@ -17,14 +17,12 @@ const Songs = ({
   addTodo,
   todosRedux,
   setIsLoaded,
-  setPlaylist,
   setPlaylistLoaded,
-  isLoaded,
-  currentTrackIndex,
-  songId,
-  setSongId,
   playlistCurrentId,
 }) => {
+  /**
+   * Receiving data of songs and playlists
+   */
   const __URL__ = "http://localhost:1337";
 
   useEffect(() => {
