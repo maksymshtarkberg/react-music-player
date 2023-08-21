@@ -5,3 +5,19 @@
   margin-top: auto;
   margin-right: 40px;
 }
+
+.tracklist__title {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  margin-left: 227px;
+  justify-items: center;
+}
+
+.tracklist__title p {
+  background: linear-gradient(106deg, #bc8c46 0%, #ffde76 100%);
+  -webkit-background-clip: text; /* Применение градиента к тексту */
+  background-clip: text;
+  color: transparent; /* Делаем текст прозрачным, чтобы показать градиент */
+  font-family: Titillium Web;
+  font-size: 20px;
+}

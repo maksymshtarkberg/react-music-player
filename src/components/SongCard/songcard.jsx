@@ -222,7 +222,7 @@ const SongCard = ({
           <PlaylistAddIcon />
         </button>
         {playlistOpen && (
-          <ul>
+          <ul className="songCard__addtoplaylist-item">
             {playlists ? (
               playlists.map((playlist) => (
                 <li
@@ -240,26 +240,32 @@ const SongCard = ({
             )}
           </ul>
         )}
-        <IconButton
-          sx={{ marginRight: 2 }}
-          onClick={(event) =>
-            handleDeletePlaylistSong(
-              event,
-              file,
-              songIdCur,
-              playlistCurrentId,
-              title
-            )
-          }
-          aria-label="delete"
-        >
-          <DeleteIcon />
-        </IconButton>
-        <AudioDownloader
-          songIdTrack={songIdCur}
-          fileName={`${artistName} - ${title}`}
-        />
       </div>
+
+      <IconButton
+        sx={{
+          marginLeft: 10,
+          width: "28px",
+          height: "28px",
+          alignSelf: "center",
+        }}
+        onClick={(event) =>
+          handleDeletePlaylistSong(
+            event,
+            file,
+            songIdCur,
+            playlistCurrentId,
+            title
+          )
+        }
+        aria-label="delete"
+      >
+        <DeleteIcon />
+      </IconButton>
+      <AudioDownloader
+        songIdTrack={songIdCur}
+        fileName={`${artistName} - ${title}`}
+      />
     </div>
   );
 };

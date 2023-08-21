@@ -41,6 +41,8 @@ const AudioDownloader = ({ songIdTrack, fileName }) => {
       style={{
         display: "inline-flex",
         alignItems: "center",
+        alignSelf: "center",
+        justifyContent: "center",
         cursor: "pointer",
         transition: "opacity 0.3s ease-in-out, background-color 0.2s",
         opacity: isDownloading ? 0.5 : hover ? 0.8 : 1,

@@ -37,8 +37,8 @@ const Div = styled("div")(({ theme }) => ({
   backgroundColor: "grey",
   height: "100%",
   width: "100%",
-  paddingTop: theme.spacing(3),
-  paddingBottom: theme.spacing(3),
+  paddingTop: theme.spacing(2),
+  paddingBottom: theme.spacing(1),
   borderRadius: 12,
 }));
 

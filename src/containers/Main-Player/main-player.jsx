@@ -14,7 +14,12 @@ const MainPlayer = () => {
           style={{ width: "100%", height: "100%", borderRadius: 12 }}
         />
       </div>
-
+      <div className="tracklist__title">
+        <p>Name of song</p>
+        <p>Artist</p>
+        <p>Add song to playlist</p>
+        <p>Delete song</p>
+      </div>
       <Songs />
       <Player canvasRef={canvasRef} />
     </div>
