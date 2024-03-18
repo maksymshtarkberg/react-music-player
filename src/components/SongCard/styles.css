@@ -1,52 +1,61 @@
-.songCard {
-  height: 60px;
-  cursor: pointer;
-  border-radius: 10px;
-  transition: background-color 0.1s;
-  background: linear-gradient(106deg, #485972 0%, #212228 100%);
+.song {
   display: grid;
-  grid-template-columns: repeat(6, minmax(200px, 1fr));
-  gap: 10px;
-}
-.songCard img {
-  border-radius: 10px;
+  grid-template-columns: 26% auto 45%;
+  align-items: center;
+  margin-bottom: 16px;
 }
 
-.songCard_selected img {
-  border-radius: 10px;
+.song-img {
+  position: relative;
+  width: 60px;
+  border-radius: 6px;
 }
 
-.songCard:hover {
-  transition-delay: 0.1s;
-  background: radial-gradient(
-    151.92% 127.02% at 15.32% 21.04%,
-    rgba(165, 239, 255, 0.2) 0%,
-    rgba(244, 253, 255, 0.18) 38.88%,
-    rgba(193, 230, 255, 0.1) 78.35%,
-    rgba(70, 144, 212, 0) 100%
-  );
+.song-img img {
+  aspect-ratio: 4/3;
+  border-radius: inherit;
+  object-fit: cover;
+  border: 2px solid rgba(159, 160, 168, 0.5);
+  box-shadow: rgba(221, 221, 221, 0.3) 0px 6px 18px -3px,
+    rgba(221, 221, 221, 0.2) 0px -3px 0px inset;
 }
 
-.songCard_selected {
-  display: grid;
-  grid-template-columns: repeat(6, minmax(200px, 1fr));
-  gap: 10px;
-  height: 60px;
-  background: radial-gradient(
-    151.92% 127.02% at 15.32% 21.04%,
-    rgba(165, 239, 255, 0.2) 0%,
-    rgba(244, 253, 255, 0.18) 38.88%,
-    rgba(193, 230, 255, 0.1) 78.35%,
-    rgba(70, 144, 212, 0) 100%
-  );
+.song-img .overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 92%;
+  background-color: rgba(169, 150, 253, 0.6);
+  border-radius: inherit;
+  font-size: 1.75rem;
+  opacity: 0;
+  transition: all 0.4s linear;
   cursor: pointer;
-  border-radius: 10px;
-  transition: background-color 0.1s;
 }
 
-.songCard_selected:hover {
-  transition-delay: 0.1s;
-  background: linear-gradient(106deg, #686d74 0%, #494a4f 100%);
+.song-img:hover .overlay {
+  opacity: 1;
+}
+
+.song h2 {
+  font-size: 1rem;
+}
+
+.song p,
+.song span {
+  font-size: 0.8rem;
+  font-weight: 300;
+}
+
+.song p {
+  opacity: 0.8;
+}
+
+.song-actions {
+  display: flex;
 }
 
 .songCard__addtoplaylist-item {
@@ -80,16 +89,6 @@
   margin: 0 auto;
 }
 
-.songCard__artist {
-  margin: 0 auto;
-  align-self: center;
-}
-
-.songCard__title {
-  align-self: center;
-  margin-left: 30px;
-}
-
 .songCard__chooseplaylist {
   border-radius: 24px;
   border: 1px solid;
@@ -100,6 +99,13 @@
 
 .songCard__chooseplaylist:hover {
   background-color: #e0d4d4;
+}
+
+.song-delete {
+  margin: 0 auto;
+  width: "28px";
+  height: "28px";
+  align-self: "center";
 }
 
 @keyframes fadeInOut {
@@ -115,5 +121,5 @@
 }
 
 .img-animation {
-  animation: fadeIn 0.5s; /* Здесь 1s - это продолжительность анимации, можно изменить по вашему усмотрению */
+  animation: fadeIn 0.5s;
 }

@@ -19,6 +19,9 @@ import {
   SET_PLAYLIST_CURRENT_ID,
   SET_PLAYLIST_IS_OPENED,
   SET_IS_LOADING_SONG,
+  SET_USER_NAME,
+  SET_USER_EMAIL,
+  SET_USER_SESSION_ID,
 } from "./actionTypes";
 
 export const addTodo = (todos) => ({
@@ -111,4 +114,16 @@ export const setPlaylistIsOpened = (playlistIsOpened) => ({
 export const setIsLoadingSong = (isLoadingSong) => ({
   type: SET_IS_LOADING_SONG,
   payload: isLoadingSong,
+});
+export const setUserName = (userName) => ({
+  type: SET_USER_NAME,
+  payload: userName,
+});
+export const setUserEmail = (email) => ({
+  type: SET_USER_EMAIL,
+  payload: email,
+});
+export const setUserSession = (sessionId) => ({
+  type: SET_USER_SESSION_ID,
+  payload: sessionId,
 });

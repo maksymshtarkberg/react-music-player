@@ -1,6 +1,6 @@
 import conn from "../config/db.js";
 import fs from "fs";
-import mongodb from "mongodb";
+import mongodb, { ObjectId } from "mongodb";
 import path from "path";
 import sendSeekable from "send-seekable";
 
@@ -27,37 +27,57 @@ export const addSong = async (req, res) => {
     });
 
     // uploading the file to the database
-    const readStream = fs
-      .createReadStream(req.file.path)
-      .pipe(bucket.openUploadStream(req.file.filename));
+    const songReadStream = fs.createReadStream(req.files['songFile'][0].path, { encoding: 'utf-8' });
+    const songUploadStream = bucket.openUploadStream(req.files['songFile'][0].filename, { encoding: 'utf-8' });
+    songReadStream.pipe(songUploadStream);
 
     // if there is an error throw an error
-    readStream.on("error", (error) => {
+    songUploadStream.on("error", (error) => {
       throw error;
     });
 
     // if the file is uploaded successfully delete the file from the uploads folder
     // and insert the song data to the database
-    readStream.on("finish", async () => {
-      console.log("finished");
-      const song = await collection.insertOne({
-        title,
-        artist,
-        album,
-        description,
-        uploadedBy: req.userId,
-        song: req.file.filename,
-        file: readStream.id,
+    songUploadStream.on("finish", async () => {
+      console.log("Song uploaded successfully");
+
+      const albumCoverReadStream = fs.createReadStream(req.files['albumCover'][0].path);
+      const albumCoverUploadStream = bucket.openUploadStream(req.files['albumCover'][0].filename);
+      albumCoverReadStream.pipe(albumCoverUploadStream);
+
+      albumCoverUploadStream.on("error", (error) => {
+        throw error;
       });
 
-      if (song) {
-        res
-          .status(201)
-          .json({ message: "Song added successfully", status: "success" });
-      } else {
-        res.status(400);
-        throw new Error("Invalid song data");
-      }
+      albumCoverUploadStream.on("finish", async () => {
+        console.log("Album cover uploaded successfully");
+
+
+        const song = await collection.insertOne({
+          title,
+          artist,
+          album,
+          description,
+          uploadedBy: req.userId,
+          song: req.files['songFile'][0],
+          albumcover: req.files['albumCover'][0],
+          file: songUploadStream.id,
+          coverfile: albumCoverUploadStream.id,
+        });
+
+        if (song) {
+          res
+            .status(201)
+            .json({ message: "Song added successfully", status: "success" });
+        } else {
+          res.status(400);
+          throw new Error("Invalid song data");
+        }
+      })
+
+      
+
+      
     });
   } catch (error) {
     console.log(error);
@@ -133,7 +153,7 @@ export const getSongs = async (req, res) => {
 };
 
 // @desc: Get a song
-// @route : GET /api/v1/song/:filename
+// @route : GET /api/v1/:filename/song
 // @access  Public
 export const getSongFile = async (req, res) => {
   try {
@@ -212,7 +232,7 @@ export const getSongByIndex = async (req, res) => {
       throw new Error("No index provided");
     }
     const songs = await collection.find({}).toArray();
-    console.log(songs);
+    // console.log(songs);
     if (songs.length === 0 || songs.length <= index) {
       res.status(404);
       throw new Error("Song not found");
@@ -226,12 +246,47 @@ export const getSongByIndex = async (req, res) => {
 
     const downloadStream = bucket.openDownloadStream(song.file);
 
+    
     res.set("Content-Type", "audio/mp3");
     // res.set("Accept-Ranges", "bytes");
 
     sendSeekable(req, res, () => {
       downloadStream.pipe(res);
     });
+  } catch (error) {
+    console.log(error);
+    return res.json({ error: error.message, status: "error" });
+  }
+};
+
+// @desc: Get a songfile by Array index
+// @route : GET /api/v1/song/:index/cover
+// @access  Public
+export const albumCover = async (req, res) => {
+  try {
+    const db = conn.db("music_streaming");
+    const collection = db.collection("songs");
+    const { id } = req.params;
+    if (!id) {
+      res.status(400);
+      throw new Error("No id provided");
+    }
+
+    const song = await collection.findOne({  coverfile: new mongodb.ObjectId(id)  });
+
+    if (!song) {
+      res.status(404);
+      throw new Error("Song not found");
+    }
+    const bucket = new mongodb.GridFSBucket(db, {
+      bucketName: "uploads",
+    });
+    const downloadStream = bucket.openDownloadStream(song.coverfile);
+
+    res.set("Content-Type", "image/jpeg")
+
+    downloadStream.pipe(res);
+
   } catch (error) {
     console.log(error);
     return res.json({ error: error.message, status: "error" });

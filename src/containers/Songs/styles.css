@@ -1,0 +1,22 @@
+.componentPlaylist h1 {
+  margin-bottom: 24px;
+}
+
+.song-container {
+  align-items: center;
+}
+
+.componentPlaylist::-webkit-scrollbar {
+  width: 8px;
+}
+.componentPlaylist::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  background-color: #888;
+}
+.componentPlaylist::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+  border-radius: 5px;
+}
+.componentPlaylist::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+}

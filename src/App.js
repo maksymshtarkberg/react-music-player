@@ -2,13 +2,18 @@
 import MainPlayer from "./containers/Main-Player/main-player";
 import Menu from "./components/Navigation/menu";
 import "./App.css";
+import Content from "./containers/Content/content";
 
 function App() {
+
   return (
-    <div className="container">
+    <main>
       <Menu />
-      <MainPlayer />
-    </div>
+      <section className="content">
+        <Content/>
+        <MainPlayer/>
+      </section>
+    </main>
   );
 }
 

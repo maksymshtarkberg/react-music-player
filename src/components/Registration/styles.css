@@ -1,0 +1,148 @@
+.reg-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(200, 200, 224, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.reg-title {
+  font-size: 1.6rem;
+  color: #e0e8ef;
+  text-align: center;
+  padding: 20px 40px 0;
+}
+
+/* FORM  */
+.reg-form {
+  padding: 30px 40px;
+}
+
+.reg-label {
+  display: inline-block;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #e0e8ef;
+  margin-bottom: 8px;
+}
+
+.reg-input {
+  width: 100%;
+  background: transparent;
+  color: #e0e8efb8;
+  font-size: 0.8rem;
+  font-weight: 500;
+  outline: 2px solid #a2b7d3;
+  border-radius: 4px;
+  border: 0;
+  padding: 10px;
+  margin-bottom: 5px;
+  transition: all 0.2s;
+}
+
+.reg-input:focus {
+  outline: 3px dotted #e0e8ef;
+}
+
+.reg-input:-webkit-autofill,
+.reg-input:-webkit-autofill:hover,
+.reg-input:-webkit-autofill:focus,
+.reg-input:-webkit-autofill:active {
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: #e0e8ef;
+}
+
+.input-control.success input {
+  outline: 3px dotted #2ecc71;
+}
+
+.input-control.error input {
+  outline: 3px dotted #b02546;
+}
+
+.input-control {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.input-control i {
+  position: absolute;
+  top: 40px;
+  right: 10px;
+  visibility: hidden;
+}
+
+.input-control.success i.fa-check-circle {
+  color: #2ecc71;
+  visibility: visible;
+}
+
+.input-control.error i.fa-exclamation-circle {
+  color: #b02546;
+  visibility: visible;
+}
+
+.input-control small {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  font-weight: 800;
+  visibility: hidden;
+}
+
+.input-control.error small {
+  color: #b02546;
+  visibility: visible;
+}
+
+.reg-button {
+  width: 100%;
+  background: rgba(200, 187, 255, 0.6);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-align: center;
+  text-transform: uppercase;
+  padding: 16px;
+  margin-top: 10px;
+  border-radius: 5px;
+  border: 0;
+  cursor: pointer;
+  transition: all 0.4s linear;
+}
+
+.reg-button:hover {
+  background: #68496b;
+}
+
+/* SHOW MESSAGE AFTER SUBMITTING  */
+
+.message {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #e0e8ef;
+  text-align: center;
+  text-transform: uppercase;
+  padding: 50px 30px;
+  animation: fade-in 1.5s ease-in-out forwards alternate;
+}
+
+.hidden {
+  display: none;
+}
+
+@keyframes fade-in {
+  from {
+    transform: rotate(0deg) scale(0) skew(0deg) translateY(30px);
+  }
+  to {
+    transform: rotate(0deg) scale(1) skew(0deg) translateY(0);
+  }
+}

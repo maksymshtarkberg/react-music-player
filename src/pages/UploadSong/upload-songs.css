@@ -1,0 +1,78 @@
+.upload-songs {
+  display: flex;
+  flex-direction: column;
+}
+
+.upload-songs__head {
+  font-family: Titillium Web;
+  font-size: 34px;
+  font-weight: 400;
+  line-height: 41px;
+  letter-spacing: 0px;
+  text-align: center;
+}
+
+.upload-songs__title {
+  display: flex;
+  flex-direction: column;
+}
+
+.upload-songs__table {
+  display: flex;
+  flex-direction: column;
+}
+
+.fl-dr {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid;
+  border-radius: 8px;
+}
+
+.fl-dr label {
+  margin: 5px 0;
+}
+
+.upload-songs__insert {
+  width: 100%;
+  height: 40px;
+  border-radius: 9px;
+  background-color: rgb(60 123 137 / 18%);
+  border: 1px;
+  cursor: text;
+  text-align: center;
+}
+
+.upload-songs__insert::placeholder {
+  text-align: center;
+  color: hsl(220, 50%, 90%);
+}
+
+.upload-songs__insert:focus {
+  outline: none;
+}
+
+.upload-songs__btn {
+  margin: 20px auto 0 auto;
+}
+
+form div label {
+  text-align: center;
+}
+
+.button {
+  background-color: rgba(188, 140, 70, 1);
+  border: 0;
+  width: 98px;
+  height: 35px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.file-input {
+  align-self: center;
+  margin-bottom: 15px;
+  background-color: rgb(60 123 137 / 18%);
+  border-radius: 2px;
+  cursor: pointer;
+}

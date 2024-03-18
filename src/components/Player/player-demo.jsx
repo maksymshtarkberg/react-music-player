@@ -3,6 +3,7 @@ import { styled, Typography, Slider, Paper, Stack, Box } from "@mui/material";
 import { connect } from "react-redux";
 import axios from "axios";
 import * as THREE from "three";
+import "./style.css";
 
 import {
   setIsLoadedSong,
@@ -15,6 +16,7 @@ import {
   setSongName,
   setArtistName,
   setIsLoadingSong,
+  setSongId,
 } from "../../redux/actions";
 import Loader from "../Loader/loader";
 
@@ -30,38 +32,8 @@ import FastForwardIcon from "@mui/icons-material/FastForward";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import SkipNextIcon from "@mui/icons-material/SkipNext";
 import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
-// #endregion ------------ ICONS ---------
 
-// #region -------- Styled Components -----------------------------------------
-const Div = styled("div")(({ theme }) => ({
-  backgroundColor: "grey",
-  height: "100%",
-  width: "100%",
-  paddingTop: theme.spacing(2),
-  paddingBottom: theme.spacing(1),
-  borderRadius: 12,
-}));
-
-const CustomPaper = styled(Paper)(({ theme }) => ({
-  backgroundColor: "#F4F4F4",
-  marginLeft: theme.spacing(6),
-  marginRight: theme.spacing(6),
-  padding: theme.spacing(2),
-}));
-
-const PSlider = styled(Slider)(({ theme, ...props }) => ({
-  color: "lime",
-  height: 2,
-  "&:hover": {
-    cursor: "auto",
-  },
-  "& .MuiSlider-thumb": {
-    width: "13px",
-    height: "13px",
-    display: props.thumbless ? "none" : "block",
-  },
-}));
-// #endregion ---------------------------------------------------------------
+import default_img from "../../assets/vinyl_icon.png";
 
 const Player = ({
   songUrl,
@@ -85,15 +57,17 @@ const Player = ({
   setArtistName,
   setIsLoadingSong,
   isLoadingSong,
+  setSongId,
   canvasRef,
+  audioPlayer,
 }) => {
   const playlist = [...todosRedux];
   // console.log(playlist.length);
-  const audioPlayer = useRef();
   const currTimeRef = useRef(currTime);
 
   const [volume, setVolume] = useState(100);
   const [mute, setMute] = useState(false);
+  const [songImg, setSongImg] = useState("");
 
   /**
    * Fetching current song by current track index
@@ -120,12 +94,25 @@ const Player = ({
 
       const blob = new Blob([data], { type: "audio/mp3" });
       const audioUrl = window.URL.createObjectURL(blob);
+      if (audioUrl) {
+        setSongUrl(audioUrl);
+        setSongName(playlist[currentTrackIndex].title);
+        setArtistName(playlist[currentTrackIndex].artist);
+        setSongId(songIdTrack);
+        setIsLoadedSong(true);
+        setIsLoadingSong(false);
+      }
 
-      setSongUrl(audioUrl);
-      setSongName(playlist[currentTrackIndex].title);
-      setArtistName(playlist[currentTrackIndex].artist);
-      setIsLoadedSong(true);
-      setIsLoadingSong(false);
+      /*
+       * Setting current song picture
+       */
+      const songIdCover = playlist[currentTrackIndex].coverfile;
+      if (songIdCover) {
+        const coverURL = `${__URL__}/api/v1/song/${songIdCover}/cover`;
+        setSongImg(coverURL);
+      } else {
+        setSongImg(""); // Clearing somgImg to default Player Image if its no file
+      }
     } catch (error) {
       console.error(error);
     }
@@ -145,6 +132,8 @@ const Player = ({
       if (isPlaying) {
         audioPlayer.current.play();
         setIsPlaying(true);
+      } else {
+        audioPlayer.current.pause();
       }
     }
   }, [songUrl, currentTrackIndex, isLoadingSong]);
@@ -198,108 +187,102 @@ const Player = ({
    * Visualizer THREE.js
    */
 
-  useEffect(() => {
-    let audioContext;
-    let analyser;
-    let source;
+  // useEffect(() => {
+  //   let audioContext;
+  //   let analyser;
+  //   let source;
 
-    const canvasWidth = 1307;
-    const canvasHeight = 300;
+  //   const canvasWidth = 1307;
+  //   const canvasHeight = 300;
 
-    const listener = new THREE.AudioListener();
-    const sound = new THREE.Audio(listener);
-    const canvas = canvasRef.current;
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(
-      75,
-      canvasWidth / canvasHeight,
-      0.1,
-      1000
-    );
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-    const sphereGeometry = new THREE.SphereGeometry(1, 64, 64);
-    const sphereMaterial = new THREE.MeshBasicMaterial({
-      color: 0xffffff, // white color
-      envMap: scene.background, // using the scene's background as an environment map (for reflections)
-    });
-    const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-    sphere.castShadow = true; // apply swadows
-    sphere.receiveShadow = true;
-    renderer.setSize(canvasWidth, canvasHeight);
+  //   const listener = new THREE.AudioListener();
+  //   const sound = new THREE.Audio(listener);
+  //   const canvas = canvasRef.current;
+  //   const scene = new THREE.Scene();
+  //   const camera = new THREE.PerspectiveCamera(
+  //     75,
+  //     canvasWidth / canvasHeight,
+  //     0.1,
+  //     1000
+  //   );
+  //   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+  //   const sphereGeometry = new THREE.SphereGeometry(1, 64, 64);
+  //   const sphereMaterial = new THREE.MeshBasicMaterial({
+  //     color: 0xffffff, // white color
+  //     envMap: scene.background, // using the scene's background as an environment map (for reflections)
+  //   });
+  //   const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+  //   sphere.castShadow = true; // apply swadows
+  //   sphere.receiveShadow = true;
+  //   renderer.setSize(canvasWidth, canvasHeight);
 
-    scene.background = new THREE.Color(0x000000);
-    scene.add(camera);
-    scene.add(sphere);
+  //   scene.background = new THREE.Color(0x000000);
+  //   scene.add(camera);
+  //   scene.add(sphere);
 
-    // sphere.position.set(0, 0, 0);
+  //   // sphere.position.set(0, 0, 0);
 
-    camera.position.z = 4;
+  //   camera.position.z = 4;
 
-    const wireframe = new THREE.WireframeGeometry(sphereGeometry);
-    const lineMaterial = new THREE.LineBasicMaterial({
-      color: 0x000000, // color of lines (segments)
-      linewidth: 50,
-    });
+  //   const wireframe = new THREE.WireframeGeometry(sphereGeometry);
+  //   const lineMaterial = new THREE.LineBasicMaterial({
+  //     color: 0x000000, // color of lines (segments)
+  //     linewidth: 50,
+  //   });
 
-    const lineSegments = new THREE.LineSegments(wireframe, lineMaterial);
-    sphere.add(lineSegments);
+  //   const lineSegments = new THREE.LineSegments(wireframe, lineMaterial);
+  //   sphere.add(lineSegments);
 
-    const connectAudio = async () => {
-      source = audioContext.createMediaElementSource(audioPlayer.current);
-      source.connect(analyser);
-      analyser.connect(audioContext.destination);
+  //   const connectAudio = async () => {
+  //     source = audioContext.createMediaElementSource(audioPlayer.current);
+  //     source.connect(analyser);
+  //     analyser.connect(audioContext.destination);
 
-      console.log(source);
-    };
+  //     console.log(source);
+  //   };
 
-    async function loadAudio() {
-      await audioContext.resume();
-    }
+  //   // Loading and playback of audio
+  //   if (songUrl) {
+  //     const audioLoader = new THREE.AudioLoader();
+  //     audioLoader.load(songUrl, function (buffer) {
+  //       sound.setBuffer(buffer);
 
-    // Loading and playback of audio
-    if (songUrl) {
-      const audioLoader = new THREE.AudioLoader();
-      audioLoader.load(songUrl, function (buffer) {
-        sound.setBuffer(buffer);
+  //       audioContext = new window.AudioContext();
+  //       analyser = audioContext.createAnalyser();
+  //       connectAudio();
 
-        audioContext = new window.AudioContext();
-        analyser = audioContext.createAnalyser();
-        connectAudio();
+  //       // Animation of analyser
+  //       const animateSphere = () => {
+  //         requestAnimationFrame(animateSphere);
 
-        // Animation of analyser
-        const animateSphere = () => {
-          requestAnimationFrame(animateSphere);
+  //         if (analyser) {
+  //           const frequencyData = new Uint8Array(analyser.frequencyBinCount);
+  //           analyser.getByteFrequencyData(frequencyData);
 
-          if (analyser) {
-            const frequencyData = new Uint8Array(analyser.frequencyBinCount);
-            analyser.getByteFrequencyData(frequencyData);
+  //           const averageFrequency =
+  //             frequencyData.reduce((a, b) => a + b, 0) / frequencyData.length;
+  //           const scaleFactor = 1 + averageFrequency / 256; // Масштабируем шар в зависимости от средней частоты
 
-            const averageFrequency =
-              frequencyData.reduce((a, b) => a + b, 0) / frequencyData.length;
-            const scaleFactor = 1 + averageFrequency / 256; // Масштабируем шар в зависимости от средней частоты
+  //           sphere.scale.set(scaleFactor, scaleFactor, scaleFactor);
+  //           sphere.rotation.y += 0.003 + averageFrequency / 500;
+  //         }
 
-            sphere.scale.set(scaleFactor, scaleFactor, scaleFactor);
-            sphere.rotation.y += 0.003 + averageFrequency / 500;
-          }
+  //         // Zone to add animation with sphere
 
-          // Zone to add animation with sphere
+  //         renderer.render(scene, camera);
+  //       };
 
-          renderer.render(scene, camera);
-        };
+  //       animateSphere();
+  //     });
+  //   }
 
-        animateSphere();
-      });
-    }
-
-    isPlaying && loadAudio();
-
-    // Clearing the audio context upon component unmounting
-    return () => {
-      if (audioContext && audioContext.state === "running") {
-        audioContext.close();
-      }
-    };
-  }, [songUrl]);
+  //   // Clearing the audio context upon component unmounting
+  //   return () => {
+  //     if (audioContext && audioContext.state === "running") {
+  //       audioContext.close();
+  //     }
+  //   };
+  // }, [songUrl]);
 
   /**
    * Creating a time format
@@ -399,30 +382,26 @@ const Player = ({
 
   function VolumeBtns() {
     return mute ? (
-      <VolumeOffIcon
-        sx={{ color: "lime", "&:hover": { color: "white" } }}
-        onClick={() => setMute(!mute)}
-      />
+      <button onClick={() => setMute(!mute)}>
+        <VolumeOffIcon />
+      </button>
     ) : volume <= 20 ? (
-      <VolumeMuteIcon
-        sx={{ color: "lime", "&:hover": { color: "white" } }}
-        onClick={() => setMute(!mute)}
-      />
+      <button onClick={() => setMute(!mute)}>
+        <VolumeMuteIcon />
+      </button>
     ) : volume <= 75 ? (
-      <VolumeDownIcon
-        sx={{ color: "lime", "&:hover": { color: "white" } }}
-        onClick={() => setMute(!mute)}
-      />
+      <button onClick={() => setMute(!mute)}>
+        <VolumeDownIcon />
+      </button>
     ) : (
-      <VolumeUpIcon
-        sx={{ color: "lime", "&:hover": { color: "white" } }}
-        onClick={() => setMute(!mute)}
-      />
+      <button onClick={() => setMute(!mute)}>
+        <VolumeUpIcon />
+      </button>
     );
   }
 
   return (
-    <Div>
+    <div className="music-player">
       <audio
         src={songUrl}
         key={songUrl}
@@ -430,132 +409,74 @@ const Player = ({
         muted={mute}
         onEnded={SongOnEnded}
       />
-      <CustomPaper>
-        <Box
-          sx={{
-            position: "relative",
-            display: "flex",
-            justifyContent: "flex-start",
-          }}
-        >
-          <Stack
-            direction="row"
-            spacing={1}
-            sx={{
-              display: "flex",
-              justifyContent: "flex-start",
-              width: "25%",
-              alignItems: "center",
-            }}
-          >
-            <VolumeBtns />
-            <PSlider
-              min={0}
-              max={100}
-              value={volume}
-              onChange={(e, v) => handleVolumeChange(v)}
-            />
-          </Stack>
 
-          <Stack
-            direction="row"
-            spacing={1}
-            sx={{
-              display: "flex",
-              width: "40%",
-              alignItems: "center",
-            }}
-          >
-            <SkipPreviousIcon
-              sx={{
-                color: "lime",
-                "&:hover": { color: "white" },
-              }}
-              onClick={toggleSkipBackward}
-              disabled={true}
-            />
-            <FastRewindIcon
-              sx={{ color: "lime", "&:hover": { color: "white" } }}
-              onClick={toggleBackward}
-            />
-            {isLoadingSong || songUrl === "" ? (
-              <Loader />
-            ) : !isPlaying ? (
-              <PlayArrowIcon
-                fontSize={"large"}
-                sx={{ color: "lime", "&:hover": { color: "white" } }}
-                onClick={togglePlay}
-              />
-            ) : (
-              <PauseIcon
-                fontSize={"large"}
-                sx={{ color: "lime", "&:hover": { color: "white" } }}
-                onClick={togglePlay}
-              />
-            )}
+      <div className="album-cover">
+        <img
+          src={!songImg ? default_img : songImg}
+          id="rotatingImage"
+          alt="album-cover"
+        />
+        <span className="point"></span>
+      </div>
+      {songUrl ? (
+        <div>
+          <h2>{songName}</h2>
+          <p>{songArtist}</p>
+        </div>
+      ) : (
+        <p>Loading song...</p>
+      )}
+      <div className="controls">
+        <button onClick={toggleSkipBackward}>
+          <SkipPreviousIcon disabled={true} />
+        </button>
+        <button onClick={toggleBackward}>
+          <FastRewindIcon />
+        </button>
+        {isLoadingSong || songUrl === "" ? (
+          <button>
+            <Loader />
+          </button>
+        ) : !isPlaying ? (
+          <button onClick={togglePlay}>
+            <PlayArrowIcon />
+          </button>
+        ) : (
+          <button onClick={togglePlay}>
+            <PauseIcon />
+          </button>
+        )}
+        <button onClick={toggleForward}>
+          <FastForwardIcon />
+        </button>
+        <button onClick={toggleSkipForward}>
+          <SkipNextIcon />
+        </button>
+      </div>
 
-            <FastForwardIcon
-              sx={{ color: "lime", "&:hover": { color: "white" } }}
-              onClick={toggleForward}
-            />
-            <SkipNextIcon
-              sx={{ color: "lime", "&:hover": { color: "white" } }}
-              onClick={toggleSkipForward}
-            />
-
-            {songUrl ? (
-              <div style={{ position: "relative" }}>
-                <p
-                  style={{
-                    position: "absolute",
-                    whiteSpace: "nowrap",
-                    top: "-23px",
-                  }}
-                >{`${songArtist} - ${songName}`}</p>
-              </div>
-            ) : (
-              <div style={{ position: "relative" }}>
-                <p
-                  style={{
-                    position: "absolute",
-                    whiteSpace: "nowrap",
-                    top: "-23px",
-                  }}
-                >
-                  Loading song...
-                </p>
-              </div>
-            )}
-          </Stack>
-
-          <Stack
-            sx={{
-              display: "flex",
-              justifyContent: "flex-end",
-            }}
-          />
-        </Box>
-        <Stack
-          spacing={1}
-          direction="row"
-          sx={{
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          <Typography sx={{ color: "lime" }}>{formatTime(seconds)}</Typography>
-          <PSlider
-            thumbless="true"
-            value={seconds || 0}
-            max={audioPlayer.current ? audioPlayer.current.duration : 0}
-            onChange={HandleTimeChange}
-          />
-          <Typography sx={{ color: "lime" }}>
-            {formatTime(time.min * 60 + time.sec - seconds)}
-          </Typography>
-        </Stack>
-      </CustomPaper>
-    </Div>
+      <input
+        id="progress"
+        type="range"
+        value={seconds || 0}
+        max={audioPlayer.current ? audioPlayer.current.duration : 0}
+        onChange={HandleTimeChange}
+      />
+      <div className="song-time">
+        <div>{formatTime(seconds)}</div>
+        <div>{formatTime(time.min * 60 + time.sec - seconds)}</div>
+      </div>
+      <div className="song-volume">
+        <VolumeBtns />
+        <input
+          id="volume"
+          type="range"
+          min={0}
+          max={100}
+          value={volume}
+          onChange={(e) => handleVolumeChange(e.target.value)}
+        />
+      </div>
+    </div>
   );
 };
 
@@ -586,4 +507,5 @@ export default connect(mapStatetoProps, {
   setSongName,
   setArtistName,
   setIsLoadingSong,
+  setSongId,
 })(Player);

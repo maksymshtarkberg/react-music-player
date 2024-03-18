@@ -48,8 +48,6 @@ const AudioDownloader = ({ songIdTrack, fileName }) => {
         opacity: isDownloading ? 0.5 : hover ? 0.8 : 1,
         backgroundColor: hover ? "#C8C8C8" : "transparent",
         marginRight: "10px",
-        paddingBottom: "5px",
-        paddingTop: "5px",
         borderRadius: 6,
       }}
       onClick={(event) => !isDownloading && downloadAudio(event)}
@@ -59,9 +57,9 @@ const AudioDownloader = ({ songIdTrack, fileName }) => {
       {isDownloading ? (
         "Downloading..."
       ) : (
-        <>
-          <FileDownloadIcon /> Download Audio
-        </>
+        <div className="download-icon">
+          <FileDownloadIcon />
+        </div>
       )}
     </div>
   );

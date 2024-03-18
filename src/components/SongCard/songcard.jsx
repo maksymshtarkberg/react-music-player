@@ -4,6 +4,7 @@ import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import React, { useState } from "react";
 import axios from "axios";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconButton } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import playing from "../../assets/playingsong.gif";
@@ -27,6 +28,7 @@ import {
 } from "../../redux/actions";
 import { connect } from "react-redux";
 import "./styles.css";
+import { faPause, faPlay, faStop } from "@fortawesome/free-solid-svg-icons";
 
 const SongCard = ({
   songIdCur,
@@ -34,6 +36,7 @@ const SongCard = ({
   artistName,
   album,
   file,
+  cover,
   setSongUrl,
   setSongName,
   setArtistName,
@@ -41,6 +44,7 @@ const SongCard = ({
   currentTrackIndex,
   setCurrentTrackIndex,
   trackIndex,
+  songId,
   setSongId,
   playlists,
   playlistCurrentId,
@@ -52,23 +56,61 @@ const SongCard = ({
   isPlaying,
   isLoadingSong,
   setIsPlaying,
+  audioPlayer,
 }) => {
   const [playlistOpen, setPlaylistOpen] = useState(false);
   const [songDeleteRenderind, setSongDeleteRenderind] = useState(false);
   const [showPlayingImage, setShowPlayingImage] = useState(false);
 
+  useEffect(() => {
+    document.addEventListener("click", handleClosePlaylist);
+    return () => {
+      document.removeEventListener("click", handleClosePlaylist);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (songDeleteRenderind) {
+      fetchPlaylists();
+    }
+  }, []);
+
+  /**
+   * Turning on gif amimation when song is playing
+   */
+  useEffect(() => {
+    if (!isLoadingSong && isPlaying && currentTrackIndex === trackIndex) {
+      setShowPlayingImage(true);
+    } else {
+      const timer = setTimeout(() => {
+        setShowPlayingImage(false);
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [currentTrackIndex, isPlaying, !isLoadingSong]);
+
   /**
    * Playing the song by click on song in the tracklist
    */
   const handlePlay = async () => {
-    setCurrentTrackIndex(trackIndex);
-    setIsLoadingSong(true);
-    setSongUrl("");
-    setSongName(title);
-    setArtistName(artistName);
-    setAlbumName(album);
-    setSongId(songIdCur);
-    setIsPlaying(true);
+    if (songIdCur === songId) {
+      if (isPlaying) {
+        audioPlayer.current.pause();
+        setIsPlaying(false);
+      } else {
+        audioPlayer.current.play();
+        setIsPlaying(true);
+      }
+    } else {
+      setCurrentTrackIndex(trackIndex);
+      setIsLoadingSong(true);
+      setSongUrl("");
+      setSongName(title);
+      setArtistName(artistName);
+      setAlbumName(album);
+      setSongId(songIdCur);
+      setIsPlaying(true);
+    }
   };
 
   /**
@@ -84,24 +126,11 @@ const SongCard = ({
     setPlaylistOpen(false);
   };
 
-  useEffect(() => {
-    document.addEventListener("click", handleClosePlaylist);
-    return () => {
-      document.removeEventListener("click", handleClosePlaylist);
-    };
-  }, []);
-
   const fetchPlaylists = async () => {
     const __URL__ = "http://localhost:1337";
     const { data } = await axios.get(`${__URL__}/api/v1/playlist`);
     setPlaylist(data["playlists"]);
   };
-
-  useEffect(() => {
-    if (songDeleteRenderind) {
-      fetchPlaylists();
-    }
-  }, []);
 
   const handlePlaylistItemClick = async (event, playlistId) => {
     event.stopPropagation();
@@ -176,96 +205,88 @@ const SongCard = ({
     setSongDeleteRenderind(false);
   };
 
-  /**
-   * Turning on gif amimation when song is playing
-   */
-  useEffect(() => {
-    if (!isLoadingSong && isPlaying && currentTrackIndex === trackIndex) {
-      setShowPlayingImage(true);
-    } else {
-      const timer = setTimeout(() => {
-        setShowPlayingImage(false);
-      }, 100);
-      return () => clearTimeout(timer);
-    }
-  }, [currentTrackIndex, isPlaying, !isLoadingSong]);
-
   return (
-    <div
-      onClick={handlePlay}
-      className={
-        "songCard" + (currentTrackIndex === trackIndex ? "_selected" : "")
-      }
-    >
-      <img
-        style={{ height: "60px", width: "80px" }}
-        src={showPlayingImage ? playing : musicbg}
-        alt="SongCover"
-      />
-
-      <div className="songCard__title">{title}</div>
-      <div className="songCard__artist">{artistName}</div>
-
-      <div className="songCard__addtoplaylist">
-        <button
-          style={{
-            marginLeft: "auto",
-            marginRight: 70,
-            alignSelf: "center",
-            cursor: "pointer",
-            zIndex: 1,
-            border: "none",
-            background: "transparent",
-          }}
-          onClick={handleAddToPlaylist}
-        >
-          <PlaylistAddIcon />
-        </button>
-        {playlistOpen && (
-          <ul className="songCard__addtoplaylist-item">
-            {playlists ? (
-              playlists.map((playlist) => (
-                <li
-                  className="songCard__chooseplaylist"
-                  key={playlist._id}
-                  onClick={(event) =>
-                    handlePlaylistItemClick(event, playlist._id)
-                  }
-                >
-                  {playlist.playlistName}
-                </li>
-              ))
-            ) : (
-              <li>Loading playlists...</li>
-            )}
-          </ul>
-        )}
+    <div className="song">
+      <div className="song-img" onClick={handlePlay}>
+        <img
+          src={
+            cover !== null && cover !== undefined
+              ? showPlayingImage
+                ? playing
+                : `http://localhost:1337/api/v1/song/${cover}/cover`
+              : showPlayingImage
+              ? playing
+              : musicbg
+          }
+          alt="SongCover"
+        />
+        <div className="overlay">
+          {isPlaying && songIdCur === songId ? (
+            <FontAwesomeIcon icon={faPause} />
+          ) : (
+            <FontAwesomeIcon icon={faPlay} />
+          )}
+        </div>
       </div>
-
-      <IconButton
-        sx={{
-          marginLeft: 10,
-          width: "28px",
-          height: "28px",
-          alignSelf: "center",
-        }}
-        onClick={(event) =>
-          handleDeletePlaylistSong(
-            event,
-            file,
-            songIdCur,
-            playlistCurrentId,
-            title
-          )
-        }
-        aria-label="delete"
-      >
-        <DeleteIcon />
-      </IconButton>
-      <AudioDownloader
-        songIdTrack={songIdCur}
-        fileName={`${artistName} - ${title}`}
-      />
+      <div className="song-title">
+        <h2>{title}</h2>
+        <p>{artistName}</p>
+      </div>
+      <div className="song-actions">
+        <div className="songCard__addtoplaylist">
+          <button
+            style={{
+              alignSelf: "center",
+              cursor: "pointer",
+              zIndex: 1,
+              border: "none",
+              background: "transparent",
+            }}
+            onClick={handleAddToPlaylist}
+          >
+            <PlaylistAddIcon />
+          </button>
+          {playlistOpen && (
+            <ul className="songCard__addtoplaylist-item">
+              {playlists ? (
+                playlists.map((playlist) => (
+                  <li
+                    className="songCard__chooseplaylist"
+                    key={playlist._id}
+                    onClick={(event) =>
+                      handlePlaylistItemClick(event, playlist._id)
+                    }
+                  >
+                    {playlist.playlistName}
+                  </li>
+                ))
+              ) : (
+                <li>Loading playlists...</li>
+              )}
+            </ul>
+          )}
+        </div>
+        <div className="song-delete">
+          <IconButton
+            onClick={(event) =>
+              handleDeletePlaylistSong(
+                event,
+                file,
+                songIdCur,
+                playlistCurrentId,
+                title
+              )
+            }
+            aria-label="delete"
+          >
+            <DeleteIcon />
+          </IconButton>
+        </div>
+        <AudioDownloader
+          songIdTrack={songIdCur}
+          fileName={`${artistName} - ${title}`}
+        />
+      </div>
     </div>
   );
 };
@@ -276,7 +297,6 @@ const mapStatetoProps = (state) => ({
   isLoadedSong: state.songReducer.isLoadedSong,
   currentTrackIndex: state.playerReducer.currentTrackIndex,
   songId: state.songReducer.songId,
-  songUrl: state.songReducer.songUrl,
   playlists: state.playlistReducer.playlists,
   playlistCurrentId: state.playlistReducer.playlistCurrentId,
   playlistIsOpened: state.playlistReducer.playlistIsOpened,

@@ -1,0 +1,147 @@
+.main-content {
+  padding: 30px 20px;
+  color: #e5e5e5;
+}
+
+/* Containers of Artist and Albums */
+
+.containers {
+  display: flex;
+  align-items: center;
+  padding: 0 0 12px;
+  overflow-x: auto;
+  cursor: grab;
+}
+
+/* ARTISTS */
+
+.artists h1 {
+  margin-bottom: 24px;
+}
+
+.artist-container {
+  column-gap: 20px;
+}
+
+.artist {
+  display: grid;
+  grid-auto-flow: dense;
+  align-items: center;
+  grid-template-rows: 8fr 2fr;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+}
+
+.artist img {
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid rgba(169, 150, 253, 0.5);
+  width: 140px;
+  aspect-ratio: 1/1;
+  margin-bottom: 8px;
+  box-shadow: rgba(221, 221, 221, 0.3) 0px 6px 18px -3px,
+    rgba(221, 221, 221, 0.2) 0px -3px 0px inset;
+  transition: all 0.2s;
+}
+
+.artist img:hover {
+  border: 4px solid rgba(169, 150, 253, 0.6);
+}
+
+.artist p {
+  font-size: clamp(0.9rem, 3vw, 1rem);
+  font-weight: 500;
+  text-align: center;
+}
+
+/* ALBUMS */
+
+.albums h1 {
+  margin: 60px 0 14px;
+}
+
+.album-container {
+  column-gap: 24px;
+}
+
+.album {
+  display: grid;
+  grid-auto-flow: dense;
+  grid-template-rows: 5fr 2fr;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+}
+
+.album-frame {
+  position: relative;
+  width: 180px;
+  aspect-ratio: 1/1;
+  border: 2px solid rgba(169, 150, 253, 0.5);
+  border-radius: 10px;
+  box-shadow: rgba(221, 221, 221, 0.3) 0px 8px 18px -3px,
+    rgba(221, 221, 221, 0.2) 0px -3px 0px inset;
+  margin-bottom: 15px;
+  overflow: hidden;
+}
+
+.album-frame img {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s;
+}
+
+.album-frame img:hover {
+  transform: rotate(3deg) scale(1.2);
+}
+
+.album h2 {
+  font-size: clamp(0.9rem, 4vw, 1.1rem);
+  font-weight: 500;
+  line-height: 1.3;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+
+  @supports (-webkit-line-clamp: 2) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: initial;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+}
+
+.album p {
+  font-size: clamp(0.9rem, 4vw, 1rem);
+  opacity: 0.5;
+}
+
+/* Containers Scrollbar Style */
+
+.artist-container::-webkit-scrollbar,
+.album-container::-webkit-scrollbar {
+  height: 10px;
+}
+
+.artist-container::-webkit-scrollbar-track,
+.album-container::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 0.3rem rgb(79, 78, 78);
+  border-radius: 40px;
+}
+
+.artist-container::-webkit-scrollbar-thumb,
+.album-container::-webkit-scrollbar-thumb {
+  box-shadow: inset 0 0 0.5rem rgb(116, 116, 116);
+  background-color: rgba(25, 43, 206, 0.2);
+  outline: none;
+  border-radius: 40px;
+}

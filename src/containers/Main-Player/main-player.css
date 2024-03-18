@@ -1,9 +1,10 @@
 .main-player {
   display: flex;
   flex-direction: column;
-  width: 100%;
-  margin-top: auto;
-  margin-right: 40px;
+  border-radius: 0 15px 15px 0;
+  border-left: 1px solid rgba(255, 255, 255, 0.5);
+  padding: 30px 20px;
+  color: #e5e5e5;
 }
 
 .tracklist__title {
@@ -20,4 +21,16 @@
   color: transparent; /* Делаем текст прозрачным, чтобы показать градиент */
   font-family: Titillium Web;
   font-size: 20px;
+}
+
+.vizualizer-container {
+  position: relative;
+}
+
+.vizualizer{
+  display: none;
+  position: absolute;
+  border-radius: 12px;
+  top: 395px;
+  right: 2px;
 }
