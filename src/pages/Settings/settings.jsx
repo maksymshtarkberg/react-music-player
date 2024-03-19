@@ -4,9 +4,14 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { connect } from "react-redux";
 import { decodeToken } from "react-jwt";
+import { getUser } from "../../util/getUser";
+import { useEffect } from "react";
+import { uploadAvatar } from "../../util/uploadAvatar";
 
 const Settings = ({ sessionId }) => {
   const [submitted, setSubmitted] = useState(false);
+  const [userAvatar, setUserAvatar] = useState();
+
   const {
     handleSubmit,
     register,
@@ -17,7 +22,6 @@ const Settings = ({ sessionId }) => {
     defaultValues: {
       username: "",
       email: "",
-      password: "",
     },
   });
 
@@ -26,19 +30,58 @@ const Settings = ({ sessionId }) => {
     "X-Auth-Token": localStorage.getItem("access_token"),
   };
 
-  const token = localStorage.getItem("access_token");
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const headers = {
+          "Content-Type": "application/json",
+          "X-Auth-Token": localStorage.getItem("access_token"),
+        };
+        const user = await getUser(headers);
+        setValue("username", user.name);
+        setValue("email", user.email);
+      } catch (error) {
+        console.error("No user logged in", error);
+      }
+    };
 
-  const userSession = token && decodeToken(token);
+    fetchUserInfo();
+  }, []);
+
+  const uploadUserAvatar = async () => {
+    try {
+      const headers = {
+        "content-type": "multipart/form-data",
+        "x-auth-token": localStorage.getItem("access_token"),
+      };
+
+      const result = await uploadAvatar(userAvatar, headers);
+      // console.log(avatar.data);
+    } catch (error) {
+      console.error("Avatar can`t be upload", error);
+    }
+  };
+
+  const handleUserAvatarChange = (e) => {
+    setUserAvatar(e.target.files[0]);
+  };
 
   const onSubmit = handleSubmit(async (data) => {
-    const response = await axios.patch(
-      `http://localhost:1337/api/v1/user/changename`,
-      { fullName: data.username },
-      { headers }
-    );
-    if (response.status === 200) {
-      // setLoading(false);
-      alert("Name changed successfully");
+    try {
+      // const response = await axios.put(
+      //   `http://localhost:1337/api/v1/user/changename`,
+      //   { fullName: data.username },
+      //   { headers }
+      // );
+      // if (response.status === 200) {
+      //   const username = response.data;
+      //   console.log(username);
+      //   // setLoading(false);
+      //   alert("Name changed successfully");
+      // }
+      uploadUserAvatar();
+    } catch (error) {
+      console.log(error.message);
     }
   });
   return (
@@ -78,28 +121,13 @@ const Settings = ({ sessionId }) => {
             Photo
           </label>
           <input
+            onChange={handleUserAvatarChange}
             className="reg-input"
             type="file"
             name="avatar"
             accept="image/*"
-            // required
           />
         </div>
-        {/* <div className="input-control">
-          <label htmlFor="password" className="reg-label">
-            Password
-          </label>
-          <input
-            type="password"
-            placeholder="password"
-            id="password"
-            className="reg-input"
-            {...register("password", {
-              required: true,
-              minLength: 4,
-            })}
-          />
-        </div> */}
 
         <button className="reg-button" type="submit">
           Submit

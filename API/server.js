@@ -10,6 +10,7 @@ import userRoutes from "./routes/userRoutes.js";
 import playlistRoutes from "./routes/playlistRoutes.js";
 import { getSongs, streamSong } from "./controllers/songController.js"; //generic functions
 import { userJwtMiddleware } from "./middlewares/authMiddleware.js"; // auth middleware
+import { getAvatar } from "./controllers/userController.js";
 
 var app = express();
 
@@ -29,8 +30,10 @@ app.use("/api/v1/song", sendSeekable, songRoutes);
 app.use("/api/v1/playlist", userJwtMiddleware, playlistRoutes);
 
 // //Generic routes
+app.get("/api/v1/avatar/:id", getAvatar);
 app.get("/api/v1/stream/:filename", streamSong);
 app.get("/api/v1/songs", getSongs);
+
 
 // console.log(path.resolve("../dist/index.html"));
 // app.get("*", (req, res) => {

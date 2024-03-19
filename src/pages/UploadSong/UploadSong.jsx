@@ -28,7 +28,6 @@ const UploadSong = ({ onUploadSong, close }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setcreatedAt(Date.now());
-    console.log(createdAt);
     const formData = new FormData();
     formData.append("songFile", songFile);
     formData.append("albumCover", albumCover);

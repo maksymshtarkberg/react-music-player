@@ -21,10 +21,6 @@ const userSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  avatar: {
-    data: Buffer, 
-    contentType: String,
-  },
   playLists: [
     {
       listName: { type: String, required: true, trim: true },

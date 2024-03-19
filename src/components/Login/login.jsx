@@ -39,12 +39,6 @@ const Login = ({ setUserSession }) => {
       } else {
         console.error("Error during login:", response.statusText);
       }
-
-      const token = localStorage.getItem("access_token");
-      if (token) {
-        const userSession = decodeToken(token);
-        setUserSession(userSession.id);
-      }
     } catch (error) {
       console.error("Error during login:", error);
     }

@@ -12,9 +12,11 @@ import {
   faHeart,
   faMap,
   faRightFromBracket,
+  faRightToBracket,
   faUpload,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
+import defaultAvatar from "../../assets/default-avatar.svg";
 
 import { connect } from "react-redux";
 import {
@@ -30,6 +32,8 @@ import {
 } from "../../redux/actions";
 
 import "./menu.css";
+import { getUser } from "../../util/getUser";
+import UserInfo from "../User/userInfo";
 
 const Menu = ({
   setPlaylist,
@@ -48,40 +52,62 @@ const Menu = ({
 }) => {
   const [modalShow, setModalShow] = useState(false);
   const [activeNavItem, setActiveNavItem] = useState(0);
+  const [userInfo, setUserInfo] = useState({ name: "", email: "" });
 
-  const handleNavItemClick = (index) => {
-    setActiveNavItem(index);
-  };
-  const HandleClickOpen = () => {
-    setModalShow(true);
-  };
-
-  const fetchSongs = async () => {
-    setIsLoadingSong(true);
-    setSongUrl("");
-    setPlaylistIsOpened(false);
-    setCurrentTrackIndex(0);
-    const __URL__ = "http://localhost:1337";
-    const { data } = await axios.get(`${__URL__}/api/v1/songs`);
-    addTodo(data["songs"]);
-    setPlaylistCurrentId("");
-    setIsLoaded(true);
-  };
-
-  const fetchPlaylists = async () => {
-    const __URL__ = "http://localhost:1337";
-    const { data } = await axios.get(`${__URL__}/api/v1/playlist`);
-
-    setPlaylist(data["playlists"]);
-    setPlaylistLoaded(true);
-  };
+  const token = localStorage.getItem("access_token");
 
   useEffect(() => {
-    if (playlists && playlists.length === 0) {
+    const fetchUserInfo = async () => {
+      try {
+        const headers = {
+          "Content-Type": "application/json",
+          "X-Auth-Token": localStorage.getItem("access_token"),
+        };
+        const user = await getUser(headers);
+        setUserInfo({ name: user.name, email: user.email });
+      } catch (error) {
+        console.error("No user logged in", error);
+      }
+    };
+
+    fetchUserInfo();
+  }, []);
+
+  useEffect(() => {
+    if (token && playlists && playlists.length === 0) {
       fetchPlaylists();
       setPlaylistLoaded(false);
     }
   }, [playlists, playlistsisLoaded]);
+
+  const handleNavItemClick = (index) => {
+    setActiveNavItem(index);
+  };
+
+  // const fetchSongs = async () => {
+  //   setIsLoadingSong(true);
+  //   setSongUrl("");
+  //   setPlaylistIsOpened(false);
+  //   setCurrentTrackIndex(0);
+  //   const __URL__ = "http://localhost:1337";
+  //   const { data } = await axios.get(`${__URL__}/api/v1/songs`);
+  //   addTodo(data["songs"]);
+  //   setPlaylistCurrentId("");
+  //   setIsLoaded(true);
+  // };
+
+  const fetchPlaylists = async () => {
+    const headers = {
+      "Content-type": "multipart/form-data",
+      "X-Auth-Token": localStorage.getItem("access_token"),
+    };
+
+    const __URL__ = "http://localhost:1337";
+    const { data } = await axios.get(`${__URL__}/api/v1/playlist`, { headers });
+
+    setPlaylist(data["playlists"]);
+    setPlaylistLoaded(true);
+  };
 
   // delete playlist
   const deletePlaylist = async (id) => {
@@ -135,127 +161,122 @@ const Menu = ({
   return (
     <nav className="main-menu">
       <div>
-        <UserInfo />
+        <UserInfo userInfo={userInfo} />
 
         <ul>
+          {!token && (
+            <NavItem
+              index={0}
+              icon={faRightToBracket}
+              text="Login"
+              activeIndex={activeNavItem}
+              onClick={handleNavItemClick}
+            />
+          )}
           <NavItem
-            index={0}
+            index={1}
             icon={faMap}
             text="Discover"
             activeIndex={activeNavItem}
             onClick={handleNavItemClick}
           />
-          <NavItem
-            index={1}
-            icon={faUpload}
-            text="Upload song"
-            activeIndex={activeNavItem}
-            onClick={handleNavItemClick}
-          />
-          <NavItem
-            index={2}
-            icon={faCompactDisc}
-            text="Albums"
-            activeIndex={activeNavItem}
-            onClick={handleNavItemClick}
-          />
-          <NavItem
-            index={3}
-            icon={faCirclePlay}
-            text="Playlist"
-            activeIndex={activeNavItem}
-            onClick={handleNavItemClick}
-          />
-          <NavItem
-            index={4}
-            icon={faHeart}
-            text="Favorites"
-            activeIndex={activeNavItem}
-            onClick={handleNavItemClick}
-          />
+
+          {token && (
+            <>
+              <NavItem
+                index={1}
+                icon={faUpload}
+                text="Upload song"
+                activeIndex={activeNavItem}
+                onClick={handleNavItemClick}
+              />
+              <NavItem
+                index={2}
+                icon={faCompactDisc}
+                text="Albums"
+                activeIndex={activeNavItem}
+                onClick={handleNavItemClick}
+              />
+              <NavItem
+                index={3}
+                icon={faCirclePlay}
+                text="Playlist"
+                activeIndex={activeNavItem}
+                onClick={handleNavItemClick}
+              />
+              <NavItem
+                index={4}
+                icon={faHeart}
+                text="Favorites"
+                activeIndex={activeNavItem}
+                onClick={handleNavItemClick}
+              />
+            </>
+          )}
         </ul>
       </div>
       <ul>
-        <NavItem
-          index={5}
-          icon={faUser}
-          text="Account"
-          activeIndex={activeNavItem}
-          onClick={handleNavItemClick}
-        />
-        <NavItem
-          index={6}
-          icon={faGear}
-          text="Settings"
-          activeIndex={activeNavItem}
-          onClick={handleNavItemClick}
-        />
-        <NavItem
-          index={7}
-          icon={faRightFromBracket}
-          text="Logout"
-          activeIndex={activeNavItem}
-          onClick={handleNavItemClick}
-        />
+        {token && (
+          <>
+            <NavItem
+              index={5}
+              icon={faUser}
+              text="Account"
+              activeIndex={activeNavItem}
+              onClick={handleNavItemClick}
+            />
+            <NavItem
+              index={6}
+              icon={faGear}
+              text="Settings"
+              activeIndex={activeNavItem}
+              onClick={handleNavItemClick}
+            />
+            <NavItem
+              index={7}
+              icon={faRightFromBracket}
+              text="Logout"
+              activeIndex={activeNavItem}
+              onClick={handleNavItemClick}
+            />
+          </>
+        )}
       </ul>
 
       {/* <ul className="menu__player">
-          <p>Player</p>
-          <li onClick={fetchSongs}>Listen</li>
-          <BasicModal
-            modalShow={modalShow}
-            setModalShow={setModalShow}
-            onUploadSong={fetchSongs}
-          />
-          <li onClick={HandleClickOpen}>Upload song</li>
-        </ul>
-        <ul className="menu__media">
-          <p>Media</p>
-          <li onClick={sortBySongName}>Songs</li>
-           <li>Last added</li> Need to connect Upload file date with
-        comparing of tracklist songs or added date of file on params in
-        uploading route on backend 
-          <li onClick={sortByArtist}>Artists</li>
-        </ul> */}
-      {/* <PlaylistModal />
-        <ul className="menu__playlist">
-          <p className="menu__playlist-title">Playlists</p>
-          <div className="menu__playlist-box">
-            {playlists ? (
-              playlists.map((playlist) => (
-                <li
-                  key={playlist._id}
-                  onClick={() => handleSetPlaylistOn(playlist)}
+        <p>Player</p>
+      </ul>
+      <ul className="menu__media">
+        <p>Media</p>
+        <li onClick={sortBySongName}>Songs</li>
+        <li onClick={sortByArtist}>Artists</li>
+      </ul>
+      <ul className="menu__playlist">
+        <p className="menu__playlist-title">Playlists</p>
+        <div className="menu__playlist-box">
+          {playlists ? (
+            playlists.map((playlist) => (
+              <li
+                key={playlist._id}
+                onClick={() => handleSetPlaylistOn(playlist)}
+              >
+                {playlist.playlistName}
+
+                <IconButton
+                  sx={{ marginLeft: "auto" }}
+                  onClick={() => handleDelete(playlist._id)}
+                  aria-label="delete"
                 >
-                  {playlist.playlistName}
-
-                  <IconButton
-                    sx={{ marginLeft: "auto" }}
-                    onClick={() => handleDelete(playlist._id)}
-                    aria-label="delete"
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </li>
-              ))
-            ) : (
-              <li>Loading playlists...</li>
-            )}
-          </div>
-        </ul> */}
+                  <DeleteIcon />
+                </IconButton>
+              </li>
+            ))
+          ) : (
+            <li>Loading playlists...</li>
+          )}
+        </div>
+      </ul> */}
     </nav>
-  );
-};
-
-const UserInfo = () => {
-  return (
-    <div className="user-info">
-      <img
-        src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/37e5ccfa-f9ee-458b-afa2-dcd85b495e4e"
-        alt="user"
-      />
-      <p>Jane Wilson</p>
-    </div>
   );
 };
 

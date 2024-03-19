@@ -27,8 +27,8 @@ export const addSong = async (req, res) => {
     });
 
     // uploading the file to the database
-    const songReadStream = fs.createReadStream(req.files['songFile'][0].path, { encoding: 'utf-8' });
-    const songUploadStream = bucket.openUploadStream(req.files['songFile'][0].filename, { encoding: 'utf-8' });
+    const songReadStream = fs.createReadStream(req.files['songFile'][0].path);
+    const songUploadStream = bucket.openUploadStream(req.files['songFile'][0].filename);
     songReadStream.pipe(songUploadStream);
 
     // if there is an error throw an error

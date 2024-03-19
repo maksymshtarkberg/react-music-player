@@ -27,6 +27,8 @@ export const login = async (req, res) => {
       res.status(200).json({
         message: "User logged in",
         status: "success",
+        name : user.fullName,
+        email : user.email,
         token: generateToken(user._id),
       });
     } else {
@@ -71,6 +73,7 @@ export const register = async (req, res) => {
       fullName,
       email,
       password: hashedPassword,
+      avatar: {},
       playllists: [],
     });
     if (user) {
