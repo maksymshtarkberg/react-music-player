@@ -10,13 +10,9 @@ import "./content.css";
 const Content = () => {
   return (
     <div class="main-content">
-      <Settings />
-      {/* <UploadSong /> */}
-      <Login />
-      {/* <Registration /> */}
-      {/* <PlaylistsSlider /> */}
-      {/* <Artists />
-      <Albums /> */}
+      <PlaylistsSlider />
+      <Artists />
+      <Albums />
     </div>
   );
 };

@@ -1,8 +1,11 @@
 import { useState } from "react";
 import "./styles.css";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Registration = () => {
+  const [submitted, setSubmitted] = useState(false);
   const {
     handleSubmit,
     register,
@@ -19,39 +22,37 @@ const Registration = () => {
     },
   });
 
-  const [submitted, setSubmitted] = useState(false);
+  const navigate = useNavigate();
 
   const onSubmit = handleSubmit(async (data) => {
     try {
       if (data.password !== data.confirmPassword) {
-        // Проверка на соответствие паролей
         console.error("Passwords do not match");
         return;
       }
 
       const apiUrl = "http://localhost:1337/api/v1/auth/register";
-      const signUpResponse = await fetch(apiUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          fullName: data.username,
-          email: data.email,
-          password: data.password,
-        }),
+      const response = await axios.post(apiUrl, {
+        fullName: data.username,
+        email: data.email,
+        password: data.password,
       });
-      if (signUpResponse.ok) {
+
+      if (response.status === 200) {
         setValue("username", "");
         setValue("email", "");
         setValue("password", "");
         setValue("confirmPassword", "");
         setSubmitted(true);
+        localStorage.setItem("access_token", response.data.token);
+        const token = localStorage.getItem("access_token");
+
+        token && navigate("/");
       } else {
-        console.error("Error during login:", signUpResponse.statusText);
+        console.error("Error during registration:", response.statusText);
       }
     } catch (error) {
-      console.error("Error during login:", error);
+      console.error("Error during registration:", error);
     }
   });
 
@@ -59,7 +60,7 @@ const Registration = () => {
 
   return (
     <section className="reg-container">
-      <h1 className="reg-title">Registration Form</h1>
+      <h1 className="reg-title">Registration</h1>
 
       <form onSubmit={onSubmit} className="reg-form">
         <div className="input-control">

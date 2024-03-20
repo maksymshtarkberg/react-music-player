@@ -6,6 +6,7 @@ import { decodeToken } from "react-jwt";
 import { connect } from "react-redux";
 import { setUserSession } from "../../redux/actions";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Login = ({ setUserSession }) => {
   const [submitted, setSubmitted] = useState(false);
@@ -22,6 +23,8 @@ const Login = ({ setUserSession }) => {
     },
   });
 
+  const navigate = useNavigate();
+
   const onSubmit = handleSubmit(async (data) => {
     try {
       const apiUrl = "http://localhost:1337/api/v1/auth/login";
@@ -36,6 +39,9 @@ const Login = ({ setUserSession }) => {
         setSubmitted(true);
 
         localStorage.setItem("access_token", response.data.token);
+        const token = localStorage.getItem("access_token");
+
+        token && navigate("/feed");
       } else {
         console.error("Error during login:", response.statusText);
       }

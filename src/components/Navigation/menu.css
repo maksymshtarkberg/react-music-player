@@ -28,7 +28,7 @@
   white-space: nowrap;
 }
 
-.nav-item a {
+.nav-element {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -37,9 +37,10 @@
   padding: 12px 0;
   margin: 0 8px;
   border-radius: 5px;
+  cursor: pointer;
 }
 
-.nav-item.active a {
+.nav-item.active .nav-element {
   background: rgba(106, 109, 155, 0.5);
   text-decoration: none;
 }

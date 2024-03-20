@@ -38,8 +38,11 @@ const Settings = ({ sessionId }) => {
           "X-Auth-Token": localStorage.getItem("access_token"),
         };
         const user = await getUser(headers);
-        setValue("username", user.name);
-        setValue("email", user.email);
+        console.log(headers, user);
+        if (user) {
+          setValue("username", user.name);
+          setValue("email", user.email);
+        }
       } catch (error) {
         console.error("No user logged in", error);
       }
@@ -52,7 +55,7 @@ const Settings = ({ sessionId }) => {
     try {
       const headers = {
         "content-type": "multipart/form-data",
-        "x-auth-token": localStorage.getItem("access_token"),
+        "X-Auth-token": localStorage.getItem("access_token"),
       };
 
       const result = await uploadAvatar(userAvatar, headers);

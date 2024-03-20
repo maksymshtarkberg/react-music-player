@@ -20,12 +20,11 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(sendSeekable);
 
-
 app.use(express.static("../dist"));
 
 // adding ROUTES to the app
 app.use("/api/v1/auth", authRoutes);
-app.use("/api/v1/user", userJwtMiddleware, userRoutes)
+app.use("/api/v1/user", userJwtMiddleware, userRoutes);
 app.use("/api/v1/song", sendSeekable, songRoutes);
 app.use("/api/v1/playlist", userJwtMiddleware, playlistRoutes);
 
@@ -33,7 +32,6 @@ app.use("/api/v1/playlist", userJwtMiddleware, playlistRoutes);
 app.get("/api/v1/avatar/:id", getAvatar);
 app.get("/api/v1/stream/:filename", streamSong);
 app.get("/api/v1/songs", getSongs);
-
 
 // console.log(path.resolve("../dist/index.html"));
 // app.get("*", (req, res) => {

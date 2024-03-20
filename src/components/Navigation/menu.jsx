@@ -15,6 +15,7 @@ import {
   faRightToBracket,
   faUpload,
   faUser,
+  faUserPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import defaultAvatar from "../../assets/default-avatar.svg";
 
@@ -34,6 +35,9 @@ import {
 import "./menu.css";
 import { getUser } from "../../util/getUser";
 import UserInfo from "../User/userInfo";
+import Logout from "../../util/logout";
+import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const Menu = ({
   setPlaylist,
@@ -56,22 +60,37 @@ const Menu = ({
 
   const token = localStorage.getItem("access_token");
 
+  const navigate = useNavigate();
+  const location = useLocation();
+  const currentPath = location.pathname;
+
+  const routes = {
+    0: !token ? "/signin" : "/feed",
+    1: !token ? "/signup" : "/upload",
+    2: !token ? "/feed" : "/albums",
+    3: "/playlists",
+    4: "/favorites",
+    5: "/account",
+    6: "/settings",
+    7: () => Logout(),
+  };
+
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
         const headers = {
           "Content-Type": "application/json",
-          "X-Auth-Token": localStorage.getItem("access_token"),
+          "X-Auth-token": localStorage.getItem("access_token"),
         };
         const user = await getUser(headers);
-        setUserInfo({ name: user.name, email: user.email });
+        user && setUserInfo({ name: user.name, email: user.email });
       } catch (error) {
         console.error("No user logged in", error);
       }
     };
 
-    fetchUserInfo();
-  }, []);
+    token && fetchUserInfo();
+  }, [token]);
 
   useEffect(() => {
     if (token && playlists && playlists.length === 0) {
@@ -80,21 +99,23 @@ const Menu = ({
     }
   }, [playlists, playlistsisLoaded]);
 
+  useEffect(() => {
+    const activeIndex = Object.values(routes).indexOf(currentPath);
+    setActiveNavItem(activeIndex);
+  }, [currentPath]);
+
   const handleNavItemClick = (index) => {
     setActiveNavItem(index);
-  };
 
-  // const fetchSongs = async () => {
-  //   setIsLoadingSong(true);
-  //   setSongUrl("");
-  //   setPlaylistIsOpened(false);
-  //   setCurrentTrackIndex(0);
-  //   const __URL__ = "http://localhost:1337";
-  //   const { data } = await axios.get(`${__URL__}/api/v1/songs`);
-  //   addTodo(data["songs"]);
-  //   setPlaylistCurrentId("");
-  //   setIsLoaded(true);
-  // };
+    const route = routes[index];
+
+    if (typeof route === "string") {
+      navigate(route);
+    } else if (typeof route === "function") {
+      route();
+      navigate("/signin");
+    }
+  };
 
   const fetchPlaylists = async () => {
     const headers = {
@@ -165,28 +186,44 @@ const Menu = ({
 
         <ul>
           {!token && (
-            <NavItem
-              index={0}
-              icon={faRightToBracket}
-              text="Login"
-              activeIndex={activeNavItem}
-              onClick={handleNavItemClick}
-            />
+            <>
+              <NavItem
+                index={0}
+                icon={faRightToBracket}
+                text="Sign in"
+                activeIndex={activeNavItem}
+                onClick={handleNavItemClick}
+              />
+              <NavItem
+                index={1}
+                icon={faUserPlus}
+                text="Sign up"
+                activeIndex={activeNavItem}
+                onClick={handleNavItemClick}
+              />
+              <NavItem
+                index={2}
+                icon={faMap}
+                text="Discover"
+                activeIndex={activeNavItem}
+                onClick={handleNavItemClick}
+              />
+            </>
           )}
-          <NavItem
-            index={1}
-            icon={faMap}
-            text="Discover"
-            activeIndex={activeNavItem}
-            onClick={handleNavItemClick}
-          />
 
           {token && (
             <>
               <NavItem
+                index={0}
+                icon={faMap}
+                text="Feed"
+                activeIndex={activeNavItem}
+                onClick={handleNavItemClick}
+              />
+              <NavItem
                 index={1}
                 icon={faUpload}
-                text="Upload song"
+                text="Upload"
                 activeIndex={activeNavItem}
                 onClick={handleNavItemClick}
               />
@@ -289,10 +326,10 @@ const NavItem = ({ icon, text, index, activeIndex, onClick }) => {
       className={`nav-item ${activeIndex === index ? "active" : ""}`}
       onClick={handleClick}
     >
-      <a href="#">
+      <div className="nav-element">
         <FontAwesomeIcon icon={icon} className="nav-icon" />
         <span className="nav-text">{text}</span>
-      </a>
+      </div>
     </li>
   );
 };
