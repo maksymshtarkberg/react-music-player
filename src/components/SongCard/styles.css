@@ -58,47 +58,11 @@
   display: flex;
 }
 
-.songCard__addtoplaylist-item {
-  list-style: none;
-  position: absolute;
-  top: -10px;
-  z-index: 1;
-  height: 108px;
-  overflow-y: scroll;
-}
-
-.songCard__addtoplaylist ul::-webkit-scrollbar {
-  width: 8px;
-}
-.songCard__addtoplaylist ul::-webkit-scrollbar-track {
-  background-color: #f1f1f1;
-  border-radius: 5px;
-}
-.songCard__addtoplaylist ul::-webkit-scrollbar-thumb {
-  border-radius: 5px;
-  background-color: #888;
-}
-.songCard__addtoplaylist ul::-webkit-scrollbar-thumb:hover {
-  background-color: #555;
-}
-
 .songCard__addtoplaylist {
   display: flex;
   position: relative;
   align-items: center;
   margin: 0 auto;
-}
-
-.songCard__chooseplaylist {
-  border-radius: 24px;
-  border: 1px solid;
-  background: linear-gradient(106deg, #485972 0%, #212228 100%);
-  padding: 4px 12px;
-  margin-bottom: 5px;
-}
-
-.songCard__chooseplaylist:hover {
-  background-color: #e0d4d4;
 }
 
 .song-delete {
@@ -112,9 +76,11 @@
   0% {
     opacity: 0;
   }
+
   50% {
     opacity: 1;
   }
+
   100% {
     opacity: 0;
   }

@@ -48,12 +48,10 @@ div .swiper-pagination-bullet-active {
   inset: 0;
   width: 100%;
   height: 98%;
-  background: linear-gradient(
-    240deg,
-    transparent,
-    transparent,
-    rgba(38, 21, 149, 0.8)
-  );
+  background: linear-gradient(240deg,
+      transparent,
+      transparent,
+      rgba(38, 21, 149, 0.8));
   border-radius: 20px;
   padding: 30px;
 }
@@ -63,7 +61,7 @@ div .swiper-pagination-bullet-active {
   font-weight: 700;
 }
 
-.slide-overlay button {
+.slide-overlay_btn {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -84,7 +82,7 @@ div .swiper-pagination-bullet-active {
   cursor: pointer;
 }
 
-.slide-overlay button:is(:hover, :focus-visible) {
+.slide-overlay_btn:is(:hover, :focus-visible) {
   background: #e9e6eb;
   color: #000;
 }

@@ -1,5 +1,6 @@
 import mongodb from "mongodb";
 import dbConnect from "../config/db.js";
+import fs from "fs";
 
 // @desc   add new playlist
 // @route  POST /api/v1/playlist/create
@@ -10,19 +11,42 @@ export const addPlaylist = async (req, res) => {
 
     const db = dbConnect.db("music_streaming");
     const collection = db.collection("playlists");
-
-    // Inserting the playlist to the database
-    const playList = await collection.insertOne({
-      playlistName: req.body.playlistName,
-      createdBy: req.userId,
-      songs: [],
+    const bucket = new mongodb.GridFSBucket(db, {
+      bucketName: "uploads",
     });
-    // If the playlist is added successfully return a success message
-    if (playList) {
-      return res
-        .status(200)
-        .json({ message: "Playlist added successfully", status: "success" });
-    } else throw new Error("Error adding playlist");
+
+    const playlistCoverReadStream = fs.createReadStream(req.file.path);
+    const playlistCoverUploadStream = bucket.openUploadStream(
+      req.file.filename
+    );
+    playlistCoverReadStream.pipe(playlistCoverUploadStream);
+
+    playlistCoverUploadStream.on("error", (error) => {
+      throw error;
+    });
+
+    playlistCoverUploadStream.on("finish", async () => {
+      console.log("Playlist cover uploaded successfully");
+
+      // Inserting the playlist to the database
+      const playlist = await collection.insertOne({
+        playlistName: req.body.playlistName,
+        createdBy: req.userId,
+        songs: [],
+        playlistCover: req.file.filename,
+        playlistCoverId: playlistCoverUploadStream.id,
+      });
+
+      // If the playlist is added successfully return a success message
+      if (playlist) {
+        res
+          .status(201)
+          .json({ message: "Playlist added successfully", status: "success" });
+      } else {
+        res.status(400);
+        throw new Error("Invalid song data");
+      }
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: error.message, status: "error" });
@@ -124,11 +148,46 @@ export const getPlaylist = async (req, res) => {
     const collection = db.collection("playlists");
 
     const playlist = await collection.findOne({
-      _id: new mongodb.ObjectId(req.params.id),
+      playlistCover: new mongodb.ObjectId(req.params.id),
     });
     if (playlist) {
       return res.status(200).json({ playlist });
     } else throw new Error("Error getting playlist");
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: error.message, status: "error" });
+  }
+};
+
+export const getPlaylistCover = async (req, res) => {
+  try {
+    const db = dbConnect.db("music_streaming");
+    const collection = db.collection("playlists");
+    const { id } = req.params;
+
+    if (!id) {
+      res.status(400);
+      throw new Error("No id provided");
+    }
+    const playlistCover = await collection.findOne({
+      playlistCoverId: new mongodb.ObjectId(id),
+    });
+
+    if (!playlistCover) {
+      res.status(404);
+      throw new Error("Cover not found");
+    }
+
+    const bucket = new mongodb.GridFSBucket(db, {
+      bucketName: "uploads",
+    });
+    const downloadStream = bucket.openDownloadStream(
+      playlistCover.playlistCoverId
+    );
+
+    res.set("Content-Type", "image/jpeg");
+
+    downloadStream.pipe(res);
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: error.message, status: "error" });

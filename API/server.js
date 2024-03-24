@@ -11,6 +11,7 @@ import playlistRoutes from "./routes/playlistRoutes.js";
 import { getSongs, streamSong } from "./controllers/songController.js"; //generic functions
 import { userJwtMiddleware } from "./middlewares/authMiddleware.js"; // auth middleware
 import { getAvatar } from "./controllers/userController.js";
+import { getPlaylistCover } from "./controllers/playlistController.js";
 
 var app = express();
 
@@ -32,6 +33,7 @@ app.use("/api/v1/playlist", userJwtMiddleware, playlistRoutes);
 app.get("/api/v1/avatar/:id", getAvatar);
 app.get("/api/v1/stream/:filename", streamSong);
 app.get("/api/v1/songs", getSongs);
+app.get("/api/v1/playlistcover/:id", getPlaylistCover);
 
 // console.log(path.resolve("../dist/index.html"));
 // app.get("*", (req, res) => {

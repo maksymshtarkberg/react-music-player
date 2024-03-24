@@ -19,6 +19,7 @@ import {
   setSongId,
 } from "../../redux/actions";
 import Loader from "../Loader/loader";
+import RotateImg from "../RotatingImg/rotatingImg";
 
 // #region ------------ ICONS ---------
 import VolumeDownIcon from "@mui/icons-material/VolumeDown";
@@ -32,8 +33,6 @@ import FastForwardIcon from "@mui/icons-material/FastForward";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import SkipNextIcon from "@mui/icons-material/SkipNext";
 import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
-
-import default_img from "../../assets/vinyl_icon.png";
 
 const Player = ({
   songUrl,
@@ -320,17 +319,17 @@ const Player = ({
 
   const toggleForward = () => {
     if (audioPlayer.current) {
-      audioPlayer.current.pause();
+      // audioPlayer.current.pause();
       audioPlayer.current.currentTime += 10;
-      audioPlayer.current.play();
+      // audioPlayer.current.play();
     }
   };
 
   const toggleBackward = () => {
     if (audioPlayer.current) {
-      audioPlayer.current.pause();
+      // audioPlayer.current.pause();
       audioPlayer.current.currentTime -= 10;
-      audioPlayer.current.play();
+      // audioPlayer.current.play();
     }
   };
 
@@ -410,14 +409,7 @@ const Player = ({
         onEnded={SongOnEnded}
       />
 
-      <div className="album-cover">
-        <img
-          src={!songImg ? default_img : songImg}
-          id="rotatingImage"
-          alt="album-cover"
-        />
-        <span className="point"></span>
-      </div>
+      <RotateImg songImg={songImg} />
       {songUrl ? (
         <div>
           <h2>{songName}</h2>

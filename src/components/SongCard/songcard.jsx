@@ -1,4 +1,3 @@
-import { decodeToken } from "react-jwt";
 import musicbg from "../../assets/musicbg.jpg";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import React, { useState } from "react";
@@ -29,6 +28,8 @@ import {
 import { connect } from "react-redux";
 import "./styles.css";
 import { faPause, faPlay, faStop } from "@fortawesome/free-solid-svg-icons";
+import { getPlaylists } from "../../util/getPlaylists";
+import Playlistmodal from "../PlaylistModal/playlistmodal";
 
 const SongCard = ({
   songIdCur,
@@ -61,13 +62,6 @@ const SongCard = ({
   const [playlistOpen, setPlaylistOpen] = useState(false);
   const [songDeleteRenderind, setSongDeleteRenderind] = useState(false);
   const [showPlayingImage, setShowPlayingImage] = useState(false);
-
-  useEffect(() => {
-    document.addEventListener("click", handleClosePlaylist);
-    return () => {
-      document.removeEventListener("click", handleClosePlaylist);
-    };
-  }, []);
 
   useEffect(() => {
     if (songDeleteRenderind) {
@@ -127,50 +121,52 @@ const SongCard = ({
   };
 
   const fetchPlaylists = async () => {
-    const __URL__ = "http://localhost:1337";
-    const { data } = await axios.get(`${__URL__}/api/v1/playlist`);
-    setPlaylist(data["playlists"]);
+    const data = await getPlaylists();
+    setPlaylist(data);
   };
 
-  const handlePlaylistItemClick = async (event, playlistId) => {
-    event.stopPropagation();
+  // const handlePlaylistItemClick = async (event, playlistId) => {
+  //   event.stopPropagation();
 
-    const selectedPlaylist = playlists.find(
-      (playlist) => playlist._id === playlistId
-    );
-    const songsInPlaylist = selectedPlaylist.songs || [];
+  //   const selectedPlaylist = playlists.find(
+  //     (playlist) => playlist._id === playlistId
+  //   );
+  //   const songsInPlaylist = selectedPlaylist.songs || [];
 
-    const isSongAlreadyInPlaylist = songsInPlaylist.some(
-      (song) => song._id === songIdCur
-    );
+  //   const isSongAlreadyInPlaylist = songsInPlaylist.some(
+  //     (song) => song._id === songIdCur
+  //   );
 
-    if (isSongAlreadyInPlaylist) {
-      alert("This song is already in the playlist.");
-      return;
-    }
+  //   if (isSongAlreadyInPlaylist) {
+  //     alert("This song is already in the playlist.");
+  //     return;
+  //   }
 
-    const songData = [
-      {
-        _id: songIdCur,
-        title,
-        artist: artistName,
-        album,
-      },
-    ];
+  //   const songData = [
+  //     {
+  //       _id: songIdCur,
+  //       title,
+  //       artist: artistName,
+  //       album,
+  //     },
+  //   ];
+  //   const headers = {
+  //     "X-Auth-Token": localStorage.getItem("access_token"),
+  //   };
+  //   const __URL__ = "http://localhost:1337";
+  //   const { data, status } = await axios.post(
+  //     `${__URL__}/api/v1/playlist/add/${playlistId}`,
+  //     songData,
+  //     { headers }
+  //   );
+  //   if (status === 200) {
+  //     alert("Song added to playlist");
+  //   }
+  //   fetchPlaylists();
+  //   console.log(`Song added to playlist with ID: ${playlistId}`);
 
-    const __URL__ = "http://localhost:1337";
-    const { data, status } = await axios.post(
-      `${__URL__}/api/v1/playlist/add/${playlistId}`,
-      songData
-    );
-    if (status === 200) {
-      alert("Song added to playlist");
-    }
-    fetchPlaylists();
-    console.log(`Song added to playlist with ID: ${playlistId}`);
-
-    setPlaylistOpen(false);
-  };
+  //   setPlaylistOpen(false);
+  // };
 
   const handleDeletePlaylistSong = async (
     event,
@@ -246,25 +242,14 @@ const SongCard = ({
           >
             <PlaylistAddIcon />
           </button>
-          {playlistOpen && (
-            <ul className="songCard__addtoplaylist-item">
-              {playlists ? (
-                playlists.map((playlist) => (
-                  <li
-                    className="songCard__chooseplaylist"
-                    key={playlist._id}
-                    onClick={(event) =>
-                      handlePlaylistItemClick(event, playlist._id)
-                    }
-                  >
-                    {playlist.playlistName}
-                  </li>
-                ))
-              ) : (
-                <li>Loading playlists...</li>
-              )}
-            </ul>
-          )}
+          <Playlistmodal
+            songIdCur={songIdCur}
+            title={title}
+            artistName={artistName}
+            album={album}
+            playlistOpen={playlistOpen}
+            handleClosePlaylist={handleClosePlaylist}
+          />
         </div>
         <div className="song-delete">
           <IconButton

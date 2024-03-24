@@ -25,11 +25,6 @@ const Settings = ({ sessionId }) => {
     },
   });
 
-  const headers = {
-    "Content-Type": "application/json",
-    "X-Auth-Token": localStorage.getItem("access_token"),
-  };
-
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {

@@ -31,9 +31,9 @@ function RouterWrapper() {
             <Route element={<PrivateRoute />}>
               <Route path="/upload" element={<UploadSong />} />
               <Route path="/albums" element={<Artists />} />
-              <Route path="/playlists" element={<PlaylistsSlider />} />
-              <Route path="/favorites" element={<h1>Favorites</h1>} />
-              <Route path="/account" element={<PlaylistsSlider />} />
+              <Route path="/playlists" element={<PlayList />} />
+              <Route path="/mysongs" element={<h1>My songs</h1>} />
+              <Route path="/account" element={<PlayList />} />
               <Route path="/settings" element={<Settings />} />
             </Route>
           </Routes>

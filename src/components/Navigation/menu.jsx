@@ -38,6 +38,7 @@ import UserInfo from "../User/userInfo";
 import Logout from "../../util/logout";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import { getPlaylists } from "../../util/getPlaylists";
 
 const Menu = ({
   setPlaylist,
@@ -69,7 +70,7 @@ const Menu = ({
     1: !token ? "/signup" : "/upload",
     2: !token ? "/feed" : "/albums",
     3: "/playlists",
-    4: "/favorites",
+    4: "/mysongs",
     5: "/account",
     6: "/settings",
     7: () => Logout(),
@@ -118,15 +119,8 @@ const Menu = ({
   };
 
   const fetchPlaylists = async () => {
-    const headers = {
-      "Content-type": "multipart/form-data",
-      "X-Auth-Token": localStorage.getItem("access_token"),
-    };
-
-    const __URL__ = "http://localhost:1337";
-    const { data } = await axios.get(`${__URL__}/api/v1/playlist`, { headers });
-
-    setPlaylist(data["playlists"]);
+    const data = await getPlaylists();
+    setPlaylist(data);
     setPlaylistLoaded(true);
   };
 
@@ -145,23 +139,6 @@ const Menu = ({
   const handleDelete = (id) => {
     if (window.confirm("Are you sure you want to delete this playlist?")) {
       deletePlaylist(id);
-    }
-  };
-
-  const handleSetPlaylistOn = (playlist) => {
-    setCurrentTrackIndex(0);
-    if (playlist._id !== playlistCurrentId) {
-      setIsLoadingSong(true);
-      setPlaylistIsOpened(true);
-      setSongUrl("");
-      if (playlist.songs.length !== 0) {
-        addTodo(playlist.songs);
-        setPlaylistCurrentId(playlist._id);
-      } else {
-        addTodo(playlist.songs);
-        setPlaylistCurrentId(playlist._id);
-        setSongUrl("");
-      }
     }
   };
 
@@ -244,7 +221,7 @@ const Menu = ({
               <NavItem
                 index={4}
                 icon={faHeart}
-                text="Favorites"
+                text="My Songs"
                 activeIndex={activeNavItem}
                 onClick={handleNavItemClick}
               />
@@ -279,40 +256,6 @@ const Menu = ({
           </>
         )}
       </ul>
-
-      {/* <ul className="menu__player">
-        <p>Player</p>
-      </ul>
-      <ul className="menu__media">
-        <p>Media</p>
-        <li onClick={sortBySongName}>Songs</li>
-        <li onClick={sortByArtist}>Artists</li>
-      </ul>
-      <ul className="menu__playlist">
-        <p className="menu__playlist-title">Playlists</p>
-        <div className="menu__playlist-box">
-          {playlists ? (
-            playlists.map((playlist) => (
-              <li
-                key={playlist._id}
-                onClick={() => handleSetPlaylistOn(playlist)}
-              >
-                {playlist.playlistName}
-
-                <IconButton
-                  sx={{ marginLeft: "auto" }}
-                  onClick={() => handleDelete(playlist._id)}
-                  aria-label="delete"
-                >
-                  <DeleteIcon />
-                </IconButton>
-              </li>
-            ))
-          ) : (
-            <li>Loading playlists...</li>
-          )}
-        </div>
-      </ul> */}
     </nav>
   );
 };
