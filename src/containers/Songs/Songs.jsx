@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import axios from "axios";
 
 import SongCard from "../../components/SongCard/songcard";
+import { getSongs } from "../../util/getSongs";
 import "./styles.css";
 
 import {
@@ -19,17 +20,20 @@ const Songs = ({
   setIsLoaded,
   setPlaylistLoaded,
   playlistCurrentId,
+  setSongId,
   audioPlayer,
+  songId,
 }) => {
-  const __URL__ = "http://localhost:1337";
-
   useEffect(() => {
     fetchSongs();
   }, []);
 
   const fetchSongs = async () => {
-    const { data } = await axios.get(`${__URL__}/api/v1/songs`);
-    addTodo(data["songs"]);
+    const songs = await getSongs();
+    addTodo(songs);
+    if (songId === "") {
+      setSongId(songs[0]._id);
+    }
 
     setIsLoaded(true);
   };
@@ -39,8 +43,12 @@ const Songs = ({
   };
 
   const fetchPlaylists = async () => {
+    const headers = {
+      "X-Auth-token": localStorage.getItem("access_token"),
+    };
+
     const __URL__ = "http://localhost:1337";
-    const { data } = await axios.get(`${__URL__}/api/v1/playlist`);
+    const { data } = await axios.get(`${__URL__}/api/v1/playlist`, { headers });
 
     const playlists = data["playlists"];
     const currentPlaylist = playlists.find(
@@ -75,7 +83,7 @@ const Songs = ({
                 album={song.album}
                 artistName={song.artist}
                 songSrc={song.song}
-                userId={song.uploadedBy}
+                uploadedBy={song.uploadedBy}
                 file={song.file}
                 cover={song.coverfile}
                 onSongDelete={handleSongDeleteMain}

@@ -31,7 +31,7 @@
 .playlists-card_container {
   margin: 40px;
   display: flex;
-  justify-content: space-around;
+  flex-wrap: wrap;
 }
 
 .playlist-name {

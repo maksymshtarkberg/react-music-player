@@ -142,6 +142,7 @@
   from {
     transform: rotate(0deg) scale(0) skew(0deg) translateY(30px);
   }
+
   to {
     transform: rotate(0deg) scale(1) skew(0deg) translateY(0);
   }

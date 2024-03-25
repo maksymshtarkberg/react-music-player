@@ -3,9 +3,8 @@ import Player from "../../components/Player/player-demo";
 import Songs from "../Songs/Songs";
 import "./main-player.css";
 
-const MainPlayer = () => {
+const MainPlayer = ({ audioPlayer }) => {
   const canvasRef = useRef();
-  const audioPlayer = useRef();
 
   return (
     <div className="main-player">

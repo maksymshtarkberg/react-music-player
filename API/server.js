@@ -8,7 +8,12 @@ import authRoutes from "./routes/authRoutes.js";
 import songRoutes from "./routes/songRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import playlistRoutes from "./routes/playlistRoutes.js";
-import { getSongs, streamSong } from "./controllers/songController.js"; //generic functions
+import {
+  albumCover,
+  getSongFile,
+  getSongs,
+  streamSong,
+} from "./controllers/songController.js"; //generic functions
 import { userJwtMiddleware } from "./middlewares/authMiddleware.js"; // auth middleware
 import { getAvatar } from "./controllers/userController.js";
 import { getPlaylistCover } from "./controllers/playlistController.js";
@@ -26,13 +31,16 @@ app.use(express.static("../dist"));
 // adding ROUTES to the app
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/user", userJwtMiddleware, userRoutes);
-app.use("/api/v1/song", sendSeekable, songRoutes);
+app.use("/api/v1/song", userJwtMiddleware, songRoutes);
 app.use("/api/v1/playlist", userJwtMiddleware, playlistRoutes);
 
 // //Generic routes
 app.get("/api/v1/avatar/:id", getAvatar);
 app.get("/api/v1/stream/:filename", streamSong);
 app.get("/api/v1/songs", getSongs);
+app.get("/api/v1/:id/file", getSongFile);
+
+app.get("/api/v1/:id/cover", albumCover);
 app.get("/api/v1/playlistcover/:id", getPlaylistCover);
 
 // console.log(path.resolve("../dist/index.html"));

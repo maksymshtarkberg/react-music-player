@@ -11,6 +11,8 @@ import {
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlay } from "@fortawesome/free-solid-svg-icons";
+import DeleteIcon from "@mui/icons-material/Delete";
+
 import "./styles.css";
 import { connect } from "react-redux";
 import { getPlaylists } from "../../util/getPlaylists";
@@ -21,17 +23,10 @@ const PlaylistCard = ({
   name,
   cover,
   quantityOfSongs,
-  playlistCurrentId,
   playlists,
-  playlistsisLoaded,
   addTodo,
   setPlaylist,
   setPlaylistLoaded,
-  setPlaylistCurrentId,
-  setPlaylistIsOpened,
-  setCurrentTrackIndex,
-  setSongUrl,
-  setIsLoadingSong,
 }) => {
   const fetchPlaylists = async () => {
     const data = await getPlaylists();
@@ -41,8 +36,13 @@ const PlaylistCard = ({
 
   // delete playlist
   const deletePlaylist = async (id) => {
+    const headers = {
+      "X-Auth-Token": localStorage.getItem("access_token"),
+    };
+
     const { data, status } = await axios.delete(
-      `http://localhost:1337/api/v1/playlist/delete/${id}`
+      `http://localhost:1337/api/v1/playlist/delete/${id}`,
+      { headers }
     );
     if (status === 200) {
       alert("Playlist deleted successfully");
@@ -74,6 +74,9 @@ const PlaylistCard = ({
       <div className="playlist-card_circle"></div>
       <div className="playlist-card_circle"></div>
       <div className="playlist-card_card-inner">
+        <div className="playlist-delete">
+          <DeleteIcon onClick={() => handleDelete(playlistId)} />
+        </div>
         <div className="playlist-card_box">
           <img
             className="playlist-card_cover"

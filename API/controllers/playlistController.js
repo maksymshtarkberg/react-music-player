@@ -96,7 +96,6 @@ export const addSongToPlaylist = async (req, res) => {
     console.log(error);
     return res.status(500).json({ error: error.message, status: "error" });
   }
-  res.send("Add Song to Playlist Page");
 };
 
 // @desc   Remove song from playlist

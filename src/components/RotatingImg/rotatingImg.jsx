@@ -41,12 +41,15 @@ const RotateImg = ({ songImg, isPlaying, currTime }) => {
     cancelAnimationFrame(animationFrameId);
     setAnimationFrameId(null);
   };
+  const __URL__ = "http://localhost:1337";
+
+  const coverURL = `${__URL__}/api/v1/${songImg}/cover`;
 
   return (
     <div className="album-cover">
       <img
         ref={rotatingImageRef}
-        src={!songImg ? default_img : songImg}
+        src={!songImg && songImg === undefined ? default_img : coverURL}
         alt="album-cover"
       />
       <span className="point"></span>

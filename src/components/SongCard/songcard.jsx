@@ -30,6 +30,8 @@ import "./styles.css";
 import { faPause, faPlay, faStop } from "@fortawesome/free-solid-svg-icons";
 import { getPlaylists } from "../../util/getPlaylists";
 import Playlistmodal from "../PlaylistModal/playlistmodal";
+import { decodeToken } from "react-jwt";
+import { useLocation } from "react-router-dom";
 
 const SongCard = ({
   songIdCur,
@@ -38,6 +40,7 @@ const SongCard = ({
   album,
   file,
   cover,
+  uploadedBy,
   setSongUrl,
   setSongName,
   setArtistName,
@@ -63,6 +66,12 @@ const SongCard = ({
   const [songDeleteRenderind, setSongDeleteRenderind] = useState(false);
   const [showPlayingImage, setShowPlayingImage] = useState(false);
 
+  const location = useLocation();
+  const currentPath = location.pathname;
+
+  const token = localStorage.getItem("access_token");
+  const decoded = decodeToken(token);
+
   useEffect(() => {
     if (songDeleteRenderind) {
       fetchPlaylists();
@@ -73,7 +82,7 @@ const SongCard = ({
    * Turning on gif amimation when song is playing
    */
   useEffect(() => {
-    if (!isLoadingSong && isPlaying && currentTrackIndex === trackIndex) {
+    if (!isLoadingSong && isPlaying && songIdCur === songId) {
       setShowPlayingImage(true);
     } else {
       const timer = setTimeout(() => {
@@ -87,6 +96,9 @@ const SongCard = ({
    * Playing the song by click on song in the tracklist
    */
   const handlePlay = async () => {
+    setSongId(songIdCur);
+    setCurrentTrackIndex(trackIndex);
+
     if (songIdCur === songId) {
       if (isPlaying) {
         audioPlayer.current.pause();
@@ -176,10 +188,13 @@ const SongCard = ({
     title
   ) => {
     event.stopPropagation();
-
+    const headers = {
+      "X-Auth-token": localStorage.getItem("access_token"),
+    };
     if (playlistIsOpened) {
       const { data, status } = await axios.delete(
-        `http://localhost:1337/api/v1/playlist/remove/${playlistId}?song=${title}`
+        `http://localhost:1337/api/v1/playlist/remove/${playlistId}?song=${title}`,
+        { headers }
       );
       console.log(playlistId, title);
       if (status == 200) {
@@ -190,7 +205,8 @@ const SongCard = ({
     } else {
       const __URL__ = "http://localhost:1337";
       const { data, status } = await axios.delete(
-        `${__URL__}/api/v1/song/delete/${songIdCur}?file=${file}`
+        `${__URL__}/api/v1/song/delete/${songIdCur}?file=${file}`,
+        { headers }
       );
       if (status === 200) {
         setSongDeleteRenderind(true);
@@ -206,16 +222,17 @@ const SongCard = ({
       <div className="song-img" onClick={handlePlay}>
         <img
           src={
-            cover !== null && cover !== undefined
+            cover !== undefined && cover !== null
               ? showPlayingImage
                 ? playing
-                : `http://localhost:1337/api/v1/song/${cover}/cover`
+                : `http://localhost:1337/api/v1/${cover}/cover`
               : showPlayingImage
               ? playing
               : musicbg
           }
           alt="SongCover"
         />
+
         <div className="overlay">
           {isPlaying && songIdCur === songId ? (
             <FontAwesomeIcon icon={faPause} />
@@ -229,44 +246,48 @@ const SongCard = ({
         <p>{artistName}</p>
       </div>
       <div className="song-actions">
-        <div className="songCard__addtoplaylist">
-          <button
-            style={{
-              alignSelf: "center",
-              cursor: "pointer",
-              zIndex: 1,
-              border: "none",
-              background: "transparent",
-            }}
-            onClick={handleAddToPlaylist}
-          >
-            <PlaylistAddIcon />
-          </button>
-          <Playlistmodal
-            songIdCur={songIdCur}
-            title={title}
-            artistName={artistName}
-            album={album}
-            playlistOpen={playlistOpen}
-            handleClosePlaylist={handleClosePlaylist}
-          />
-        </div>
-        <div className="song-delete">
-          <IconButton
-            onClick={(event) =>
-              handleDeletePlaylistSong(
-                event,
-                file,
-                songIdCur,
-                playlistCurrentId,
-                title
-              )
-            }
-            aria-label="delete"
-          >
-            <DeleteIcon />
-          </IconButton>
-        </div>
+        {token && playlists.length !== 0 && (
+          <div className="songCard__addtoplaylist">
+            <button
+              style={{
+                alignSelf: "center",
+                cursor: "pointer",
+                zIndex: 1,
+                border: "none",
+                background: "transparent",
+              }}
+              onClick={handleAddToPlaylist}
+            >
+              <PlaylistAddIcon />
+            </button>
+            <Playlistmodal
+              songIdCur={songIdCur}
+              title={title}
+              artistName={artistName}
+              album={album}
+              playlistOpen={playlistOpen}
+              handleClosePlaylist={handleClosePlaylist}
+            />
+          </div>
+        )}
+        {uploadedBy === decoded.id && currentPath === "/mysongs" && (
+          <div className="song-delete">
+            <IconButton
+              onClick={(event) =>
+                handleDeletePlaylistSong(
+                  event,
+                  file,
+                  songIdCur,
+                  playlistCurrentId,
+                  title
+                )
+              }
+              aria-label="delete"
+            >
+              <DeleteIcon />
+            </IconButton>
+          </div>
+        )}
         <AudioDownloader
           songIdTrack={songIdCur}
           fileName={`${artistName} - ${title}`}

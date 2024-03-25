@@ -12,7 +12,7 @@ const AudioDownloader = ({ songIdTrack, fileName }) => {
       setIsDownloading(true);
 
       const __URL__ = "http://localhost:1337";
-      const URL = `${__URL__}/api/v1/song/${songIdTrack}/file`;
+      const URL = `${__URL__}/api/v1/${songIdTrack}/file`;
       const { data } = await axios.get(URL, {
         responseType: "blob",
       });
@@ -47,7 +47,7 @@ const AudioDownloader = ({ songIdTrack, fileName }) => {
         transition: "opacity 0.3s ease-in-out, background-color 0.2s",
         opacity: isDownloading ? 0.5 : hover ? 0.8 : 1,
         backgroundColor: hover ? "#C8C8C8" : "transparent",
-        marginRight: "10px",
+        margin: "0 auto",
         borderRadius: 6,
       }}
       onClick={(event) => !isDownloading && downloadAudio(event)}

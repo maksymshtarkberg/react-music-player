@@ -18,6 +18,20 @@ const PlayList = ({
 
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    fetchPlaylists();
+  }, []);
+
+  useEffect(() => {
+    if (cretePlaylist) {
+      setLoading(true);
+      fetchPlaylists();
+      setLoading(false);
+      setCreatePlaylist(false);
+      setPlaylistLoaded(false);
+    }
+  }, [cretePlaylist, playlists, playlistsisLoaded]);
+
   // Create a playlist
   const createPlaylist = async () => {
     const __URL__ = "http://localhost:1337";
@@ -58,20 +72,9 @@ const PlayList = ({
     setPlaylistLoaded(true);
   };
 
-  useEffect(() => {
-    if (cretePlaylist) {
-      setLoading(true);
-      fetchPlaylists();
-      setLoading(false);
-      setCreatePlaylist(false);
-      setPlaylistLoaded(false);
-    }
-  }, [cretePlaylist, playlists, playlistsisLoaded]);
-
   const handlePlaylistCover = (e) => {
     setPlaylistCover(e.target.files[0]);
   };
-
   return (
     <>
       <div className="playlist-name">
@@ -98,7 +101,7 @@ const PlayList = ({
         Create Playlist
       </button>
       <div className="playlists-card_container">
-        {playlists ? (
+        {playlists.length !== 0 ? (
           playlists.map((item, index) => {
             const songsQuantity = item.songs.length;
             return (
@@ -112,7 +115,7 @@ const PlayList = ({
             );
           })
         ) : (
-          <>No playlists</>
+          <h2>No playlists were created</h2>
         )}
       </div>
     </>

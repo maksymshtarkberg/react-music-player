@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import axios from "axios";
-import "./upload-songs.css";
-// import { redirect } from "react-router-dom";
+import { decodeToken } from "react-jwt";
+import { connect } from "react-redux";
+import { addTodo } from "../../redux/actions";
+import { getSongs } from "../../util/getSongs";
+import { useEffect } from "react";
 
-const UploadSong = ({ onUploadSong, close }) => {
+const UploadSong = ({ addTodo }) => {
   // we are using this to close the sidebar when we land on this page
 
   // we are using this to upload the file
@@ -14,6 +17,18 @@ const UploadSong = ({ onUploadSong, close }) => {
   const [album, setAlbum] = useState();
   const [description, setDescription] = useState();
   const [createdAt, setcreatedAt] = useState();
+  const [songIsUploading, setSongIsUploading] = useState(false);
+
+  useEffect(() => {
+    if (!songIsUploading) {
+      fetchSongs();
+    }
+  }, []);
+
+  const fetchSongs = async () => {
+    const updatedSongs = await getSongs();
+    addTodo(updatedSongs);
+  };
 
   // we are using this to handle the file change
   const handleFileChange = (e) => {
@@ -26,6 +41,10 @@ const UploadSong = ({ onUploadSong, close }) => {
 
   // we are using this to handle the form submission
   const handleSubmit = async (e) => {
+    setSongIsUploading(true);
+    const token = localStorage.getItem("access_token");
+    const decoded = decodeToken(token);
+
     e.preventDefault();
     setcreatedAt(Date.now());
     const formData = new FormData();
@@ -36,6 +55,7 @@ const UploadSong = ({ onUploadSong, close }) => {
     formData.append("album", album);
     formData.append("description", description);
     formData.append("createdAt", createdAt);
+    formData.append("uploadedBy", decoded.id);
 
     const body = {
       title,
@@ -44,18 +64,12 @@ const UploadSong = ({ onUploadSong, close }) => {
       description,
       createdAt: Date.now(),
     };
-    // const config = {
-    //   headers: {
-    //     "content-type": "multipart/form-data",
-    //     "x-auth-token": localStorage.getItem("access_token"),
-    //   },
-    // };
 
     const __URL__ = "http://localhost:1337";
     const result = await axios.post(`${__URL__}/api/v1/song/upload`, formData, {
       headers: {
         "content-type": "multipart/form-data",
-        //   "x-auth-token": localStorage.getItem("access_token"),
+        "X-Auth-Token": localStorage.getItem("access_token"),
       },
       data: body,
     });
@@ -63,76 +77,77 @@ const UploadSong = ({ onUploadSong, close }) => {
     // if the file is uploaded successfully, we will redirect the user to the home page with alert message
     if (result.status === 201) {
       alert("File uploaded successfully");
-      onUploadSong();
-      close();
+      setSongIsUploading(false);
     }
   };
 
   return (
-    <div className="upload-songs">
-      <h1 className="upload-songs__head">Upload Song</h1>
+    <div className="reg-container">
+      <h1 className="reg-title">Upload Song</h1>
 
       <form
         onSubmit={handleSubmit}
         encType="multipart/form-data"
-        className="upload-songs__table"
+        className="reg-form"
       >
-        <div className="upload-songs__title fl-dr">
-          <label className="" htmlFor="title">
+        <div className="input-control">
+          <label className="reg-label" htmlFor="title">
             Title
           </label>
           <input
             type="text"
             name="title"
-            className="upload-songs__insert"
+            className="reg-input"
             placeholder="Song Name"
             onChange={(e) => setTitle(e.target.value)}
             required
           />
         </div>
-        <div className="fl-dr">
-          <label className="" htmlFor="title">
+        <div className="input-control">
+          <label className="reg-label" htmlFor="title">
             Artist
           </label>
           <input
             type="text"
             name="title"
-            className="upload-songs__insert"
+            className="reg-input"
             placeholder="Artist Name"
             onChange={(e) => setArtist(e.target.value)}
             required
           />
         </div>
-        <div className="fl-dr">
-          <label className="px-2" htmlFor="title">
+        <div className="input-control">
+          <label className="reg-label" htmlFor="title">
             Album
           </label>
           <input
             type="text"
             name="title"
-            className="upload-songs__insert"
+            className="reg-input"
             placeholder="Album"
             onChange={(e) => setAlbum(e.target.value)}
             required
           />
         </div>
-        <div className="upload-songs__description fl-dr">
-          <label className="" htmlFor="title">
+        <div className="input-control">
+          <label className="reg-label" htmlFor="title">
             Description
           </label>
           <input
             type="text"
             name="title"
-            className="upload-songs__insert"
+            className="reg-input"
             placeholder="This song is about..."
             onChange={(e) => setDescription(e.target.value)}
             required
           />
         </div>
-        <div className="fl-dr">
-          <label htmlFor="audioFile">Audio File</label>
+        <div className="input-control">
+          <label htmlFor="audioFile" className="reg-label">
+            Audio File
+          </label>
           <input
-            className="file-input"
+            className="reg-input"
             onChange={handleFileChange}
             type="file"
             name="file"
@@ -140,10 +155,12 @@ const UploadSong = ({ onUploadSong, close }) => {
             required
           />
         </div>
-        <div className="fl-dr">
-          <label htmlFor="albumCover">Album Cover</label>
+        <div className="input-control">
+          <label htmlFor="albumCover" className="reg-label">
+            Album Cover
+          </label>
           <input
-            className="file-input"
+            className="reg-input"
             onChange={handleAlbumCoverChange}
             type="file"
             name="albumCover"
@@ -153,9 +170,9 @@ const UploadSong = ({ onUploadSong, close }) => {
         </div>
         <div className="upload-songs__btn">
           <button
-            className="button"
+            className="reg-button"
             type="submit"
-            //   disabled={localStorage.getItem("access_token") ? false : true}
+            disabled={localStorage.getItem("access_token") ? false : true}
           >
             Submit
           </button>
@@ -165,4 +182,6 @@ const UploadSong = ({ onUploadSong, close }) => {
   );
 };
 
-export default UploadSong;
+const mapStatetoProps = (state) => ({});
+
+export default connect(mapStatetoProps, { addTodo })(UploadSong);

@@ -56,6 +56,7 @@ const Player = ({
   setArtistName,
   setIsLoadingSong,
   isLoadingSong,
+  songId,
   setSongId,
   canvasRef,
   audioPlayer,
@@ -72,10 +73,10 @@ const Player = ({
    * Fetching current song by current track index
    */
   useEffect(() => {
-    if (isLoaded) {
+    if (isLoaded && songId && todosRedux) {
       fetchSong();
     }
-  }, [todosRedux, isLoaded, currentTrackIndex]);
+  }, [todosRedux, isLoaded, songId]);
 
   const fetchSong = async () => {
     try {
@@ -83,11 +84,15 @@ const Player = ({
         setCurrentTrackIndex(0);
       }
 
-      const songIdTrack = playlist[currentTrackIndex]._id;
+      const headers = {
+        "Content-Type": "application/json",
+        "X-Auth-token": localStorage.getItem("access_token"),
+      };
 
       const __URL__ = "http://localhost:1337";
-      const URL = `${__URL__}/api/v1/song/${songIdTrack}/file`;
+      const URL = `${__URL__}/api/v1/${songId}/file`;
       const { data } = await axios.get(URL, {
+        headers: headers,
         responseType: "blob",
       });
 
@@ -95,20 +100,15 @@ const Player = ({
       const audioUrl = window.URL.createObjectURL(blob);
       if (audioUrl) {
         setSongUrl(audioUrl);
-        setSongName(playlist[currentTrackIndex].title);
-        setArtistName(playlist[currentTrackIndex].artist);
-        setSongId(songIdTrack);
+        const currentSong = todosRedux.find((song) => song._id === songId);
+        console.log(currentSong);
+        setSongName(currentSong.title);
+        setArtistName(currentSong.artist);
+
+        setSongImg(currentSong.coverfile);
+
         setIsLoadedSong(true);
         setIsLoadingSong(false);
-      }
-
-      /*
-       * Setting current song picture
-       */
-      const songIdCover = playlist[currentTrackIndex].coverfile;
-      if (songIdCover) {
-        const coverURL = `${__URL__}/api/v1/song/${songIdCover}/cover`;
-        setSongImg(coverURL);
       } else {
         setSongImg(""); // Clearing somgImg to default Player Image if its no file
       }
@@ -135,7 +135,7 @@ const Player = ({
         audioPlayer.current.pause();
       }
     }
-  }, [songUrl, currentTrackIndex, isLoadingSong]);
+  }, [songId, isLoadingSong]);
 
   /**
    * Calculating the time of current song(duration and updating it when song is playing)
@@ -335,25 +335,24 @@ const Player = ({
 
   const toggleSkipForward = async () => {
     if (!isLoadingSong) {
-      await audioPlayer.current.pause();
-      setSongUrl("");
-      setIsLoadingSong(true);
-      const nextIndex = currentTrackIndex + 1;
-      setCurrentTrackIndex(nextIndex % playlist.length);
-      setIsPlaying(true);
+      const nextIndex = (currentTrackIndex + 1) % playlist.length;
+      await switchSong(nextIndex);
     }
   };
 
   const toggleSkipBackward = async () => {
     if (!isLoadingSong) {
-      await audioPlayer.current.pause();
-      setIsPlaying(true);
-      setIsLoadingSong(true);
-      if (currentTrackIndex > 0) {
-        setCurrentTrackIndex(currentTrackIndex - 1);
-      }
-      setSongUrl("");
+      const prevIndex = (currentTrackIndex - 1) % playlist.length;
+      await switchSong(prevIndex);
     }
+  };
+
+  const switchSong = async (index) => {
+    await audioPlayer.current.pause();
+    setIsPlaying(true);
+    setIsLoadingSong(true);
+    setCurrentTrackIndex(index);
+    setSongId(todosRedux[index]._id);
   };
 
   const handleVolumeChange = (newValue) => {
@@ -376,7 +375,8 @@ const Player = ({
 
   const SongOnEnded = () => {
     setSongUrl("");
-    setCurrentTrackIndex(currentTrackIndex + 1);
+    setCurrentTrackIndex((currentTrackIndex + 1) % playlist.length);
+    setSongId(todosRedux[currentTrackIndex]._id);
   };
 
   function VolumeBtns() {
