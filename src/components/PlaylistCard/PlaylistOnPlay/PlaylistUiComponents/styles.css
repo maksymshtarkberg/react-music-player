@@ -1,0 +1,32 @@
+.playlist-load {
+  width: 2px;
+  height: 33px;
+  background-color: limegreen;
+  animation: 1s move6 infinite;
+  border-radius: 5px;
+  margin: 0.1em;
+}
+
+.playlist-load:nth-child(1) {
+  animation-delay: 0.2s;
+}
+
+.playlist-load:nth-child(2) {
+  animation-delay: 0.4s;
+}
+
+.playlist-load:nth-child(3) {
+  animation-delay: 0.6s;
+}
+
+.playlist-loading {
+  display: flex;
+  margin-top: 1em;
+  margin-left: 0.3em;
+}
+
+.spotify {
+  width: 50px;
+  height: 50px;
+  margin-right: 0.6em;
+}

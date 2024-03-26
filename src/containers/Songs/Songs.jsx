@@ -13,6 +13,7 @@ import {
   setPlaylistLoaded,
 } from "../../redux/actions";
 import { connect } from "react-redux";
+import { getPlaylists } from "../../util/getPlaylists";
 
 const Songs = ({
   addTodo,
@@ -23,10 +24,11 @@ const Songs = ({
   setSongId,
   audioPlayer,
   songId,
+  playlistIsOpened,
 }) => {
   useEffect(() => {
     fetchSongs();
-  }, []);
+  }, [!songId]);
 
   const fetchSongs = async () => {
     const songs = await getSongs();
@@ -43,14 +45,8 @@ const Songs = ({
   };
 
   const fetchPlaylists = async () => {
-    const headers = {
-      "X-Auth-token": localStorage.getItem("access_token"),
-    };
+    const playlists = await getPlaylists();
 
-    const __URL__ = "http://localhost:1337";
-    const { data } = await axios.get(`${__URL__}/api/v1/playlist`, { headers });
-
-    const playlists = data["playlists"];
     const currentPlaylist = playlists.find(
       (playlist) => playlist._id === playlistCurrentId
     );
@@ -107,6 +103,7 @@ const mapStatetoProps = (state) => ({
   currentTrackIndex: state.playerReducer.currentTrackIndex,
   songId: state.songReducer.songId,
   playlistCurrentId: state.playlistReducer.playlistCurrentId,
+  playlistIsOpened: state.playlistReducer.playlistIsOpened,
 });
 
 export default connect(mapStatetoProps, {

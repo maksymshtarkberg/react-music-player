@@ -61,8 +61,6 @@ const Player = ({
   canvasRef,
   audioPlayer,
 }) => {
-  const playlist = [...todosRedux];
-  // console.log(playlist.length);
   const currTimeRef = useRef(currTime);
 
   const [volume, setVolume] = useState(100);
@@ -80,7 +78,7 @@ const Player = ({
 
   const fetchSong = async () => {
     try {
-      if (currentTrackIndex >= playlist.length) {
+      if (currentTrackIndex >= todosRedux.length) {
         setCurrentTrackIndex(0);
       }
 
@@ -101,7 +99,6 @@ const Player = ({
       if (audioUrl) {
         setSongUrl(audioUrl);
         const currentSong = todosRedux.find((song) => song._id === songId);
-        console.log(currentSong);
         setSongName(currentSong.title);
         setArtistName(currentSong.artist);
 
@@ -335,14 +332,14 @@ const Player = ({
 
   const toggleSkipForward = async () => {
     if (!isLoadingSong) {
-      const nextIndex = (currentTrackIndex + 1) % playlist.length;
+      const nextIndex = (currentTrackIndex + 1) % todosRedux.length;
       await switchSong(nextIndex);
     }
   };
 
   const toggleSkipBackward = async () => {
     if (!isLoadingSong) {
-      const prevIndex = (currentTrackIndex - 1) % playlist.length;
+      const prevIndex = (currentTrackIndex - 1) % todosRedux.length;
       await switchSong(prevIndex);
     }
   };
@@ -373,10 +370,10 @@ const Player = ({
     }
   };
 
-  const SongOnEnded = () => {
+  const SongOnEnded = async () => {
     setSongUrl("");
-    setCurrentTrackIndex((currentTrackIndex + 1) % playlist.length);
-    setSongId(todosRedux[currentTrackIndex]._id);
+    const nextIndex = (currentTrackIndex + 1) % todosRedux.length;
+    await switchSong(nextIndex);
   };
 
   function VolumeBtns() {
@@ -410,7 +407,7 @@ const Player = ({
       />
 
       <RotateImg songImg={songImg} />
-      {songUrl ? (
+      {songUrl && !isLoadingSong ? (
         <div>
           <h2>{songName}</h2>
           <p>{songArtist}</p>

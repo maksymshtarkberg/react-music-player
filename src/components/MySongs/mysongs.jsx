@@ -5,8 +5,10 @@ import { connect } from "react-redux";
 import Songcard from "../SongCard/songcard";
 import { getSongs } from "../../util/getSongs";
 import "./styles.css";
+import { getPlaylists } from "../../util/getPlaylists";
+import { addTodo, setPlaylistLoaded } from "../../redux/actions";
 
-const MySongs = ({ todosRedux, audioPlayer }) => {
+const MySongs = ({ todosRedux, audioPlayer, playlistCurrentId }) => {
   const token = localStorage.getItem("access_token");
   const decoded = decodeToken(token);
   const [songsUploadedByUser, setSongsUploadedByUser] = useState([]);
@@ -20,12 +22,35 @@ const MySongs = ({ todosRedux, audioPlayer }) => {
     const foundSongs = songs.filter(
       (userSong) => userSong.uploadedBy === decoded.id
     );
-    // console.log(songs);
-    setSongsUploadedByUser(foundSongs);
+
+    const setIndexesSongs = foundSongs.map((userSong) => {
+      const index = songs.findIndex((song) => song._id === userSong._id);
+      return { ...userSong, index };
+    });
+
+    // console.log(setIndexesSongs);
+    setSongsUploadedByUser(setIndexesSongs);
+  };
+
+  const fetchPlaylists = async () => {
+    const playlists = await getPlaylists();
+
+    const currentPlaylist = playlists.find(
+      (playlist) => playlist._id === playlistCurrentId
+    );
+    const songsInCurrentPlaylist = currentPlaylist
+      ? currentPlaylist.songs || []
+      : [];
+
+    setPlaylistLoaded(true);
   };
 
   const handleSongDeleteMain = () => {
     fetchSongs();
+  };
+
+  const handleSongDeletePlaylist = () => {
+    fetchPlaylists();
   };
 
   return (
@@ -37,7 +62,7 @@ const MySongs = ({ todosRedux, audioPlayer }) => {
             <Songcard
               key={index}
               songIdCur={song._id}
-              trackIndex={index}
+              trackIndex={song.index}
               title={song.title}
               album={song.album}
               artistName={song.artist}
@@ -47,6 +72,7 @@ const MySongs = ({ todosRedux, audioPlayer }) => {
               cover={song.coverfile}
               audioPlayer={audioPlayer}
               onSongDelete={handleSongDeleteMain}
+              onSongDeletePlaylist={handleSongDeletePlaylist}
             />
           );
         })
@@ -59,6 +85,9 @@ const MySongs = ({ todosRedux, audioPlayer }) => {
 
 const mapStatetoProps = (state) => ({
   todosRedux: state.todos.todos,
+  playlistCurrentId: state.playlistReducer.playlistCurrentId,
 });
 
-export default connect(mapStatetoProps, {})(MySongs);
+export default connect(mapStatetoProps, { addTodo, setPlaylistLoaded })(
+  MySongs
+);

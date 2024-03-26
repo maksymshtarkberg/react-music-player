@@ -1,15 +1,11 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import axios from "axios";
 import { decodeToken } from "react-jwt";
 import { connect } from "react-redux";
 import { addTodo } from "../../redux/actions";
 import { getSongs } from "../../util/getSongs";
-import { useEffect } from "react";
 
 const UploadSong = ({ addTodo }) => {
-  // we are using this to close the sidebar when we land on this page
-
-  // we are using this to upload the file
   const [songFile, setFile] = useState();
   const [albumCover, setAlbumCover] = useState();
   const [title, setTitle] = useState();
@@ -18,12 +14,6 @@ const UploadSong = ({ addTodo }) => {
   const [description, setDescription] = useState();
   const [createdAt, setcreatedAt] = useState();
   const [songIsUploading, setSongIsUploading] = useState(false);
-
-  useEffect(() => {
-    if (!songIsUploading) {
-      fetchSongs();
-    }
-  }, []);
 
   const fetchSongs = async () => {
     const updatedSongs = await getSongs();
@@ -40,7 +30,7 @@ const UploadSong = ({ addTodo }) => {
   };
 
   // we are using this to handle the form submission
-  const handleSubmit = async (e) => {
+  const handleSubmit = useCallback(async (e) => {
     setSongIsUploading(true);
     const token = localStorage.getItem("access_token");
     const decoded = decodeToken(token);
@@ -66,20 +56,26 @@ const UploadSong = ({ addTodo }) => {
     };
 
     const __URL__ = "http://localhost:1337";
-    const result = await axios.post(`${__URL__}/api/v1/song/upload`, formData, {
-      headers: {
-        "content-type": "multipart/form-data",
-        "X-Auth-Token": localStorage.getItem("access_token"),
+    const result = await axios.post(
+      `${__URL__}/api/v1/song/upload`,
+      formData,
+      {
+        headers: {
+          "content-type": "multipart/form-data",
+          "X-Auth-Token": localStorage.getItem("access_token"),
+        },
+        data: body,
       },
-      data: body,
-    });
+      [songFile, albumCover, title, artist, album, description, createdAt]
+    );
 
     // if the file is uploaded successfully, we will redirect the user to the home page with alert message
     if (result.status === 201) {
       alert("File uploaded successfully");
+      fetchSongs();
       setSongIsUploading(false);
     }
-  };
+  });
 
   return (
     <div className="reg-container">

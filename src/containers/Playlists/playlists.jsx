@@ -8,6 +8,7 @@ import PlaylistCard from "../../components/PlaylistCard/playlistcard";
 import { getPlaylists } from "../../util/getPlaylists";
 
 const PlayList = ({
+  audioPlayer,
   setPlaylist,
   setPlaylistLoaded,
   playlists,
@@ -106,11 +107,13 @@ const PlayList = ({
             const songsQuantity = item.songs.length;
             return (
               <PlaylistCard
+                audioPlayer={audioPlayer}
                 playlistId={item._id}
                 name={item.playlistName}
                 key={index}
                 cover={item.playlistCoverId}
                 quantityOfSongs={songsQuantity}
+                songs={item.songs}
               />
             );
           })

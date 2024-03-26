@@ -1,0 +1,113 @@
+.playlist-main {
+  background-color: white;
+  border-radius: 15px;
+}
+
+.playlist-card_arrowback {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 37px;
+  transform: rotate(335deg);
+}
+
+.playlist-loader {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  height: 63px;
+  padding-left: 1em;
+  padding-right: 1em;
+  transform: rotate(180deg);
+  justify-content: right;
+  border-radius: 10px;
+  transition: .4s ease-in-out;
+  background-color: #d3d3d3;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.playlist-loader:hover {
+  background-color: rgba(235, 235, 235, 0.5);
+
+}
+
+.currentplaying {
+  display: flex;
+  margin: 1em;
+}
+
+
+
+.playlist-heading {
+  background: linear-gradient(to right, #9f2324, #e8c51d);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 1.1em;
+  font-weight: bold;
+  align-self: center;
+}
+
+.playlist-onplay_btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: max-content;
+  height: max-content;
+  padding: 9px;
+  background: #e9e6eb;
+  color: #000;
+  border: 1px solid rgba(159, 160, 168, 0.4);
+  border-radius: 20px;
+  font-size: clamp(0.7rem, 3vw, 1rem);
+  font-weight: 500;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
+    rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+  transition: all 0.4s linear;
+  cursor: pointer;
+  transform: rotate(180deg);
+
+}
+
+
+
+.playlist-albumcover {
+  position: relative;
+  margin-right: 1em;
+  height: 40px;
+  width: 40px;
+  background-color: rgb(233, 232, 232);
+  align-self: center;
+  border-radius: 5px;
+}
+
+.playlist-song {
+  position: relative;
+  transform: rotate(180deg);
+  margin-right: 1em;
+  color: black;
+  align-self: center;
+}
+
+.playlist-artist {
+  font-size: 0.6em;
+}
+
+@keyframes move6 {
+  0% {
+    height: 0.2em;
+  }
+
+  25% {
+    height: 0.7em;
+  }
+
+  50% {
+    height: 1.5em;
+  }
+
+  100% {
+    height: 0.2em;
+  }
+}
