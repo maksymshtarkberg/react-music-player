@@ -6,30 +6,32 @@ import Songcard from "../SongCard/songcard";
 import { getSongs } from "../../util/getSongs";
 import "./styles.css";
 import { getPlaylists } from "../../util/getPlaylists";
-import { addTodo, setPlaylistLoaded } from "../../redux/actions";
+import { setSongsUploadedByUser, setPlaylistLoaded } from "../../redux/actions";
 
-const MySongs = ({ todosRedux, audioPlayer, playlistCurrentId }) => {
+const MySongs = ({
+  setSongsUploadedByUser,
+  songsUploadedByUser,
+  audioPlayer,
+  playlistCurrentId,
+  playlistIsOpened,
+}) => {
   const token = localStorage.getItem("access_token");
   const decoded = decodeToken(token);
-  const [songsUploadedByUser, setSongsUploadedByUser] = useState([]);
+  // const [songsUploadedByUser, setSongsUploadedByUser] = useState([]);
 
   useEffect(() => {
     fetchSongs();
-  }, []);
+  }, [playlistIsOpened]);
 
   const fetchSongs = async () => {
     const songs = await getSongs();
+
     const foundSongs = songs.filter(
       (userSong) => userSong.uploadedBy === decoded.id
     );
+    console.log(foundSongs);
 
-    const setIndexesSongs = foundSongs.map((userSong) => {
-      const index = songs.findIndex((song) => song._id === userSong._id);
-      return { ...userSong, index };
-    });
-
-    // console.log(setIndexesSongs);
-    setSongsUploadedByUser(setIndexesSongs);
+    setSongsUploadedByUser(foundSongs);
   };
 
   const fetchPlaylists = async () => {
@@ -71,8 +73,10 @@ const MySongs = ({ todosRedux, audioPlayer, playlistCurrentId }) => {
               file={song.file}
               cover={song.coverfile}
               audioPlayer={audioPlayer}
+              songsUploadedByUser={songsUploadedByUser}
               onSongDelete={handleSongDeleteMain}
               onSongDeletePlaylist={handleSongDeletePlaylist}
+              fromMySongs={true}
             />
           );
         })
@@ -86,8 +90,11 @@ const MySongs = ({ todosRedux, audioPlayer, playlistCurrentId }) => {
 const mapStatetoProps = (state) => ({
   todosRedux: state.todos.todos,
   playlistCurrentId: state.playlistReducer.playlistCurrentId,
+  playlistIsOpened: state.playlistReducer.playlistIsOpened,
+  songsUploadedByUser: state.todos.songsUploadedByUser,
 });
 
-export default connect(mapStatetoProps, { addTodo, setPlaylistLoaded })(
-  MySongs
-);
+export default connect(mapStatetoProps, {
+  setSongsUploadedByUser,
+  setPlaylistLoaded,
+})(MySongs);

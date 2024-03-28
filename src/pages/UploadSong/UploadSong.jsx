@@ -8,11 +8,11 @@ import { getSongs } from "../../util/getSongs";
 const UploadSong = ({ addTodo }) => {
   const [songFile, setFile] = useState();
   const [albumCover, setAlbumCover] = useState();
-  const [title, setTitle] = useState();
-  const [artist, setArtist] = useState();
-  const [album, setAlbum] = useState();
-  const [description, setDescription] = useState();
-  const [createdAt, setcreatedAt] = useState();
+  const [title, setTitle] = useState("");
+  const [artist, setArtist] = useState("");
+  const [album, setAlbum] = useState("");
+  const [description, setDescription] = useState("");
+  const [createdAt, setCreatedAt] = useState();
   const [songIsUploading, setSongIsUploading] = useState(false);
 
   const fetchSongs = async () => {
@@ -36,7 +36,7 @@ const UploadSong = ({ addTodo }) => {
     const decoded = decodeToken(token);
 
     e.preventDefault();
-    setcreatedAt(Date.now());
+    setCreatedAt(Date.now());
     const formData = new FormData();
     formData.append("songFile", songFile);
     formData.append("albumCover", albumCover);
@@ -72,6 +72,13 @@ const UploadSong = ({ addTodo }) => {
     // if the file is uploaded successfully, we will redirect the user to the home page with alert message
     if (result.status === 201) {
       alert("File uploaded successfully");
+      setTitle("");
+      setArtist("");
+      setAlbum("");
+      setDescription("");
+      setFile();
+      setAlbumCover();
+      setCreatedAt("");
       fetchSongs();
       setSongIsUploading(false);
     }

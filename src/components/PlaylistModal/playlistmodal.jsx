@@ -9,6 +9,8 @@ import axios from "axios";
 import { getPlaylists } from "../../util/getPlaylists";
 import { setPlaylist } from "../../redux/actions";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
+import { decodeToken } from "react-jwt";
+import { getSongs } from "../../util/getSongs";
 
 const style = {
   position: "absolute",
@@ -31,6 +33,7 @@ const PlaylistModal = ({
   setPlaylist,
   playlistOpen,
   handleClosePlaylist,
+  uploadedBy,
 }) => {
   const handlePlaylistItemClick = async (event, playlistId) => {
     event.stopPropagation();
@@ -48,6 +51,10 @@ const PlaylistModal = ({
       alert("This song is already in the playlist.");
       return;
     }
+    const allSongs = await getSongs();
+
+    const cover = allSongs.find((song) => song._id === songIdCur);
+    const coverfile = cover ? cover.coverfile : null;
 
     const songData = [
       {
@@ -55,6 +62,8 @@ const PlaylistModal = ({
         title,
         artist: artistName,
         album,
+        uploadedBy: uploadedBy,
+        coverfile: coverfile,
       },
     ];
     const headers = {

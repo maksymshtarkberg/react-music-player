@@ -58,13 +58,22 @@ export const addPlaylist = async (req, res) => {
 // @access Private
 export const deletePlaylist = async (req, res) => {
   try {
+    const { id } = req.params;
+
     const db = dbConnect.db("music_streaming");
     const collection = db.collection("playlists");
+    const bucket = new mongodb.GridFSBucket(db, {
+      bucketName: "uploads",
+    });
+    const playlistFind = await collection.findOne({
+      _id: new mongodb.ObjectId(id),
+    });
 
     const playlist = await collection.deleteOne({
-      _id: new mongodb.ObjectId(req.params.id),
+      _id: new mongodb.ObjectId(id),
     });
     if (playlist) {
+      await bucket.delete(new mongodb.ObjectId(playlistFind.playlistCoverId));
       return res
         .status(200)
         .json({ message: "Playlist deleted successfully", status: "success" });

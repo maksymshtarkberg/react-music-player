@@ -5,7 +5,6 @@ import sendSeekable from "send-seekable";
 import {
   addSong,
   deleteSong,
-  getSongFile,
   getSongByIndex,
 } from "../controllers/songController.js";
 

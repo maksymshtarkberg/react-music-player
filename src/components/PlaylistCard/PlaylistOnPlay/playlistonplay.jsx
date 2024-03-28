@@ -22,7 +22,7 @@ import {
 import SpotifySvg from "./PlaylistUiComponents/spotifysvg";
 import PlayingInPlaylist from "./PlaylistUiComponents/playinginplaylist";
 import { getSongs } from "../../../util/getSongs";
-import { useEffect, useState } from "react";
+import SongDefault from "../../../assets/song-default.jpg";
 
 const PlaylistOnPlay = ({
   songs,
@@ -105,7 +105,15 @@ const PlaylistOnPlay = ({
                 <p>{song.title}</p>
                 <p className="playlist-artist">{song.artist}</p>
               </div>
-              <div className="playlist-albumcover"></div>
+              <img
+                className="playlist-albumcover"
+                src={
+                  song.coverfile
+                    ? `http://localhost:1337/api/v1/${song.coverfile}/cover`
+                    : SongDefault
+                }
+                alt="cover"
+              />
               {!isLoadingSong && isPlaying && song._id === songId ? (
                 <PlayingInPlaylist />
               ) : (

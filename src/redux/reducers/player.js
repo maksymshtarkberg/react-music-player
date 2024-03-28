@@ -9,7 +9,7 @@ import {
 
 const initialState = {
   currentTrackIndex: 0,
-  volume: 1,
+  volume: 100,
   seconds: "",
   time: {
     min: "",

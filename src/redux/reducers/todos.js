@@ -1,8 +1,13 @@
-import { ADD_TODO, SET_IS_LOADED } from "../actionTypes";
+import {
+  ADD_TODO,
+  SET_IS_LOADED,
+  SET_SONGS_UPLOADED_BY_USER,
+} from "../actionTypes";
 
 const initialState = {
   todos: [],
   isLoaded: false,
+  songsUploadedByUser: [],
 };
 
 const todoReducer = (state = initialState, action) => {
@@ -20,6 +25,13 @@ const todoReducer = (state = initialState, action) => {
         isLoaded: action.payload,
       };
     }
+    case SET_SONGS_UPLOADED_BY_USER: {
+      return {
+        ...state,
+        songsUploadedByUser: action.payload,
+      };
+    }
+
     default:
       return state;
   }

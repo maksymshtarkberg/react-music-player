@@ -21,8 +21,7 @@
 
 .playlist-loading {
   display: flex;
-  margin-top: 1em;
-  margin-left: 0.3em;
+  margin: 8px;
 }
 
 .spotify {

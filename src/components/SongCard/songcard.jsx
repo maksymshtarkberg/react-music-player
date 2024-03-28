@@ -24,6 +24,9 @@ import {
   setIsLoaded,
   setPlaylist,
   setIsLoadingSong,
+  addTodo,
+  setPlaylistIsOpened,
+  setPlaylistCurrentId,
 } from "../../redux/actions";
 import { connect } from "react-redux";
 import "./styles.css";
@@ -41,6 +44,7 @@ const SongCard = ({
   file,
   cover,
   uploadedBy,
+  songsUploadedByUser,
   setSongUrl,
   setSongName,
   setArtistName,
@@ -61,6 +65,10 @@ const SongCard = ({
   isLoadingSong,
   setIsPlaying,
   audioPlayer,
+  addTodo,
+  fromMySongs,
+  setPlaylistIsOpened,
+  setPlaylistCurrentId,
 }) => {
   const [playlistOpen, setPlaylistOpen] = useState(false);
   const [songDeleteRenderind, setSongDeleteRenderind] = useState(false);
@@ -96,6 +104,11 @@ const SongCard = ({
    * Playing the song by click on song in the tracklist
    */
   const handlePlay = async () => {
+    if (fromMySongs) {
+      addTodo(songsUploadedByUser);
+      setPlaylistIsOpened(false);
+      setPlaylistCurrentId("");
+    }
     setSongId(songIdCur);
     setCurrentTrackIndex(trackIndex);
 
@@ -261,6 +274,7 @@ const SongCard = ({
               <PlaylistAddIcon />
             </button>
             <Playlistmodal
+              uploadedBy={uploadedBy}
               songIdCur={songIdCur}
               title={title}
               artistName={artistName}
@@ -270,7 +284,7 @@ const SongCard = ({
             />
           </div>
         )}
-        {uploadedBy === decoded.id && currentPath === "/mysongs" && (
+        {uploadedBy === decoded.id && fromMySongs && (
           <div className="song-delete">
             <IconButton
               onClick={(event) =>
@@ -311,6 +325,7 @@ const mapStatetoProps = (state) => ({
 });
 
 export default connect(mapStatetoProps, {
+  addTodo,
   setSongUrl,
   setSongName,
   setArtistName,
@@ -323,4 +338,6 @@ export default connect(mapStatetoProps, {
   setIsLoaded,
   setPlaylist,
   setIsLoadingSong,
+  setPlaylistIsOpened,
+  setPlaylistCurrentId,
 })(SongCard);

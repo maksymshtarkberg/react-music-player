@@ -22,6 +22,7 @@ import {
   SET_USER_NAME,
   SET_USER_EMAIL,
   SET_USER_SESSION_ID,
+  SET_SONGS_UPLOADED_BY_USER,
 } from "./actionTypes";
 
 export const addTodo = (todos) => ({
@@ -126,4 +127,8 @@ export const setUserEmail = (email) => ({
 export const setUserSession = (sessionId) => ({
   type: SET_USER_SESSION_ID,
   payload: sessionId,
+});
+export const setSongsUploadedByUser = (songsUploadedByUser) => ({
+  type: SET_SONGS_UPLOADED_BY_USER,
+  payload: songsUploadedByUser,
 });

@@ -17,6 +17,7 @@ import {
   setArtistName,
   setIsLoadingSong,
   setSongId,
+  setVolume,
 } from "../../redux/actions";
 import Loader from "../Loader/loader";
 import RotateImg from "../RotatingImg/rotatingImg";
@@ -47,6 +48,8 @@ const Player = ({
   currentTrackIndex,
   setTime,
   time,
+  volume,
+  setVolume,
   setCurrTime,
   currTime,
   setSeconds,
@@ -63,12 +66,11 @@ const Player = ({
 }) => {
   const currTimeRef = useRef(currTime);
 
-  const [volume, setVolume] = useState(100);
   const [mute, setMute] = useState(false);
   const [songImg, setSongImg] = useState("");
 
   /**
-   * Fetching current song by current track index
+   * Fetching current song by current track id
    */
   useEffect(() => {
     if (isLoaded && songId && todosRedux) {
@@ -113,6 +115,15 @@ const Player = ({
       console.error(error);
     }
   };
+
+  /**
+   * Set current song volume equal to volume in Redux Player
+   */
+  useEffect(() => {
+    if (songUrl && !isLoadingSong) {
+      audioPlayer.current.volume = volume / 100;
+    }
+  }, [songUrl, songId, volume, currentTrackIndex]);
 
   /**
    * Set song file to audioRef of component
@@ -353,8 +364,7 @@ const Player = ({
   };
 
   const handleVolumeChange = (newValue) => {
-    setVolume(newValue);
-    audioPlayer.current.volume = newValue / 100;
+    setVolume(+newValue);
   };
 
   const HandleTimeChange = (e) => {
@@ -377,20 +387,29 @@ const Player = ({
   };
 
   function VolumeBtns() {
-    return mute ? (
-      <button onClick={() => setMute(!mute)}>
+    const handleMuteToggle = () => {
+      if (mute) {
+        setVolume(50);
+      } else {
+        setVolume(0);
+      }
+      setMute(!mute);
+    };
+
+    return mute || volume === 0 ? (
+      <button onClick={handleMuteToggle}>
         <VolumeOffIcon />
       </button>
     ) : volume <= 20 ? (
-      <button onClick={() => setMute(!mute)}>
+      <button onClick={handleMuteToggle}>
         <VolumeMuteIcon />
       </button>
     ) : volume <= 75 ? (
-      <button onClick={() => setMute(!mute)}>
+      <button onClick={handleMuteToggle}>
         <VolumeDownIcon />
       </button>
     ) : (
-      <button onClick={() => setMute(!mute)}>
+      <button onClick={handleMuteToggle}>
         <VolumeUpIcon />
       </button>
     );
@@ -447,7 +466,7 @@ const Player = ({
         id="progress"
         type="range"
         value={seconds || 0}
-        max={audioPlayer.current ? audioPlayer.current.duration : 0}
+        max={audioPlayer.current ? audioPlayer.current.duration || 0 : 0}
         onChange={HandleTimeChange}
       />
       <div className="song-time">
@@ -459,8 +478,6 @@ const Player = ({
         <input
           id="volume"
           type="range"
-          min={0}
-          max={100}
           value={volume}
           onChange={(e) => handleVolumeChange(e.target.value)}
         />
@@ -480,6 +497,7 @@ const mapStatetoProps = (state) => ({
   time: state.playerReducer.time,
   currTime: state.playerReducer.currTime,
   seconds: state.playerReducer.seconds,
+  volume: state.playerReducer.volume,
   songId: state.songReducer.songId,
   isLoadedSong: state.songReducer.isLoadedSong,
   isLoadingSong: state.playerReducer.isLoadingSong,
@@ -497,4 +515,5 @@ export default connect(mapStatetoProps, {
   setArtistName,
   setIsLoadingSong,
   setSongId,
+  setVolume,
 })(Player);

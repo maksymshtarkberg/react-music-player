@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import axios from "axios";
 
 import SongCard from "../../components/SongCard/songcard";
 import { getSongs } from "../../util/getSongs";
@@ -7,16 +6,22 @@ import "./styles.css";
 
 import {
   addTodo,
+  setSongUrl,
   setIsLoaded,
   setSongId,
   setPlaylist,
   setPlaylistLoaded,
+  setPlaylistIsOpened,
+  setIsPlaying,
 } from "../../redux/actions";
 import { connect } from "react-redux";
 import { getPlaylists } from "../../util/getPlaylists";
+import { faRotate } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const Songs = ({
   addTodo,
+  setSongUrl,
   todosRedux,
   setIsLoaded,
   setPlaylistLoaded,
@@ -24,7 +29,9 @@ const Songs = ({
   setSongId,
   audioPlayer,
   songId,
+  setPlaylistIsOpened,
   playlistIsOpened,
+  setIsPlaying,
 }) => {
   useEffect(() => {
     fetchSongs();
@@ -62,9 +69,25 @@ const Songs = ({
     fetchPlaylists();
   };
 
+  const reloadTracklist = () => {
+    setSongId("");
+    setSongUrl("");
+    playlistIsOpened && setPlaylistIsOpened(false);
+    audioPlayer.current.pause();
+    setIsPlaying(false);
+    fetchSongs();
+  };
+
   return (
-    <div className="componentPlaylist">
-      <h1>Songs</h1>
+    <div className="componentTracklist">
+      <div className="tracklist-title">
+        <h1>Songs</h1>
+        <FontAwesomeIcon
+          icon={faRotate}
+          className="tracklist-reload"
+          onClick={reloadTracklist}
+        />
+      </div>
       <div className="song-container">
         {setIsLoaded && todosRedux === null ? (
           <div>loading...</div>
@@ -108,8 +131,11 @@ const mapStatetoProps = (state) => ({
 
 export default connect(mapStatetoProps, {
   addTodo,
+  setSongUrl,
   setIsLoaded,
+  setIsPlaying,
   setSongId,
   setPlaylist,
   setPlaylistLoaded,
+  setPlaylistIsOpened,
 })(Songs);

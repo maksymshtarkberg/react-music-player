@@ -39,6 +39,8 @@ const PlaylistCard = ({
   setSongId,
   setIsLoadingSong,
   setIsPlaying,
+  setPlaylistCurrentId,
+  playlistCurrentId,
 }) => {
   const fetchPlaylists = async () => {
     const data = await getPlaylists();
@@ -70,26 +72,38 @@ const PlaylistCard = ({
   };
 
   const setCurrentPlaylistOn = () => {
-    setIsLoadingSong(true);
     const currentPlaylist = playlists.find(
       (playlist) => playlist._id === playlistId
     );
     const songsInCurrentPlaylist = currentPlaylist
       ? currentPlaylist.songs || []
       : [];
-    addTodo(songsInCurrentPlaylist);
-    setSongId(songsInCurrentPlaylist[0]._id);
-    setCurrentTrackIndex(0);
-    setPlaylistLoaded(true);
-    setPlaylistIsOpened(true);
-    songUrl && setIsPlaying(true);
+    if (songsInCurrentPlaylist.length > 0) {
+      audioPlayer.current.pause();
+      setSongUrl("");
+      setIsPlaying(false);
+      setSongId("");
+      setPlaylistCurrentId(playlistId);
+      setIsLoadingSong(true);
+
+      addTodo(songsInCurrentPlaylist);
+      setSongId(songsInCurrentPlaylist[0]._id);
+      setCurrentTrackIndex(0);
+      setPlaylistLoaded(true);
+      setPlaylistIsOpened(true);
+      songUrl && setIsPlaying(true);
+    } else {
+      setPlaylistIsOpened(false);
+    }
   };
 
   return (
     <div className="playlist-card">
       <div
         className={`playlist-card_inner ${
-          playlistIsOpened ? "playlist-rotate" : ""
+          playlistIsOpened && playlistCurrentId === playlistId
+            ? "playlist-rotate"
+            : ""
         }`}
       >
         <div className="playlist-card_circle"></div>
