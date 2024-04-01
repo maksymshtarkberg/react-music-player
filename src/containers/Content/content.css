@@ -136,6 +136,7 @@
 .album-container::-webkit-scrollbar-track {
   box-shadow: inset 0 0 0.3rem rgb(79, 78, 78);
   border-radius: 40px;
+
 }
 
 .artist-container::-webkit-scrollbar-thumb,

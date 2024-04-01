@@ -20,7 +20,6 @@ import { connect } from "react-redux";
 import { getPlaylists } from "../../util/getPlaylists";
 import axios from "axios";
 import PlaylistOnPlay from "./PlaylistOnPlay/playlistonplay";
-import { useState } from "react";
 
 const PlaylistCard = ({
   songUrl,

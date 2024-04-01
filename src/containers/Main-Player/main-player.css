@@ -1,6 +1,6 @@
 .main-player {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: 65% 35%;
   border-radius: 0 15px 15px 0;
   border-left: 1px solid rgba(255, 255, 255, 0.5);
   padding: 30px 20px;
@@ -16,9 +16,11 @@
 
 .tracklist__title p {
   background: linear-gradient(106deg, #bc8c46 0%, #ffde76 100%);
-  -webkit-background-clip: text; /* Применение градиента к тексту */
+  -webkit-background-clip: text;
+  /* Применение градиента к тексту */
   background-clip: text;
-  color: transparent; /* Делаем текст прозрачным, чтобы показать градиент */
+  color: transparent;
+  /* Делаем текст прозрачным, чтобы показать градиент */
   font-family: Titillium Web;
   font-size: 20px;
 }
@@ -27,7 +29,7 @@
   position: relative;
 }
 
-.vizualizer{
+.vizualizer {
   display: none;
   position: absolute;
   border-radius: 12px;

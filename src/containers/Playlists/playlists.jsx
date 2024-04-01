@@ -6,6 +6,7 @@ import { setPlaylist, setPlaylistLoaded } from "../../redux/actions";
 import "./styles.css";
 import PlaylistCard from "../../components/PlaylistCard/playlistcard";
 import { getPlaylists } from "../../util/getPlaylists";
+import PlaylistsSlider from "../../components/PlaylistsSlider/plslider";
 
 const PlayList = ({
   audioPlayer,
@@ -78,31 +79,36 @@ const PlayList = ({
   };
   return (
     <>
-      <div className="playlist-name">
-        <input
-          type="text"
-          id="playlistName"
-          placeholder="Playlist Name"
-          className="playlist-input"
-        />
+      <div className="playlist-create">
+        <div className="playlist-name">
+          <label className="reg-label" htmlFor="playlistName">
+            Playlist Name
+          </label>
+          <input
+            type="text"
+            id="playlistName"
+            placeholder="Playlist Name"
+            className="playlist-input"
+          />
+        </div>
+        <div className="playlist-photo">
+          <label className="reg-label" htmlFor="playlistCover">
+            Playlist Cover File
+          </label>
+          <input
+            onChange={handlePlaylistCover}
+            className="playlist-input"
+            type="file"
+            name="playlistCover"
+            accept="image/*"
+          />
+        </div>
+        <button className="playlist-button" onClick={createPlaylist}>
+          Create Playlist
+        </button>
       </div>
-      <div className="playlist-photo">
-        <label className="reg-label" htmlFor="playlistCover">
-          Playlist Cover
-        </label>
-        <input
-          onChange={handlePlaylistCover}
-          className="playlist-input"
-          type="file"
-          name="playlistCover"
-          accept="image/*"
-        />
-      </div>
-      <button className="playlist-button" onClick={createPlaylist}>
-        Create Playlist
-      </button>
       <div className="playlists-card_container">
-        {playlists.length !== 0 ? (
+        {/* {playlists.length !== 0 ? (
           playlists.map((item, index) => {
             const songsQuantity = item.songs.length;
             return (
@@ -119,6 +125,9 @@ const PlayList = ({
           })
         ) : (
           <h2>No playlists were created</h2>
+        )} */}
+        {playlists.length > 0 && (
+          <PlaylistsSlider audioPlayer={audioPlayer} playlists={playlists} />
         )}
       </div>
     </>

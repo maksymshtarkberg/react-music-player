@@ -29,7 +29,10 @@ function RouterWrapper() {
             {token && <Route path="/" element={<Navigate to="/feed" />} />}
             <Route path="/signin" element={<Login />} />
             <Route path="/signup" element={<Registration />} />
-            <Route path="/feed" element={<Content />} />
+            <Route
+              path="/feed"
+              element={<Content audioPlayer={audioPlayer} />}
+            />
 
             <Route element={<PrivateRoute />}>
               <Route path="/upload" element={<UploadSong />} />

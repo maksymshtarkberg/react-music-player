@@ -6,15 +6,22 @@ import Registration from "../../components/Registration/registration";
 import Settings from "../../pages/Settings/settings";
 import UploadSong from "../../pages/UploadSong/UploadSong";
 import "./content.css";
+import { connect } from "react-redux";
 
-const Content = () => {
+const Content = ({ audioPlayer, playlists }) => {
   return (
     <div class="main-content">
-      <PlaylistsSlider />
+      {playlists.length > 0 && (
+        <PlaylistsSlider audioPlayer={audioPlayer} playlists={playlists} />
+      )}
       <Artists />
       <Albums />
     </div>
   );
 };
 
-export default Content;
+const mapStatetoProps = (state) => ({
+  playlists: state.playlistReducer.playlists,
+});
+
+export default connect(mapStatetoProps, {})(Content);

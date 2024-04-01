@@ -284,7 +284,7 @@ const SongCard = ({
             />
           </div>
         )}
-        {uploadedBy === decoded.id && fromMySongs && (
+        {decoded && decoded.id === uploadedBy && fromMySongs && (
           <div className="song-delete">
             <IconButton
               onClick={(event) =>

@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { useState } from "react";
 import { connect } from "react-redux";
 
-const RotateImg = ({ songImg, isPlaying, currTime }) => {
+const RotateImg = ({ songImg, isPlaying, currTime, isLoadingSong }) => {
   const rotatingImageRef = useRef(null);
   const [animationFrameId, setAnimationFrameId] = useState(null);
   const currentRotation = useRef(0);
@@ -19,7 +19,7 @@ const RotateImg = ({ songImg, isPlaying, currTime }) => {
     return () => {
       pauseRotation();
     };
-  }, [isPlaying, currTime.sec]);
+  }, [isPlaying, currTime.sec, isLoadingSong]);
 
   const rotateImage = () => {
     setAnimationFrameId(
@@ -43,15 +43,11 @@ const RotateImg = ({ songImg, isPlaying, currTime }) => {
   };
   const __URL__ = "http://localhost:1337";
 
-  const coverURL = `${__URL__}/api/v1/${songImg}/cover`;
+  const coverURL = songImg ? `${__URL__}/api/v1/${songImg}/cover` : default_img;
 
   return (
     <div className="album-cover">
-      <img
-        ref={rotatingImageRef}
-        src={!songImg && songImg === undefined ? default_img : coverURL}
-        alt="album-cover"
-      />
+      <img ref={rotatingImageRef} src={coverURL} alt="album-cover" />
       <span className="point"></span>
     </div>
   );
@@ -61,6 +57,7 @@ const mapStateToProps = (state) => ({
   isPlaying: state.songReducer.isPlaying,
   seconds: state.playerReducer.seconds,
   currTime: state.playerReducer.currTime,
+  isLoadingSong: state.playerReducer.isLoadingSong,
 });
 
 export default connect(mapStateToProps)(RotateImg);

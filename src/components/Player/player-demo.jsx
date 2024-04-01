@@ -425,14 +425,16 @@ const Player = ({
         onEnded={SongOnEnded}
       />
 
-      <RotateImg songImg={songImg} />
+      <RotateImg songs={todosRedux} songImg={songImg} />
       {songUrl && !isLoadingSong ? (
-        <div>
+        <div className="music-player-info">
           <h2>{songName}</h2>
           <p>{songArtist}</p>
         </div>
       ) : (
-        <p>Loading song...</p>
+        <div className="music-player-loader">
+          <p>Loading song...</p>
+        </div>
       )}
       <div className="controls">
         <button onClick={toggleSkipBackward}>
