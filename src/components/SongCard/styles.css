@@ -1,6 +1,6 @@
 .song {
   display: grid;
-  grid-template-columns: 26% auto 45%;
+  grid-template-columns: 26% auto 37%;
   align-items: center;
   margin-bottom: 16px;
 }

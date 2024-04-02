@@ -79,7 +79,7 @@ const Songs = ({
   };
 
   return (
-    <div className="componentTracklist">
+    <>
       <div className="tracklist-title">
         <h1>Songs</h1>
         <FontAwesomeIcon
@@ -115,7 +115,7 @@ const Songs = ({
           <h2>No songs found</h2>
         )}
       </div>
-    </div>
+    </>
   );
 };
 

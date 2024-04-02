@@ -1,6 +1,7 @@
 import useDragScroll from "../../util/useDragScroll";
+import albums from "../../assets/albums-default.png";
 
-const Albums = () => {
+const Albums = ({ albums }) => {
   const { handleMouseDown, handleMouseMove, handleMouseUp, handleMouseLeave } =
     useDragScroll();
   return (
@@ -13,70 +14,38 @@ const Albums = () => {
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseLeave}
       >
-        <div class="album">
-          <div class="album-frame">
-            <img
-              src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/74c4f0f9-d73e-4737-83fa-ea4afe392229"
-              alt=""
-            />
-          </div>
-          <div>
-            <h2>Views</h2>
-            <p>Drake</p>
-          </div>
-        </div>
-
-        <div class="album">
-          <div class="album-frame">
-            <img
-              src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/d3a0bac0-fdb4-467e-bdf5-f3f415928f24"
-              alt=""
-            />
-          </div>
-          <div>
-            <h2>Speak Now</h2>
-            <p>Taylor Swift</p>
-          </div>
-        </div>
-
-        <div class="album">
-          <div class="album-frame">
-            <img
-              src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/85521a12-cc46-4b9f-a742-21ba407ebd5e"
-              alt=""
-            />
-          </div>
-          <div>
-            <h2>Born to Die</h2>
-            <p>Lana Del Rey</p>
-          </div>
-        </div>
-
-        <div class="album">
-          <div class="album-frame">
-            <img
-              src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/4e7bf466-7fa5-4dad-b628-5bca12833b64"
-              alt=""
-            />
-          </div>
-          <div>
-            <h2>Endless Summer Vacation</h2>
-            <p>Miley Cyrus</p>
-          </div>
-        </div>
-
-        <div class="album">
-          <div class="album-frame">
-            <img
-              src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/f01f546a-7ab7-4e90-acb9-1c1e817b676d"
-              alt=""
-            />
-          </div>
-          <div>
-            <h2>The Dark Side of The Moon</h2>
-            <p>Pink Floyd</p>
-          </div>
-        </div>
+        {albums &&
+          albums.map((album, index) => {
+            return (
+              <div class="album" key={index}>
+                <div class="album-frame">
+                  <img
+                    src={
+                      album.albumName === "Now the Moon’s Rising"
+                        ? "https://t2.genius.com/unsafe/842x0/https%3A%2F%2Fimages.genius.com%2F3d76a6c01fde3e445b40246d45682eb1.877x877x1.png"
+                        : album.albumName === "DS2"
+                        ? "https://t2.genius.com/unsafe/842x0/https%3A%2F%2Fimages.genius.com%2Fc498a9a939e455ae13be88fb8319ac3b.1000x1000x1.jpg"
+                        : album.albumName === "After Hours"
+                        ? "https://t2.genius.com/unsafe/842x0/https%3A%2F%2Fimages.genius.com%2F9d35a5dff10090e6c1d5e077932cea99.1000x1000x1.jpg"
+                        : album.albumName ===
+                          "Come Over When You’re Sober, Pt. 1"
+                        ? "https://t2.genius.com/unsafe/842x0/https%3A%2F%2Fimages.genius.com%2F08a41fd48e3aad97b825b70dfdea89af.1000x1000x1.png"
+                        : album.albumName === "The Dark Side Of The Moon"
+                        ? "https://t2.genius.com/unsafe/842x0/https%3A%2F%2Fimages.genius.com%2Fd3ecd57d490f664e08aba94019796f1a.1000x1000x1.png"
+                        : album.albumName === "Led Zeppelin IV"
+                        ? "https://t2.genius.com/unsafe/842x0/https%3A%2F%2Fimages.genius.com%2F2f7f8a7cf53e8162d15ef6143d38e8ed.1000x1000x1.jpg"
+                        : albums
+                    }
+                    alt="album-cover"
+                  />
+                </div>
+                <div>
+                  <h2>{album.albumName}</h2>
+                  <p>{album.songs[0].artist}</p>
+                </div>
+              </div>
+            );
+          })}
       </div>
     </div>
   );

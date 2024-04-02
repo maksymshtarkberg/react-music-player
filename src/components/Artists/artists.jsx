@@ -1,7 +1,8 @@
 import { useState } from "react";
 import useDragScroll from "../../util/useDragScroll";
+import artists from "../../assets/artist-default.png";
 
-const Artists = () => {
+const Artists = ({ artists }) => {
   const { handleMouseDown, handleMouseMove, handleMouseUp, handleMouseLeave } =
     useDragScroll();
 
@@ -15,69 +16,32 @@ const Artists = () => {
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseLeave}
       >
-        <div class="artist">
-          <img
-            src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/c8feaa0f-6ae7-4c69-bb7d-4a11de76b4f5"
-            alt=""
-          />
-          <p>Taylor Swift</p>
-        </div>
-
-        <div class="artist">
-          <img
-            src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/bf80314e-5a02-4702-bb64-eae8c113c417"
-            alt=""
-          />
-          <p>The Weeknd</p>
-        </div>
-
-        <div class="artist">
-          <img
-            src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/e4576af8-0e84-4343-8f90-7a01acb9c8b7"
-            alt=""
-          />
-          <p>Dua Lipa</p>
-        </div>
-
-        <div class="artist">
-          <img
-            src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/d8eb2888-1e74-4117-82d7-833ad29e3cc1"
-            alt=""
-          />
-          <p>Jimin</p>
-        </div>
-
-        <div class="artist">
-          <img
-            src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/f23adc16-11d7-41dc-af6a-191e03a81603"
-            alt=""
-          />
-          <p>Alicia Keys</p>
-        </div>
-
-        <div class="artist">
-          <img
-            src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/f511c102-3217-4bea-bede-8be23b969bd8"
-            alt=""
-          />
-          <p>Maroon 5</p>
-        </div>
-
-        <div class="artist">
-          <img
-            src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/9a8bd237-b525-43e6-a37c-daaac39db8ce"
-            alt=""
-          />
-          <p>Imagine Dragons</p>
-        </div>
-
-        <div class="artist">
-          <img
-            src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/99452c85-26f4-4ccd-b439-7d1bd3875634"
-            alt=""
-          />
-          <p>Billie Eilish</p>
-        </div>
+        {artists &&
+          artists.map((artist, index) => {
+            return (
+              <div class="artist" key={index}>
+                <img
+                  src={
+                    artist.artistName === "Future"
+                      ? "https://images.genius.com/a3496b5fc4c6f7796e08548ab28aef18.1000x1000x1.jpg"
+                      : artist.artistName === "$uicideBoy$"
+                      ? "https://images.genius.com/3858815bfd12a53748553d09964fed4c.529x529x1.jpg"
+                      : artist.artistName === "Led Zeppelin"
+                      ? "https://images.genius.com/e4763bba12e6411077a3e573cd290da0.433x433x1.jpg"
+                      : artist.artistName === "Lil Peep"
+                      ? "https://images.genius.com/919c7ba130d3861740cbe7fbd7f83c59.1000x1000x1.jpg"
+                      : artist.artistName === "Pink Floyd"
+                      ? "https://images.genius.com/6b5c50912d99c3cf0eabfec5f427c452.1000x1000x1.jpg"
+                      : artist.artistName === "The Weeknd"
+                      ? "https://images.genius.com/1bab7f9dbd1216febc16d73ae4da9bd0.1000x1000x1.jpg"
+                      : artists
+                  }
+                  alt="artist-cover"
+                />
+                <p>{artist.artistName}</p>
+              </div>
+            );
+          })}
       </div>
     </div>
   );

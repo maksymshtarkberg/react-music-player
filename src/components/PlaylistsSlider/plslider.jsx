@@ -53,12 +53,11 @@ const PlaylistsSlider = ({ audioPlayer, setPlaylist, playlists }) => {
             playlists.map((item, index) => {
               const songsQuantity = item.songs.length;
               return (
-                <SwiperSlide className="swiper-slide">
+                <SwiperSlide className="swiper-slide" key={index}>
                   <PlaylistCard
                     audioPlayer={audioPlayer}
                     playlistId={item._id}
                     name={item.playlistName}
-                    key={index}
                     cover={item.playlistCoverId}
                     quantityOfSongs={songsQuantity}
                     songs={item.songs}

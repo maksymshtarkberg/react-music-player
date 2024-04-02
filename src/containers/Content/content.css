@@ -68,6 +68,7 @@
 }
 
 .album {
+  width: 180px;
   display: grid;
   grid-auto-flow: dense;
   grid-template-rows: 5fr 2fr;

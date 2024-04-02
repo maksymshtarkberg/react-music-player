@@ -6,14 +6,14 @@ import Menu from "./components/Navigation/menu";
 import MainPlayer from "./containers/Main-Player/main-player";
 import Registration from "./components/Registration/registration";
 import UploadSong from "./pages/UploadSong/UploadSong";
-import Artists from "./components/Artists/artists";
-import Albums from "./components/Albums/albums";
+
 import PlayList from "./containers/Playlists/playlists";
 import PlaylistsSlider from "./components/PlaylistsSlider/plslider";
 import Settings from "./pages/Settings/settings";
 import PrivateRoute from "./privateRoute";
 import Mysongs from "./components/MySongs/mysongs";
 import { useRef } from "react";
+import AlbumsAndArtists from "./pages/Albums&Artists/albumsAndArtists";
 
 function RouterWrapper() {
   const token = localStorage.getItem("access_token");
@@ -36,7 +36,7 @@ function RouterWrapper() {
 
             <Route element={<PrivateRoute />}>
               <Route path="/upload" element={<UploadSong />} />
-              <Route path="/albums" element={<Artists />} />
+              <Route path="/albums" element={<AlbumsAndArtists />} />
               <Route
                 path="/playlists"
                 element={<PlayList audioPlayer={audioPlayer} />}

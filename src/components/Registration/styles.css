@@ -103,7 +103,10 @@
 
 .reg-button {
   width: 100%;
-  background: rgba(200, 187, 255, 0.6);
+  filter: blur(.04px);
+  /* background: linear-gradient(135deg, #1afbf0, #da00ff); */
+  background-color: #4a3fad;
+  background-image: linear-gradient(135deg, #16b0fd, #f50bed);
   color: #fff;
   font-size: 1rem;
   font-weight: 700;
@@ -115,12 +118,17 @@
   border-radius: 5px;
   border: 0;
   cursor: pointer;
-  transition: all 0.4s linear;
+  opacity: 0.8;
 }
 
 .reg-button:hover {
-  background: #68496b;
+  opacity: 1;
 }
+
+.upload-songs__btn {
+  position: relative;
+}
+
 
 /* SHOW MESSAGE AFTER SUBMITTING  */
 

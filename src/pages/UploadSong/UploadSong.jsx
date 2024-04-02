@@ -4,6 +4,7 @@ import { decodeToken } from "react-jwt";
 import { connect } from "react-redux";
 import { addTodo } from "../../redux/actions";
 import { getSongs } from "../../util/getSongs";
+import BtnLoader from "../../components/BtnLoader/btnloader";
 
 const UploadSong = ({ addTodo }) => {
   const [songFile, setFile] = useState();
@@ -72,6 +73,7 @@ const UploadSong = ({ addTodo }) => {
     // if the file is uploaded successfully, we will redirect the user to the home page with alert message
     if (result.status === 201) {
       alert("File uploaded successfully");
+      setSongIsUploading(false);
       setTitle("");
       setArtist("");
       setAlbum("");
@@ -80,7 +82,6 @@ const UploadSong = ({ addTodo }) => {
       setAlbumCover();
       setCreatedAt("");
       fetchSongs();
-      setSongIsUploading(false);
     }
   });
 
@@ -172,13 +173,17 @@ const UploadSong = ({ addTodo }) => {
           />
         </div>
         <div className="upload-songs__btn">
-          <button
-            className="reg-button"
-            type="submit"
-            disabled={localStorage.getItem("access_token") ? false : true}
-          >
-            Submit
-          </button>
+          {songIsUploading ? (
+            <BtnLoader />
+          ) : (
+            <button
+              className="reg-button"
+              type="submit"
+              disabled={localStorage.getItem("access_token") ? false : true}
+            >
+              Submit
+            </button>
+          )}
         </div>
       </form>
     </div>

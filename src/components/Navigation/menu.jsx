@@ -142,20 +142,6 @@ const Menu = ({
     }
   };
 
-  const sortBySongName = () => {
-    const songs = [...todosRedux].sort((song1, song2) =>
-      song1.title.localeCompare(song2.title)
-    );
-    addTodo(songs);
-  };
-
-  const sortByArtist = () => {
-    const artists = [...todosRedux].sort((song1, song2) =>
-      song1.artist.localeCompare(song2.artist)
-    );
-    addTodo(artists);
-  };
-
   return (
     <nav className="main-menu">
       <div>

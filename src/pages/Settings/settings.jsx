@@ -11,6 +11,7 @@ import { uploadAvatar } from "../../util/uploadAvatar";
 const Settings = ({ sessionId }) => {
   const [submitted, setSubmitted] = useState(false);
   const [userAvatar, setUserAvatar] = useState();
+  const [editOn, setEditOn] = useState(false);
 
   const {
     handleSubmit,
@@ -66,17 +67,21 @@ const Settings = ({ sessionId }) => {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      // const response = await axios.put(
-      //   `http://localhost:1337/api/v1/user/changename`,
-      //   { fullName: data.username },
-      //   { headers }
-      // );
-      // if (response.status === 200) {
-      //   const username = response.data;
-      //   console.log(username);
-      //   // setLoading(false);
-      //   alert("Name changed successfully");
-      // }
+      const headers = {
+        "X-Auth-token": localStorage.getItem("access_token"),
+      };
+
+      const response = await axios.put(
+        `http://localhost:1337/api/v1/user/changename`,
+        { fullName: data.username },
+        { headers }
+      );
+      if (response.status === 200) {
+        const username = response.data;
+        console.log(username);
+        // setLoading(false);
+        alert("Name changed successfully");
+      }
       uploadUserAvatar();
     } catch (error) {
       console.log(error.message);
@@ -96,7 +101,7 @@ const Settings = ({ sessionId }) => {
             id="username"
             className="reg-input"
             {...register("username", {
-              required: true,
+              // required: true,
             })}
           />
         </div>
