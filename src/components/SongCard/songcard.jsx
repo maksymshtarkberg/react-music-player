@@ -6,7 +6,7 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconButton } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import playing from "../../assets/playingsong.gif";
+import playingImg from "../../assets/playingsong.gif";
 import { useEffect } from "react";
 
 import AudioDownloader from "../AudioDownloader/audioDownloader";
@@ -231,16 +231,16 @@ const SongCard = ({
   };
 
   return (
-    <div className="song">
+    <div className={`song ${songId === songIdCur && `active-song`}`}>
       <div className="song-img" onClick={handlePlay}>
         <img
           src={
             cover !== undefined && cover !== null
               ? showPlayingImage
-                ? playing
+                ? playingImg
                 : `http://localhost:1337/api/v1/${cover}/cover`
               : showPlayingImage
-              ? playing
+              ? playingImg
               : musicbg
           }
           alt="SongCover"

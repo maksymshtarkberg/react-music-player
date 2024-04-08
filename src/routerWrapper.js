@@ -14,10 +14,13 @@ import PrivateRoute from "./privateRoute";
 import Mysongs from "./components/MySongs/mysongs";
 import { useRef } from "react";
 import AlbumsAndArtists from "./pages/Albums&Artists/albumsAndArtists";
+import Account from "./pages/Account/account";
+import PlayerDemo from "./components/Player/player-demo";
 
 function RouterWrapper() {
   const token = localStorage.getItem("access_token");
   const audioPlayer = useRef();
+  const canvasRef = useRef();
 
   return (
     <main>
@@ -36,7 +39,10 @@ function RouterWrapper() {
 
             <Route element={<PrivateRoute />}>
               <Route path="/upload" element={<UploadSong />} />
-              <Route path="/albums" element={<AlbumsAndArtists />} />
+              <Route
+                path="/albums"
+                element={<AlbumsAndArtists audioPlayer={audioPlayer} />}
+              />
               <Route
                 path="/playlists"
                 element={<PlayList audioPlayer={audioPlayer} />}
@@ -45,12 +51,13 @@ function RouterWrapper() {
                 path="/mysongs"
                 element={<Mysongs audioPlayer={audioPlayer} />}
               />
-              <Route path="/account" element={<PlayList />} />
+              <Route path="/account" element={<Account />} />
               <Route path="/settings" element={<Settings />} />
             </Route>
           </Routes>
         </div>
         <MainPlayer audioPlayer={audioPlayer} />
+        <PlayerDemo audioPlayer={audioPlayer} canvasRef={canvasRef} />
       </section>
     </main>
   );

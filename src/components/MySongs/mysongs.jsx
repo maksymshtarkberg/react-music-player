@@ -58,31 +58,33 @@ const MySongs = ({
   return (
     <div className="mysongs-container">
       <h1 className="mysongs-title">My songs</h1>
-      {songsUploadedByUser.length !== 0 ? (
-        songsUploadedByUser.map((song, index) => {
-          return (
-            <Songcard
-              key={index}
-              songIdCur={song._id}
-              trackIndex={song.index}
-              title={song.title}
-              album={song.album}
-              artistName={song.artist}
-              songSrc={song.file}
-              uploadedBy={song.uploadedBy}
-              file={song.file}
-              cover={song.coverfile}
-              audioPlayer={audioPlayer}
-              songsUploadedByUser={songsUploadedByUser}
-              onSongDelete={handleSongDeleteMain}
-              onSongDeletePlaylist={handleSongDeletePlaylist}
-              fromMySongs={true}
-            />
-          );
-        })
-      ) : (
-        <h2>No songs, that were uploaded by the user.</h2>
-      )}
+      <div className="mysongs-box">
+        {songsUploadedByUser.length !== 0 ? (
+          songsUploadedByUser.map((song, index) => {
+            return (
+              <Songcard
+                key={index}
+                songIdCur={song._id}
+                trackIndex={song.index}
+                title={song.title}
+                album={song.album}
+                artistName={song.artist}
+                songSrc={song.file}
+                uploadedBy={song.uploadedBy}
+                file={song.file}
+                cover={song.coverfile}
+                audioPlayer={audioPlayer}
+                songsUploadedByUser={songsUploadedByUser}
+                onSongDelete={handleSongDeleteMain}
+                onSongDeletePlaylist={handleSongDeletePlaylist}
+                fromMySongs={true}
+              />
+            );
+          })
+        ) : (
+          <h2>No songs, that were uploaded by the user.</h2>
+        )}
+      </div>
     </div>
   );
 };

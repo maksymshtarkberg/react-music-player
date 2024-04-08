@@ -7,6 +7,8 @@ import { getSongs } from "../../util/getSongs";
 import BtnLoader from "../../components/BtnLoader/btnloader";
 
 const UploadSong = ({ addTodo }) => {
+  const [submitted, setSubmitted] = useState(false);
+
   const [songFile, setFile] = useState();
   const [albumCover, setAlbumCover] = useState();
   const [title, setTitle] = useState("");
@@ -82,6 +84,7 @@ const UploadSong = ({ addTodo }) => {
       setAlbumCover();
       setCreatedAt("");
       fetchSongs();
+      setSubmitted(true);
     }
   });
 
@@ -103,6 +106,7 @@ const UploadSong = ({ addTodo }) => {
             name="title"
             className="reg-input"
             placeholder="Song Name"
+            value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
           />
@@ -114,6 +118,7 @@ const UploadSong = ({ addTodo }) => {
           <input
             type="text"
             name="title"
+            value={artist}
             className="reg-input"
             placeholder="Artist Name"
             onChange={(e) => setArtist(e.target.value)}
@@ -127,6 +132,7 @@ const UploadSong = ({ addTodo }) => {
           <input
             type="text"
             name="title"
+            value={album}
             className="reg-input"
             placeholder="Album"
             onChange={(e) => setAlbum(e.target.value)}
@@ -140,6 +146,7 @@ const UploadSong = ({ addTodo }) => {
           <input
             type="text"
             name="title"
+            value={description}
             className="reg-input"
             placeholder="This song is about..."
             onChange={(e) => setDescription(e.target.value)}
@@ -157,6 +164,7 @@ const UploadSong = ({ addTodo }) => {
             name="file"
             accept="audio/*"
             required
+            value={songFile}
           />
         </div>
         <div className="input-control">
@@ -170,6 +178,7 @@ const UploadSong = ({ addTodo }) => {
             name="albumCover"
             accept="image/*"
             required
+            value={albumCover}
           />
         </div>
         <div className="upload-songs__btn">
@@ -186,6 +195,11 @@ const UploadSong = ({ addTodo }) => {
           )}
         </div>
       </form>
+      {submitted && (
+        <div className="message">
+          <p>Song successfully upload!🎉</p>
+        </div>
+      )}
     </div>
   );
 };

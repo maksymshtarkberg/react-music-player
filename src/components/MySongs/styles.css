@@ -1,3 +1,31 @@
+.mysongs-box {
+  height: 99vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
 .mysongs-title {
   margin-bottom: 40px;
+}
+
+/* Containers Scrollbar Style */
+
+.mysongs-box::-webkit-scrollbar,
+.mysongs-box::-webkit-scrollbar {
+  width: 10px;
+}
+
+.mysongs-box::-webkit-scrollbar-track,
+.mysongs-box::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 0.3rem rgb(79, 78, 78);
+  border-radius: 40px;
+}
+
+.mysongs-box::-webkit-scrollbar-thumb,
+.mysongs-box::-webkit-scrollbar-thumb {
+  box-shadow: inset 0 0 0.5rem rgb(116, 116, 116);
+  background-color: rgba(25, 43, 206, 0.2);
+  outline: none;
+  border-radius: 40px;
+  cursor: pointer;
 }

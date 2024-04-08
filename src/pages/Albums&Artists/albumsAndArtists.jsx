@@ -1,10 +1,30 @@
 import Artists from "../../components/Artists/artists";
 import Albums from "../../components/Albums/albums";
 import { connect } from "react-redux";
+import {
+  setArtistIsOn,
+  setAlbumIsOn,
+  setSongId,
+  setSongUrl,
+  setIsPlaying,
+  setCurrentTrackIndex,
+} from "../../redux/actions";
 import { useEffect } from "react";
 import { useState } from "react";
+import "./styles.css";
 
-const AlbumsAndArtists = ({ todosRedux }) => {
+const AlbumsAndArtists = ({
+  todosRedux,
+  audioPlayer,
+  albumIsOn,
+  artistIsOn,
+  setArtistIsOn,
+  setAlbumIsOn,
+  setSongId,
+  setSongUrl,
+  setIsPlaying,
+  setCurrentTrackIndex,
+}) => {
   const [sortedAlbums, setSortedAlbums] = useState();
   const [sortedArtists, setSortedArtists] = useState();
 
@@ -56,16 +76,55 @@ const AlbumsAndArtists = ({ todosRedux }) => {
     setSortedArtists(artistsArray);
   };
 
+  const handleGoBack = () => {
+    setSortedAlbums([]);
+    setSortedArtists([]);
+    setArtistIsOn(false);
+    setAlbumIsOn(false);
+    setSongId("");
+    setSongUrl("");
+    audioPlayer.current.pause();
+    setIsPlaying(false);
+    setCurrentTrackIndex(0);
+  };
+
   return (
     <>
-      <Albums albums={sortedAlbums} />
-      <Artists artists={sortedArtists} />
+      {artistIsOn || albumIsOn ? (
+        <button class="btn-go_back" title="Go Back" onClick={handleGoBack}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="50px"
+            height="50px"
+            viewBox="0 0 24 24"
+            class="stroke-blue-300"
+          >
+            <path
+              stroke-linejoin="round"
+              stroke-linecap="round"
+              stroke-width="1.5"
+              d="M11 6L5 12M5 12L11 18M5 12H19"
+            ></path>
+          </svg>
+        </button>
+      ) : null}
+      <Albums albums={sortedAlbums} audioPlayer={audioPlayer} />
+      <Artists artists={sortedArtists} audioPlayer={audioPlayer} />
     </>
   );
 };
 
 const mapStatetoProps = (state) => ({
   todosRedux: state.todos.todos,
+  albumIsOn: state.playerReducer.albumIsOn,
+  artistIsOn: state.playerReducer.artistIsOn,
 });
 
-export default connect(mapStatetoProps, {})(AlbumsAndArtists);
+export default connect(mapStatetoProps, {
+  setArtistIsOn,
+  setAlbumIsOn,
+  setSongId,
+  setSongUrl,
+  setIsPlaying,
+  setCurrentTrackIndex,
+})(AlbumsAndArtists);

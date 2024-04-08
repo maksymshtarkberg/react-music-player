@@ -5,6 +5,8 @@ import {
   SET_TIME,
   SET_CURR_TIME,
   SET_IS_LOADING_SONG,
+  SET_ALBUM_IS_ON,
+  SET_ARTIST_IS_ON,
 } from "../actionTypes";
 
 const initialState = {
@@ -20,6 +22,8 @@ const initialState = {
     sec: "",
   },
   isLoadingSong: false,
+  albumIsOn: false,
+  artistIsOn: false,
 };
 
 const playerReducer = (state = initialState, action) => {
@@ -53,6 +57,16 @@ const playerReducer = (state = initialState, action) => {
       return {
         ...state,
         isLoadingSong: action.payload,
+      };
+    case SET_ALBUM_IS_ON:
+      return {
+        ...state,
+        albumIsOn: action.payload,
+      };
+    case SET_ARTIST_IS_ON:
+      return {
+        ...state,
+        artistIsOn: action.payload,
       };
     default:
       return state;

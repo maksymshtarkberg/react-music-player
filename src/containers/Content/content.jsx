@@ -9,7 +9,7 @@ const Content = ({ audioPlayer, playlists }) => {
       {playlists.length > 0 && (
         <PlaylistsSlider audioPlayer={audioPlayer} playlists={playlists} />
       )}
-      <AlbumsAndArtists />
+      {/* <AlbumsAndArtists /> */}
     </div>
   );
 };

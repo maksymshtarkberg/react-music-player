@@ -436,44 +436,46 @@ const Player = ({
           <p>Loading song...</p>
         </div>
       )}
-      <div className="controls">
-        <button onClick={toggleSkipBackward}>
-          <SkipPreviousIcon disabled={true} />
-        </button>
-        <button onClick={toggleBackward}>
-          <FastRewindIcon />
-        </button>
-        {isLoadingSong || songUrl === "" ? (
-          <button>
-            <Loader />
-          </button>
-        ) : !isPlaying ? (
-          <button onClick={togglePlay}>
-            <PlayArrowIcon />
-          </button>
-        ) : (
-          <button onClick={togglePlay}>
-            <PauseIcon />
-          </button>
-        )}
-        <button onClick={toggleForward}>
-          <FastForwardIcon />
-        </button>
-        <button onClick={toggleSkipForward}>
-          <SkipNextIcon />
-        </button>
-      </div>
 
-      <input
-        id="progress"
-        type="range"
-        value={seconds || 0}
-        max={audioPlayer.current ? audioPlayer.current.duration || 0 : 0}
-        onChange={HandleTimeChange}
-      />
       <div className="song-time">
-        <div>{formatTime(seconds)}</div>
-        <div>{formatTime(time.min * 60 + time.sec - seconds)}</div>
+        <div className="controls">
+          <button onClick={toggleSkipBackward}>
+            <SkipPreviousIcon disabled={true} />
+          </button>
+          <button onClick={toggleBackward}>
+            <FastRewindIcon />
+          </button>
+          {isLoadingSong || songUrl === "" ? (
+            <button>
+              <Loader />
+            </button>
+          ) : !isPlaying ? (
+            <button onClick={togglePlay}>
+              <PlayArrowIcon />
+            </button>
+          ) : (
+            <button onClick={togglePlay}>
+              <PauseIcon />
+            </button>
+          )}
+          <button onClick={toggleForward}>
+            <FastForwardIcon />
+          </button>
+          <button onClick={toggleSkipForward}>
+            <SkipNextIcon />
+          </button>
+        </div>
+        <input
+          id="progress"
+          type="range"
+          value={seconds || 0}
+          max={audioPlayer.current ? audioPlayer.current.duration || 0 : 0}
+          onChange={HandleTimeChange}
+        />
+        <div className="song-time_sec">
+          <div>{formatTime(seconds)}</div>
+          <div>{formatTime(time.min * 60 + time.sec - seconds)}</div>
+        </div>
       </div>
       <div className="song-volume">
         <VolumeBtns />

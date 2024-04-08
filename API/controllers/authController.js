@@ -69,11 +69,13 @@ export const register = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     // Create user
+    const currentDate = new Date();
     const user = await collection.insertOne({
       fullName,
       email,
       password: hashedPassword,
       playllists: [],
+      registrationDate: currentDate,
     });
 
     if (user) {

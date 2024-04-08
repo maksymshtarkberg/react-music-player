@@ -4,15 +4,12 @@ import Songs from "../Songs/Songs";
 import "./main-player.css";
 
 const MainPlayer = ({ audioPlayer }) => {
-  const canvasRef = useRef();
-
   return (
     <div className="main-player">
       {/* <div className="vizualizer-container">
         <canvas ref={canvasRef} className="vizualizer" />
       </div> */}
       <Songs audioPlayer={audioPlayer} />
-      <Player canvasRef={canvasRef} audioPlayer={audioPlayer} />
     </div>
   );
 };

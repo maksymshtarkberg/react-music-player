@@ -16,7 +16,7 @@
 /* ARTISTS */
 
 .artists h1 {
-  margin-bottom: 24px;
+  margin: 50px 0 10px;
 }
 
 .artist-container {
@@ -60,7 +60,7 @@
 /* ALBUMS */
 
 .albums h1 {
-  margin: 60px 0 14px;
+  margin: 50px 0 10px;
 }
 
 .album-container {

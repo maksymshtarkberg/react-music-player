@@ -13,6 +13,8 @@ import {
   setPlaylistLoaded,
   setPlaylistIsOpened,
   setIsPlaying,
+  setArtistIsOn,
+  setAlbumIsOn,
 } from "../../redux/actions";
 import { connect } from "react-redux";
 import { getPlaylists } from "../../util/getPlaylists";
@@ -32,6 +34,8 @@ const Songs = ({
   setPlaylistIsOpened,
   playlistIsOpened,
   setIsPlaying,
+  setArtistIsOn,
+  setAlbumIsOn,
 }) => {
   useEffect(() => {
     fetchSongs();
@@ -70,6 +74,8 @@ const Songs = ({
   };
 
   const reloadTracklist = () => {
+    setArtistIsOn(false);
+    setAlbumIsOn(false);
     setSongId("");
     setSongUrl("");
     playlistIsOpened && setPlaylistIsOpened(false);
@@ -138,4 +144,6 @@ export default connect(mapStatetoProps, {
   setPlaylist,
   setPlaylistLoaded,
   setPlaylistIsOpened,
+  setArtistIsOn,
+  setAlbumIsOn,
 })(Songs);

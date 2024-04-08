@@ -1,15 +1,27 @@
 import express from "express";
-import { changeEmail, changeName, getUser, uploadAvatar } from "../controllers/userController.js";
+import {
+  changeEmail,
+  changeName,
+  getUser,
+  uploadAvatar,
+} from "../controllers/userController.js";
 import multer from "multer";
+import uploadMiddleware from "../middlewares/uploadMiddleware.js";
+
 const router = express.Router();
 
-const upload = multer({ dest: "uploads/" });
-
+const upload = multer({
+  dest: "uploads/",
+});
 
 router.get("/getuser", getUser);
 router.put("/changename", changeName);
 router.put("/changemail", changeEmail);
-router.post("/avatar/upload", upload.single("avatar"), uploadAvatar);
-
+router.post(
+  "/avatar/upload",
+  upload.single("avatar"),
+  uploadMiddleware("avatars"),
+  uploadAvatar
+);
 
 export default router;

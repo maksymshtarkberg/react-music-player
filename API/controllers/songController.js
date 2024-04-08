@@ -92,7 +92,6 @@ export const addSong = async (req, res) => {
 //@access Private
 export const deleteSong = async (req, res) => {
   try {
-    console.log("hitting the server");
     console.log(req.query.file);
     const { id } = req.params;
     if (!id) {
@@ -149,7 +148,6 @@ export const getSongs = async (req, res) => {
       throw new Error("No songs found");
     }
     res.status(200).json({ songs });
-    console.log(songs);
   } catch (error) {
     console.log(error);
     return res.json({ error: error.message, status: "error" });

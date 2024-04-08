@@ -36,12 +36,14 @@ const Login = ({ setUserSession }) => {
       if (response.status === 200 && response.data.status === "success") {
         setValue("username", "");
         setValue("password", "");
-        setSubmitted(true);
 
         localStorage.setItem("access_token", response.data.token);
         const token = localStorage.getItem("access_token");
+        token && setSubmitted(true);
 
-        token && navigate("/feed");
+        setTimeout(() => {
+          token && navigate("/feed");
+        }, 2000);
       } else {
         console.error("Error during login:", response.statusText);
       }

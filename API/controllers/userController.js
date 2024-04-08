@@ -15,6 +15,7 @@ export const getUser = async (req, res) => {
     res.status(200).json({
       name: user.fullName,
       email: user.email,
+      registrationDate: user.registrationDate,
     });
   } catch (error) {
     console.log(error.message);
@@ -46,6 +47,11 @@ export const changeEmail = async (req, res) => {
   try {
     const db = dbConnect.db("music_streaming");
     const collection = db.collection("users");
+
+    const existingUser = await collection.findOne({ email: req.body.email });
+    if (existingUser) {
+      return res.status(400).json({ message: "Email already exists" });
+    }
 
     const user = await collection.findOneAndUpdate(
       { _id: new mongodb.ObjectId(req.userId) },

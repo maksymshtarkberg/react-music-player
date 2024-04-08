@@ -1,0 +1,13 @@
+.input-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.edit-icon {
+  margin-left: 20px;
+}
+
+.user-info {
+  padding: 8px 0;
+}

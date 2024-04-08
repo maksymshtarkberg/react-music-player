@@ -43,11 +43,13 @@ const Registration = () => {
         setValue("email", "");
         setValue("password", "");
         setValue("confirmPassword", "");
-        setSubmitted(true);
         localStorage.setItem("access_token", response.data.token);
         const token = localStorage.getItem("access_token");
+        token && setSubmitted(true);
 
-        token && navigate("/");
+        setTimeout(() => {
+          token && navigate("/feed");
+        }, 2000);
       } else {
         console.error("Error during registration:", response.statusText);
       }
@@ -145,7 +147,7 @@ const Registration = () => {
 
       {submitted && (
         <div className="message">
-          <p>Submitted successfully!🎉</p>
+          <p>Account created successfully!🎉</p>
         </div>
       )}
     </section>

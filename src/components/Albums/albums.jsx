@@ -1,9 +1,39 @@
 import useDragScroll from "../../util/useDragScroll";
-import albums from "../../assets/albums-default.png";
+import albumsdef from "../../assets/albums-default.png";
+import { connect } from "react-redux";
+import {
+  addTodo,
+  setIsPlaying,
+  setSongId,
+  setSongUrl,
+  setCurrentTrackIndex,
+  setAlbumIsOn,
+} from "../../redux/actions";
 
-const Albums = ({ albums }) => {
+const Albums = ({
+  audioPlayer,
+  albums,
+  addTodo,
+  setIsPlaying,
+  setSongId,
+  setSongUrl,
+  setCurrentTrackIndex,
+  setAlbumIsOn,
+}) => {
   const { handleMouseDown, handleMouseMove, handleMouseUp, handleMouseLeave } =
     useDragScroll();
+
+  const HandlePlayArtistSongs = (songs) => {
+    audioPlayer.current.pause();
+    setSongUrl("");
+    setSongId("");
+    setIsPlaying(false);
+    setSongId(songs[0]._id);
+    addTodo(songs);
+    setCurrentTrackIndex(0);
+    setAlbumIsOn(true);
+  };
+
   return (
     <div class="albums">
       <h1>Recommended Albums</h1>
@@ -20,6 +50,7 @@ const Albums = ({ albums }) => {
               <div class="album" key={index}>
                 <div class="album-frame">
                   <img
+                    onClick={() => HandlePlayArtistSongs(album.songs)}
                     src={
                       album.albumName === "Now the Moon’s Rising"
                         ? "https://t2.genius.com/unsafe/842x0/https%3A%2F%2Fimages.genius.com%2F3d76a6c01fde3e445b40246d45682eb1.877x877x1.png"
@@ -34,7 +65,7 @@ const Albums = ({ albums }) => {
                         ? "https://t2.genius.com/unsafe/842x0/https%3A%2F%2Fimages.genius.com%2Fd3ecd57d490f664e08aba94019796f1a.1000x1000x1.png"
                         : album.albumName === "Led Zeppelin IV"
                         ? "https://t2.genius.com/unsafe/842x0/https%3A%2F%2Fimages.genius.com%2F2f7f8a7cf53e8162d15ef6143d38e8ed.1000x1000x1.jpg"
-                        : albums
+                        : albumsdef
                     }
                     alt="album-cover"
                   />
@@ -51,4 +82,15 @@ const Albums = ({ albums }) => {
   );
 };
 
-export default Albums;
+const mapStatetoProps = (state) => ({
+  albumIsOn: state.playerReducer.artistIsOn,
+});
+
+export default connect(mapStatetoProps, {
+  addTodo,
+  setIsPlaying,
+  setSongId,
+  setSongUrl,
+  setCurrentTrackIndex,
+  setAlbumIsOn,
+})(Albums);

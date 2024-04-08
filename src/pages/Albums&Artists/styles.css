@@ -1,0 +1,23 @@
+.btn-go_back:hover {
+  transform: scale(1.25);
+}
+
+.btn-go_back:active {
+  transform: scale(1);
+}
+
+.stroke-blue-300 path {
+  stroke: #6569eca3;
+  stroke-width: 1.5px;
+}
+
+.btn-go_back {
+  width: 50px;
+  height: 50px;
+  padding: 0;
+  background: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  transition-duration: 0.2s;
+}

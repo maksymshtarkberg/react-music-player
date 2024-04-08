@@ -45,17 +45,7 @@ const Menu = ({
   setPlaylistLoaded,
   playlists,
   playlistsisLoaded,
-  addTodo,
-  todosRedux,
-  setIsLoaded,
-  setPlaylistCurrentId,
-  setPlaylistIsOpened,
-  setCurrentTrackIndex,
-  setSongUrl,
-  setIsLoadingSong,
-  playlistCurrentId,
 }) => {
-  const [modalShow, setModalShow] = useState(false);
   const [activeNavItem, setActiveNavItem] = useState(0);
   const [userInfo, setUserInfo] = useState({ name: "", email: "" });
 

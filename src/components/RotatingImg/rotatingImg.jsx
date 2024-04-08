@@ -47,8 +47,10 @@ const RotateImg = ({ songImg, isPlaying, currTime, isLoadingSong }) => {
 
   return (
     <div className="album-cover">
-      <img ref={rotatingImageRef} src={coverURL} alt="album-cover" />
-      <span className="point"></span>
+      <div className="album-cover_box">
+        <img ref={rotatingImageRef} src={coverURL} alt="album-cover" />
+        <span className="point"></span>
+      </div>
     </div>
   );
 };

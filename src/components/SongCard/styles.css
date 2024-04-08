@@ -5,8 +5,15 @@
   margin-bottom: 16px;
 }
 
+.active-song {
+  border-radius: 6px;
+  border-top: 2px solid rgba(169, 150, 253, 0.5);
+  border-bottom: 2px solid rgba(169, 150, 253, 0.5);
+}
+
 .song-img {
   position: relative;
+  display: flex;
   width: 60px;
   border-radius: 6px;
 }
@@ -27,7 +34,6 @@
   position: absolute;
   inset: 0;
   width: 100%;
-  height: 92%;
   background-color: rgba(169, 150, 253, 0.6);
   border-radius: inherit;
   font-size: 1.75rem;

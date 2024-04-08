@@ -125,8 +125,13 @@
   opacity: 1;
 }
 
+.reg-button:disabled {
+  opacity: 0.3;
+}
+
 .upload-songs__btn {
   position: relative;
+  height: 61px;
 }
 
 
