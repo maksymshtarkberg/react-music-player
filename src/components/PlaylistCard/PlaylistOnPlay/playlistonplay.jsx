@@ -47,8 +47,6 @@ const PlaylistOnPlay = ({
   addTodo,
 }) => {
   const goBackToPlaylistMain = async () => {
-    const songs = await getSongs();
-    addTodo(songs);
     setIsPlaying(false);
     setSongUrl("");
     setCurrentTrackIndex(0);
@@ -91,39 +89,47 @@ const PlaylistOnPlay = ({
         <SpotifySvg />
         <div className="playlist-heading">Currently Playing</div>
       </div>
-      {songs &&
-        songs.map((song, index) => {
-          return (
-            <div
-              className="playlist-loader"
-              key={index}
-              onClick={() =>
-                handlePlay(song._id, song.title, song.artist, song.album, index)
-              }
-            >
-              <div className="playlist-song">
-                <p>{song.title}</p>
-                <p className="playlist-artist">{song.artist}</p>
-              </div>
-              <img
-                className="playlist-albumcover"
-                src={
-                  song.coverfile
-                    ? `http://localhost:1337/api/v1/${song.coverfile}/cover`
-                    : SongDefault
+      <div className="playlist-song_container">
+        {songs &&
+          songs.map((song, index) => {
+            return (
+              <div
+                className="playlist-loader"
+                key={index}
+                onClick={() =>
+                  handlePlay(
+                    song._id,
+                    song.title,
+                    song.artist,
+                    song.album,
+                    index
+                  )
                 }
-                alt="cover"
-              />
-              {!isLoadingSong && isPlaying && song._id === songId ? (
-                <PlayingInPlaylist />
-              ) : (
-                <button className="playlist-onplay_btn">
-                  <FontAwesomeIcon icon={faCirclePlay} />
-                </button>
-              )}
-            </div>
-          );
-        })}
+              >
+                <div className="playlist-song">
+                  <p>{song.title}</p>
+                  <p className="playlist-artist">{song.artist}</p>
+                </div>
+                <img
+                  className="playlist-albumcover"
+                  src={
+                    song.coverfile
+                      ? `http://localhost:1337/api/v1/${song.coverfile}/cover`
+                      : SongDefault
+                  }
+                  alt="cover"
+                />
+                {!isLoadingSong && isPlaying && song._id === songId ? (
+                  <PlayingInPlaylist />
+                ) : (
+                  <button className="playlist-onplay_btn">
+                    <FontAwesomeIcon icon={faCirclePlay} />
+                  </button>
+                )}
+              </div>
+            );
+          })}
+      </div>
     </>
   );
 };

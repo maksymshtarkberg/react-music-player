@@ -61,7 +61,6 @@ const Settings = ({ sessionId }) => {
         "X-Auth-token": localStorage.getItem("access_token"),
       };
 
-      // Отправляем оба запроса параллельно и ждем, когда они оба завершатся
       const [nameResponse, emailResponse, avatarResponse] = await Promise.all([
         axios.put(
           `http://localhost:1337/api/v1/user/changename`,

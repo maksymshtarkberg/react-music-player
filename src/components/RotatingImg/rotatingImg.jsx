@@ -4,7 +4,13 @@ import { useRef } from "react";
 import { useState } from "react";
 import { connect } from "react-redux";
 
-const RotateImg = ({ songImg, isPlaying, currTime, isLoadingSong }) => {
+const RotateImg = ({
+  songImg,
+  isPlaying,
+  currTime,
+  isLoadingSong,
+  audioPlayer,
+}) => {
   const rotatingImageRef = useRef(null);
   const [animationFrameId, setAnimationFrameId] = useState(null);
   const currentRotation = useRef(0);
@@ -19,7 +25,7 @@ const RotateImg = ({ songImg, isPlaying, currTime, isLoadingSong }) => {
     return () => {
       pauseRotation();
     };
-  }, [isPlaying, currTime.sec, isLoadingSong]);
+  }, [isPlaying, currTime.sec, isLoadingSong, audioPlayer.current]);
 
   const rotateImage = () => {
     setAnimationFrameId(

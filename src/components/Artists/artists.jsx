@@ -9,6 +9,7 @@ import {
   setSongUrl,
   setCurrentTrackIndex,
   setArtistIsOn,
+  setPlaylistIsOpened,
 } from "../../redux/actions";
 
 const Artists = ({
@@ -22,6 +23,7 @@ const Artists = ({
   setCurrentTrackIndex,
   setArtistIsOn,
   artistIsOn,
+  setPlaylistIsOpened,
 }) => {
   const { handleMouseDown, handleMouseMove, handleMouseUp, handleMouseLeave } =
     useDragScroll();
@@ -35,6 +37,7 @@ const Artists = ({
     addTodo(songs);
     setCurrentTrackIndex(0);
     setArtistIsOn(true);
+    setPlaylistIsOpened(false);
   };
 
   return (
@@ -91,4 +94,5 @@ export default connect(mapStatetoProps, {
   setSongUrl,
   setCurrentTrackIndex,
   setArtistIsOn,
+  setPlaylistIsOpened,
 })(Artists);

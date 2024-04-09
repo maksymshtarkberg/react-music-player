@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import { setPlaylist, setPlaylistLoaded } from "../../redux/actions";
 
 import "./styles.css";
-import PlaylistCard from "../../components/PlaylistCard/playlistcard";
 import { getPlaylists } from "../../util/getPlaylists";
 import PlaylistsSlider from "../../components/PlaylistsSlider/plslider";
 
@@ -107,29 +106,10 @@ const PlayList = ({
           Create Playlist
         </button>
       </div>
-      <div className="playlists-card_container">
-        {/* {playlists.length !== 0 ? (
-          playlists.map((item, index) => {
-            const songsQuantity = item.songs.length;
-            return (
-              <PlaylistCard
-                audioPlayer={audioPlayer}
-                playlistId={item._id}
-                name={item.playlistName}
-                key={index}
-                cover={item.playlistCoverId}
-                quantityOfSongs={songsQuantity}
-                songs={item.songs}
-              />
-            );
-          })
-        ) : (
-          <h2>No playlists were created</h2>
-        )} */}
-        {playlists.length > 0 && (
-          <PlaylistsSlider audioPlayer={audioPlayer} playlists={playlists} />
-        )}
-      </div>
+
+      {playlists.length > 0 && (
+        <PlaylistsSlider audioPlayer={audioPlayer} playlists={playlists} />
+      )}
     </>
   );
 };

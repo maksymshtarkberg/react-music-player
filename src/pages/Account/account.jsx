@@ -4,6 +4,7 @@ import moment from "moment";
 import { getSongs } from "../../util/getSongs";
 import { decodeToken } from "react-jwt";
 import { getPlaylists } from "../../util/getPlaylists";
+import "./styles.css";
 
 const Account = () => {
   const [user, setUser] = useState();
@@ -59,16 +60,19 @@ const Account = () => {
   return (
     <div>
       {user && (
-        <div>
-          <p>Name: {user.name}</p>
-          <p>Email: {user.email}</p>
-          <p>Registration Date: {formattedDate}</p>
-          <p>
-            Songs uploaded by {user.name}: {userSongs}
-          </p>
-          <p>
-            Playlists created by {user.name}: {userPlaylists}
-          </p>
+        <div className="reg-container">
+          <h1 className="reg-title">Account Info</h1>
+          <div className="reg-form reg-form_account">
+            <p>Name: {user.name}</p>
+            <p>Email: {user.email}</p>
+            <p>Registration Date: {formattedDate}</p>
+            <p>
+              Songs uploaded by {user.name}: {userSongs}
+            </p>
+            <p>
+              Playlists created by {user.name}: {userPlaylists}
+            </p>
+          </div>
         </div>
       )}
     </div>

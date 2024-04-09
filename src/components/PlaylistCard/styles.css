@@ -46,7 +46,7 @@
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
-  background: rgba(255, 255, 255, .05);
+  background: rgba(106, 109, 155, 0.95);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(10px);
   border-radius: 8px;

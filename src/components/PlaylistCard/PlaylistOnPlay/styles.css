@@ -33,9 +33,34 @@
 
 }
 
+.playlist-song_container {
+  height: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.playlist-song_container::-webkit-scrollbar,
+.playlist-song_container::-webkit-scrollbar {
+  width: 10px;
+}
+
+.playlist-song_container::-webkit-scrollbar-track,
+.playlist-song_container::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 0.3rem rgb(204, 187, 187);
+  border-radius: 40px;
+}
+
+.playlist-song_container::-webkit-scrollbar-thumb,
+.playlist-song_container::-webkit-scrollbar-thumb {
+  box-shadow: inset 0 0 0.5rem rgb(204, 187, 187);
+  background-color: rgba(8, 16, 90, 0.799);
+  outline: none;
+  border-radius: 40px;
+  cursor: pointer;
+}
+
 .currentplaying {
   display: flex;
-  margin: 1em;
 }
 
 .playlist-heading {

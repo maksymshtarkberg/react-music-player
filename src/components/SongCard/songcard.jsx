@@ -150,49 +150,6 @@ const SongCard = ({
     setPlaylist(data);
   };
 
-  // const handlePlaylistItemClick = async (event, playlistId) => {
-  //   event.stopPropagation();
-
-  //   const selectedPlaylist = playlists.find(
-  //     (playlist) => playlist._id === playlistId
-  //   );
-  //   const songsInPlaylist = selectedPlaylist.songs || [];
-
-  //   const isSongAlreadyInPlaylist = songsInPlaylist.some(
-  //     (song) => song._id === songIdCur
-  //   );
-
-  //   if (isSongAlreadyInPlaylist) {
-  //     alert("This song is already in the playlist.");
-  //     return;
-  //   }
-
-  //   const songData = [
-  //     {
-  //       _id: songIdCur,
-  //       title,
-  //       artist: artistName,
-  //       album,
-  //     },
-  //   ];
-  //   const headers = {
-  //     "X-Auth-Token": localStorage.getItem("access_token"),
-  //   };
-  //   const __URL__ = "http://localhost:1337";
-  //   const { data, status } = await axios.post(
-  //     `${__URL__}/api/v1/playlist/add/${playlistId}`,
-  //     songData,
-  //     { headers }
-  //   );
-  //   if (status === 200) {
-  //     alert("Song added to playlist");
-  //   }
-  //   fetchPlaylists();
-  //   console.log(`Song added to playlist with ID: ${playlistId}`);
-
-  //   setPlaylistOpen(false);
-  // };
-
   const handleDeletePlaylistSong = async (
     event,
     file,
@@ -210,7 +167,7 @@ const SongCard = ({
         { headers }
       );
       console.log(playlistId, title);
-      if (status == 200) {
+      if (status === 200) {
         setSongDeleteRenderind(true);
         alert("Song removed from the playlist");
         onSongDeletePlaylist();

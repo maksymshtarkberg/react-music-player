@@ -425,7 +425,11 @@ const Player = ({
         onEnded={SongOnEnded}
       />
 
-      <RotateImg songs={todosRedux} songImg={songImg} />
+      <RotateImg
+        songs={todosRedux}
+        songImg={songImg}
+        audioPlayer={audioPlayer}
+      />
       {songUrl && !isLoadingSong ? (
         <div className="music-player-info">
           <h2>{songName}</h2>

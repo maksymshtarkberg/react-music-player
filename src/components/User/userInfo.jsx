@@ -2,6 +2,7 @@ import { decodeToken } from "react-jwt";
 import { getAvatar } from "../../util/getAvatar";
 import { useEffect } from "react";
 import { useState } from "react";
+import "./styles.css";
 
 const UserInfo = ({ userInfo }) => {
   const token = localStorage.getItem("access_token");
@@ -24,7 +25,7 @@ const UserInfo = ({ userInfo }) => {
   }, []);
 
   return (
-    <div className="user-info">
+    <div className="user-profile-name">
       {token ? (
         <>
           {userAvatar ? (
