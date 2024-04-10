@@ -164,7 +164,6 @@ const UploadSong = ({ addTodo }) => {
             name="file"
             accept="audio/*"
             required
-            value={songFile}
           />
         </div>
         <div className="input-control">
@@ -178,7 +177,6 @@ const UploadSong = ({ addTodo }) => {
             name="albumCover"
             accept="image/*"
             required
-            value={albumCover}
           />
         </div>
         <div className="upload-songs__btn">

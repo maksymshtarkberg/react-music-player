@@ -9,6 +9,7 @@ import {
   setIsLoadingSong,
   setSongId,
   setIsPlaying,
+  setPlaylistSongHasBeenDeleted,
 } from "../../redux/actions";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -20,6 +21,8 @@ import { connect } from "react-redux";
 import { getPlaylists } from "../../util/getPlaylists";
 import axios from "axios";
 import PlaylistOnPlay from "./PlaylistOnPlay/playlistonplay";
+import { useEffect } from "react";
+import { useState } from "react";
 
 const PlaylistCard = ({
   songUrl,
@@ -40,7 +43,14 @@ const PlaylistCard = ({
   setIsPlaying,
   setPlaylistCurrentId,
   playlistCurrentId,
+  playlistSongHasBeenDeleted,
+  setPlaylistSongHasBeenDeleted,
 }) => {
+  useEffect(() => {
+    fetchPlaylists();
+    setPlaylistSongHasBeenDeleted(false);
+  }, [playlistSongHasBeenDeleted]);
+
   const fetchPlaylists = async () => {
     const data = await getPlaylists();
     setPlaylist(data);
@@ -145,6 +155,7 @@ const mapStatetoProps = (state) => ({
   playlistsisLoaded: state.playlistReducer.playlistsisLoaded,
   playlistIsOpened: state.playlistReducer.playlistIsOpened,
   playlistCurrentId: state.playlistReducer.playlistCurrentId,
+  playlistSongHasBeenDeleted: state.playlistReducer.playlistSongHasBeenDeleted,
 });
 
 export default connect(mapStatetoProps, {
@@ -158,4 +169,5 @@ export default connect(mapStatetoProps, {
   setIsLoadingSong,
   setSongId,
   setIsPlaying,
+  setPlaylistSongHasBeenDeleted,
 })(PlaylistCard);

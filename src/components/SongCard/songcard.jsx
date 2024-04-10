@@ -35,6 +35,7 @@ import { getPlaylists } from "../../util/getPlaylists";
 import Playlistmodal from "../PlaylistModal/playlistmodal";
 import { decodeToken } from "react-jwt";
 import { useLocation } from "react-router-dom";
+import { deleteSongFromPlaylist } from "../../util/deleteSongFromPlaylist";
 
 const SongCard = ({
   songIdCur,
@@ -161,21 +162,26 @@ const SongCard = ({
     const headers = {
       "X-Auth-token": localStorage.getItem("access_token"),
     };
-    if (playlistIsOpened) {
-      const { data, status } = await axios.delete(
-        `http://localhost:1337/api/v1/playlist/remove/${playlistId}?song=${title}`,
-        { headers }
-      );
-      console.log(playlistId, title);
-      if (status === 200) {
-        setSongDeleteRenderind(true);
-        alert("Song removed from the playlist");
-        onSongDeletePlaylist();
+
+    const isSongInPlaylists = playlists.some((playlist) =>
+      playlist.songs.some((song) => song.title === title)
+    );
+
+    if (isSongInPlaylists) {
+      for (const playlist of playlists) {
+        const songDeletingPlaylist = await deleteSongFromPlaylist(
+          playlist._id,
+          title
+        );
+        console.log(songDeletingPlaylist);
+        // if (songDeletingPlaylist.status === 200) {
+        //   console.log("Song removed from the playlist" + playlist.playlistName);
+        // }
       }
-    } else {
+
       const __URL__ = "http://localhost:1337";
       const { data, status } = await axios.delete(
-        `${__URL__}/api/v1/song/delete/${songIdCur}?file=${file}`,
+        `${__URL__}/api/v1/song/delete/${songIdCur}`,
         { headers }
       );
       if (status === 200) {
@@ -183,8 +189,22 @@ const SongCard = ({
         alert("Song removed from the player");
         onSongDelete();
       }
+
+      setSongDeleteRenderind(false);
+    } else {
+      const __URL__ = "http://localhost:1337";
+      const { data, status } = await axios.delete(
+        `${__URL__}/api/v1/song/delete/${songIdCur}`,
+        { headers }
+      );
+      if (status === 200) {
+        setSongDeleteRenderind(true);
+        alert("Song removed from the player");
+        onSongDelete();
+      }
+
+      setSongDeleteRenderind(false);
     }
-    setSongDeleteRenderind(false);
   };
 
   return (

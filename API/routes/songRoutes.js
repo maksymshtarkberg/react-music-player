@@ -22,7 +22,7 @@ router.post(
   //  uploadMiddleware("songs"), Problem with multiple deleting of temporary files
   addSong
 );
-router.delete("/delete/:id");
+router.delete("/delete/:id", deleteSong);
 router.get("/:index/listen", sendSeekable, getSongByIndex);
 
 export default router;

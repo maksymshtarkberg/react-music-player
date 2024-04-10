@@ -9,6 +9,7 @@
   right: 0;
   font-size: 37px;
   transform: rotate(335deg);
+  cursor: pointer;
 }
 
 .playlist-loader {
@@ -24,7 +25,6 @@
   border-radius: 10px;
   transition: .4s ease-in-out;
   background-color: #d3d3d3;
-  cursor: pointer;
   margin-bottom: 10px;
 }
 
@@ -34,6 +34,7 @@
 }
 
 .playlist-song_container {
+  width: 300px;
   height: 200px;
   overflow-y: auto;
   overflow-x: hidden;
@@ -93,7 +94,15 @@
 
 }
 
-
+.playlist-delete_song {
+  position: relative;
+  cursor: pointer;
+  font-size: 24px;
+  color: #000;
+  margin-right: auto;
+  top: 15px;
+  right: 5px;
+}
 
 .playlist-albumcover {
   position: relative;

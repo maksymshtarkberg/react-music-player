@@ -3,6 +3,7 @@ import {
   SET_PLAYLIST_LOADED,
   SET_PLAYLIST_CURRENT_ID,
   SET_PLAYLIST_IS_OPENED,
+  SET_PLAYLIST_SONG_HAS_BEEN_DELETED,
 } from "../actionTypes";
 
 const initialState = {
@@ -10,6 +11,7 @@ const initialState = {
   playlistsisLoaded: false,
   playlistIsOpened: false,
   playlistCurrentId: "",
+  playlistSongHasBeenDeleted: true,
 };
 
 const playlistReducer = (state = initialState, action) => {
@@ -37,6 +39,12 @@ const playlistReducer = (state = initialState, action) => {
       return {
         ...state,
         playlistIsOpened: action.payload,
+      };
+    }
+    case SET_PLAYLIST_SONG_HAS_BEEN_DELETED: {
+      return {
+        ...state,
+        playlistSongHasBeenDeleted: action.payload,
       };
     }
     default:

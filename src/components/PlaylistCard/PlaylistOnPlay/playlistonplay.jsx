@@ -18,11 +18,14 @@ import {
   setIsLoadingSong,
   setPlaylistIsOpened,
   addTodo,
+  setPlaylistSongHasBeenDeleted,
 } from "../../../redux/actions";
 import SpotifySvg from "./PlaylistUiComponents/spotifysvg";
 import PlayingInPlaylist from "./PlaylistUiComponents/playinginplaylist";
 import { getSongs } from "../../../util/getSongs";
 import SongDefault from "../../../assets/song-default.jpg";
+import { deleteSongFromPlaylist } from "../../../util/deleteSongFromPlaylist";
+import { getPlaylists } from "../../../util/getPlaylists";
 
 const PlaylistOnPlay = ({
   songs,
@@ -45,6 +48,7 @@ const PlaylistOnPlay = ({
   setIsLoadingSong,
   isLoadingSong,
   addTodo,
+  setPlaylistSongHasBeenDeleted,
 }) => {
   const goBackToPlaylistMain = async () => {
     setIsPlaying(false);
@@ -80,6 +84,25 @@ const PlaylistOnPlay = ({
       setIsPlaying(true);
     }
   };
+
+  const handleDeleteSongFromPlaylist = async (event, id, title) => {
+    event.stopPropagation();
+    await deleteSongFromPlaylist(id, title);
+    setPlaylistSongHasBeenDeleted(true);
+    const newPlaylist = await getPlaylists();
+    const currentPlaylist = newPlaylist.find(
+      (playlist) => playlist._id === playlistId
+    );
+    const songsInCurrentPlaylist = currentPlaylist
+      ? currentPlaylist.songs || []
+      : [];
+    addTodo(songsInCurrentPlaylist);
+    if (songsInCurrentPlaylist.length === 0) {
+      setPlaylistIsOpened(false);
+      const songs = await getSongs();
+      addTodo(songs);
+    }
+  };
   return (
     <>
       <div className="playlist-card_arrowback" onClick={goBackToPlaylistMain}>
@@ -106,6 +129,14 @@ const PlaylistOnPlay = ({
                   )
                 }
               >
+                <div
+                  className="playlist-delete_song"
+                  onClick={(event) =>
+                    handleDeleteSongFromPlaylist(event, playlistId, song.title)
+                  }
+                >
+                  &times;
+                </div>
                 <div className="playlist-song">
                   <p>{song.title}</p>
                   <p className="playlist-artist">{song.artist}</p>
@@ -155,4 +186,5 @@ export default connect(mapStatetoProps, {
   setPlaylist,
   setIsLoadingSong,
   setPlaylistIsOpened,
+  setPlaylistSongHasBeenDeleted,
 })(PlaylistOnPlay);

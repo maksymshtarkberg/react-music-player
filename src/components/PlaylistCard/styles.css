@@ -31,7 +31,7 @@
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
-  background: rgba(255, 255, 255, .05);
+  background: rgb(43 43 43 / 11%);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(10px);
   border-radius: 8px;
@@ -40,6 +40,7 @@
 }
 
 .playlist-card_back {
+  cursor: auto;
   width: 100%;
   height: 100%;
   display: flex;

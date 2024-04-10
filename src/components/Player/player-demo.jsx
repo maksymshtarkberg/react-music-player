@@ -63,6 +63,7 @@ const Player = ({
   setSongId,
   canvasRef,
   audioPlayer,
+  playlistSongHasBeenDeleted,
 }) => {
   const currTimeRef = useRef(currTime);
 
@@ -509,6 +510,7 @@ const mapStatetoProps = (state) => ({
   songId: state.songReducer.songId,
   isLoadedSong: state.songReducer.isLoadedSong,
   isLoadingSong: state.playerReducer.isLoadingSong,
+  playlistSongHasBeenDeleted: state.playlistReducer.playlistSongHasBeenDeleted,
 });
 
 export default connect(mapStatetoProps, {

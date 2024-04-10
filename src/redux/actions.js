@@ -25,6 +25,7 @@ import {
   SET_SONGS_UPLOADED_BY_USER,
   SET_ALBUM_IS_ON,
   SET_ARTIST_IS_ON,
+  SET_PLAYLIST_SONG_HAS_BEEN_DELETED,
 } from "./actionTypes";
 
 export const addTodo = (todos) => ({
@@ -142,4 +143,8 @@ export const setAlbumIsOn = (albumIsOn) => ({
 export const setArtistIsOn = (artistIsOn) => ({
   type: SET_ARTIST_IS_ON,
   payload: artistIsOn,
+});
+export const setPlaylistSongHasBeenDeleted = (songDelete) => ({
+  type: SET_PLAYLIST_SONG_HAS_BEEN_DELETED,
+  payload: songDelete,
 });
