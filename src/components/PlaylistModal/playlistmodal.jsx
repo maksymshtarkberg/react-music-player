@@ -35,53 +35,66 @@ const PlaylistModal = ({
   handleClosePlaylist,
   uploadedBy,
 }) => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const handlePlaylistItemClick = async (event, playlistId) => {
     event.stopPropagation();
 
-    const selectedPlaylist = playlists.find(
-      (playlist) => playlist._id === playlistId
-    );
-    const songsInPlaylist = selectedPlaylist.songs || [];
-
-    const isSongAlreadyInPlaylist = songsInPlaylist.some(
-      (song) => song._id === songIdCur
-    );
-
-    if (isSongAlreadyInPlaylist) {
-      alert("This song is already in the playlist.");
+    if (isLoading) {
       return;
     }
-    const allSongs = await getSongs();
 
-    const cover = allSongs.find((song) => song._id === songIdCur);
-    const coverfile = cover ? cover.coverfile : null;
+    setIsLoading(true);
+    try {
+      const selectedPlaylist = playlists.find(
+        (playlist) => playlist._id === playlistId
+      );
+      const songsInPlaylist = selectedPlaylist.songs || [];
 
-    const songData = [
-      {
-        _id: songIdCur,
-        title,
-        artist: artistName,
-        album,
-        uploadedBy: uploadedBy,
-        coverfile: coverfile,
-      },
-    ];
-    const headers = {
-      "X-Auth-Token": localStorage.getItem("access_token"),
-    };
-    const __URL__ = "http://localhost:1337";
-    const { data, status } = await axios.post(
-      `${__URL__}/api/v1/playlist/add/${playlistId}`,
-      songData,
-      { headers }
-    );
-    if (status === 200) {
-      alert("Song added to playlist");
+      const isSongAlreadyInPlaylist = songsInPlaylist.some(
+        (song) => song._id === songIdCur
+      );
+
+      if (isSongAlreadyInPlaylist) {
+        alert("This song is already in the playlist.");
+        return;
+      }
+      const allSongs = await getSongs();
+
+      const cover = allSongs.find((song) => song._id === songIdCur);
+      const coverfile = cover ? cover.coverfile : null;
+
+      const songData = [
+        {
+          _id: songIdCur,
+          title,
+          artist: artistName,
+          album,
+          uploadedBy: uploadedBy,
+          coverfile: coverfile,
+        },
+      ];
+      const headers = {
+        "X-Auth-Token": localStorage.getItem("access_token"),
+      };
+      const __URL__ = "http://localhost:1337";
+      const { data, status } = await axios.post(
+        `${__URL__}/api/v1/playlist/add/${playlistId}`,
+        songData,
+        { headers }
+      );
+      if (status === 200) {
+        alert("Song added to playlist");
+      }
+      const playlistsData = await getPlaylists();
+      setPlaylist(playlistsData);
+
+      console.log(`Song added to playlist with ID: ${playlistId}`);
+    } catch (error) {
+      console.error("Error adding song to playlist:", error);
+    } finally {
+      setIsLoading(false);
     }
-    const playlistsData = await getPlaylists();
-    setPlaylist(playlistsData);
-
-    console.log(`Song added to playlist with ID: ${playlistId}`);
   };
 
   return (

@@ -6,8 +6,7 @@
 }
 
 .playlist-card_inner {
-  width: 100%;
-  height: 100%;
+  width: 60%;
   position: relative;
   transform-style: preserve-3d;
   transition: transform 0.999s;
@@ -155,24 +154,15 @@
   }
 }
 
-/* @media (max-width: 1310px) {
+@media (max-width: 1110px) {
   .playlist-card_inner {
-    height: 270px;
+    width: 70%;
   }
 }
+
 
 @media (max-width: 1110px) {
-  .playlist-card {
-    width: 50%;
+  .playlist-card_inner {
+    width: 80%;
   }
 }
-
-@media (max-width: 910px) {
-  .playlist-card {
-    width: 100%;
-  }
-
-  .playlist-card_inner {
-    height: 100%;
-  }
-} */

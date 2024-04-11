@@ -1,8 +1,13 @@
 import "./styles.css";
 
-const BtnLoader = () => {
+const BtnLoader = ({ top, left }) => {
+  const loaderStyle = {
+    top: top || "50%",
+    left: left || "50%",
+  };
+
   return (
-    <div class="btn-loader">
+    <div style={loaderStyle} class="btn-loader">
       <div class="btn-loader_cube btn-loader_cube--color"></div>
       <div class="btn-loader_cube btn-loader_cube--glowing"></div>
     </div>

@@ -7,6 +7,7 @@ import {
   SET_IS_LOADING_SONG,
   SET_ALBUM_IS_ON,
   SET_ARTIST_IS_ON,
+  SET_ALBUMS_AND_ARTISTS_SONGS,
 } from "../actionTypes";
 
 const initialState = {
@@ -24,6 +25,7 @@ const initialState = {
   isLoadingSong: false,
   albumIsOn: false,
   artistIsOn: false,
+  albumsAndArtistsSongs: [],
 };
 
 const playerReducer = (state = initialState, action) => {
@@ -67,6 +69,11 @@ const playerReducer = (state = initialState, action) => {
       return {
         ...state,
         artistIsOn: action.payload,
+      };
+    case SET_ALBUMS_AND_ARTISTS_SONGS:
+      return {
+        ...state,
+        albumsAndArtistsSongs: action.payload,
       };
     default:
       return state;

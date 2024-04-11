@@ -26,9 +26,9 @@ const PlaylistsSlider = ({ audioPlayer, setPlaylist, playlists }) => {
   return (
     <div className="slider-container">
       {location.pathname === "/feed" ? (
-        <h1>Popular Playlist</h1>
+        <h1>Popular Playlists</h1>
       ) : (
-        <h1>My Playlist</h1>
+        <h1>My Playlists</h1>
       )}
       <Swiper
         modules={[Pagination, Scrollbar, A11y, EffectCoverflow]}
@@ -40,9 +40,10 @@ const PlaylistsSlider = ({ audioPlayer, setPlaylist, playlists }) => {
         loop={false}
         speed={600}
         slidesPerView={"auto"}
+        spaceBetween={0.1}
         coverflowEffect={{
           rotate: 10,
-          stretch: 120,
+          stretch: 100,
           depth: 200,
           modifier: 1,
           slideShadows: false,

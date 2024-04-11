@@ -3,6 +3,11 @@
   width: 100%;
 }
 
+.slider-container h1 {
+  margin-top: 20px;
+}
+
+
 div .swiper {
   width: 100%;
   padding: 30px 0 20px;
@@ -169,6 +174,10 @@ div .swiper-pagination-bullet-active {
   .swiper-slide_pic {
     height: 180px;
   }
+
+  div .playlist-card {
+    padding-bottom: 0;
+  }
 }
 
 @media (max-width: 450px) {
@@ -181,4 +190,10 @@ div .swiper-pagination-bullet-active {
     padding: 12px 36px;
   }
 
+}
+
+@media (max-width: 375px) {
+  div .swiper-slide {
+    width: 100%;
+  }
 }

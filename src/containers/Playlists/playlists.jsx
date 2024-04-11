@@ -6,6 +6,7 @@ import { setPlaylist, setPlaylistLoaded } from "../../redux/actions";
 import "./styles.css";
 import { getPlaylists } from "../../util/getPlaylists";
 import PlaylistsSlider from "../../components/PlaylistsSlider/plslider";
+import BtnLoader from "../../components/BtnLoader/btnloader";
 
 const PlayList = ({
   audioPlayer,
@@ -14,34 +15,31 @@ const PlayList = ({
   playlists,
   playlistsisLoaded,
 }) => {
-  const [cretePlaylist, setCreatePlaylist] = useState(false);
-  const [PlaylistCover, setPlaylistCover] = useState();
-
+  const [playlistName, setPlaylistName] = useState("");
+  const [playlistCover, setPlaylistCover] = useState(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchPlaylists();
   }, []);
 
-  useEffect(() => {
-    if (cretePlaylist) {
-      setLoading(true);
-      fetchPlaylists();
-      setLoading(false);
-      setCreatePlaylist(false);
-      setPlaylistLoaded(false);
-    }
-  }, [cretePlaylist, playlists, playlistsisLoaded]);
+  const fetchPlaylists = async () => {
+    const data = await getPlaylists();
+    setPlaylist(data);
+    setPlaylistLoaded(true);
+  };
 
-  // Create a playlist
   const createPlaylist = async () => {
-    const __URL__ = "http://localhost:1337";
-    const playlistName = document.getElementById("playlistName").value;
-    if (playlistName === "") return alert("Please enter a playlist name");
+    if (!playlistName) {
+      alert("Please enter a playlist name");
+      return;
+    }
+
+    setLoading(true);
 
     const formData = new FormData();
     formData.append("playlistName", playlistName);
-    formData.append("playlistCover", PlaylistCover);
+    formData.append("playlistCover", playlistCover);
 
     try {
       const headers = {
@@ -50,32 +48,29 @@ const PlayList = ({
       };
 
       const response = await axios.post(
-        `${__URL__}/api/v1/playlist/create`,
+        "http://localhost:1337/api/v1/playlist/create",
         formData,
-        {
-          headers,
-        }
+        { headers }
       );
+
       if (response.status === 201) {
         alert("Playlist created successfully");
-        setCreatePlaylist(true);
+        setPlaylistName("");
+        setPlaylistCover(null);
+        fetchPlaylists();
       }
     } catch (error) {
       console.error("Error creating playlist:", error);
       alert("Failed to create playlist");
+    } finally {
+      setLoading(false);
     }
-  };
-
-  // fetching playlists
-  const fetchPlaylists = async () => {
-    const data = await getPlaylists();
-    setPlaylist(data);
-    setPlaylistLoaded(true);
   };
 
   const handlePlaylistCover = (e) => {
     setPlaylistCover(e.target.files[0]);
   };
+
   return (
     <>
       <div className="playlist-create">
@@ -88,6 +83,8 @@ const PlayList = ({
             id="playlistName"
             placeholder="Playlist Name"
             className="playlist-input"
+            value={playlistName}
+            onChange={(e) => setPlaylistName(e.target.value)}
           />
         </div>
         <div className="playlist-photo">
@@ -102,13 +99,24 @@ const PlayList = ({
             accept="image/*"
           />
         </div>
-        <button className="playlist-button" onClick={createPlaylist}>
-          Create Playlist
-        </button>
+        <div className="playlists-create_btn">
+          {loading ? (
+            <BtnLoader top={"10px"} left={"-100px"} />
+          ) : (
+            <button
+              className="reg-button playlist-button"
+              onClick={createPlaylist}
+            >
+              Create Playlist
+            </button>
+          )}
+        </div>
       </div>
 
-      {playlists.length > 0 && (
+      {playlistsisLoaded && playlists.length > 0 ? (
         <PlaylistsSlider audioPlayer={audioPlayer} playlists={playlists} />
+      ) : (
+        <h2>No playlists </h2>
       )}
     </>
   );

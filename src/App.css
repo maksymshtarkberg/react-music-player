@@ -69,7 +69,7 @@ img {
     grid-template-columns: 6% 94%;
   }
 
-  .user-info img {
+  .user-info_img {
     border-radius: 50%;
     padding: 12px 12px 6px;
   }
@@ -96,20 +96,6 @@ img {
 }
 
 @media (max-width: 1250px) {
-
-
-  .artist {
-    grid-template-rows: 7fr 2fr;
-  }
-
-  .artist img {
-    width: 120px;
-  }
-
-  .album-frame {
-    width: 160px;
-  }
-
   .song {
     grid-template-columns: 30% 30% 30%;
   }
@@ -124,23 +110,6 @@ img {
 
   .left-content {
     padding: 40px 20px 20px;
-  }
-
-
-  .artist {
-    grid-template-rows: 5fr 2fr;
-  }
-
-  .artist img {
-    width: 90px;
-  }
-
-  .album {
-    grid-template-rows: 4fr 2fr;
-  }
-
-  .album-frame {
-    width: 130px;
   }
 
   .song {
@@ -158,21 +127,14 @@ img {
     padding: 30px 20px 20px;
   }
 
-
-  .artist {
-    grid-template-rows: 4fr 2fr;
+  .music-player {
+    position: static;
+    flex-direction: column;
   }
 
-  .artist img {
-    width: 80px;
-  }
-
-  .album {
-    grid-template-rows: 3fr 2fr;
-  }
-
-  .album-frame {
-    width: 100px;
+  .song-volume {
+    width: 50%;
+    margin: 20px 0;
   }
 
   .right-content {
@@ -180,7 +142,11 @@ img {
   }
 
   .song {
-    grid-template-columns: 22% 30% 40%;
+    grid-template-columns: 30% 30% 40%;
+  }
+
+  .song-container {
+    height: 100%;
   }
 
 }
@@ -190,9 +156,7 @@ img {
     grid-template-columns: 52% 48%;
   }
 
-  .song {
-    grid-template-columns: 24% 30% 45%;
-  }
+
 }
 
 @media (max-width: 700px) {
@@ -207,16 +171,20 @@ img {
       "rightContent";
   }
 
+  .music-player {
+    grid-column: span 1;
+  }
+
+  .main-player {
+    border: none;
+  }
+
+  div .swiper {
+    margin: 0;
+  }
+
   .left-content {
     grid-area: leftContent;
-  }
-
-  .album {
-    grid-template-rows: 3fr 2fr;
-  }
-
-  .album-frame {
-    width: 140px;
   }
 
   .right-content {
@@ -236,6 +204,9 @@ img {
     display: grid;
   }
 
+  .song-container {
+    height: 100vh;
+  }
 }
 
 @media (max-width: 580px) {
@@ -252,17 +223,8 @@ img {
     width: 85%;
   }
 
-  .artist img {
-    width: 80px;
-  }
 
-  .album {
-    grid-template-rows: 3fr 2fr;
-  }
 
-  .album-frame {
-    width: 100px;
-  }
 
 }
 
@@ -272,6 +234,9 @@ img {
     padding: 6px 6px 2px;
   }
 
+  .song-volume {
+    width: 80%;
+  }
 
   .song {
     grid-template-columns: 26% 30% 45%;

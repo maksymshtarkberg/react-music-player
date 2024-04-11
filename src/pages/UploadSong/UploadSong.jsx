@@ -181,7 +181,7 @@ const UploadSong = ({ addTodo }) => {
         </div>
         <div className="upload-songs__btn">
           {songIsUploading ? (
-            <BtnLoader />
+            <BtnLoader top={"9px"} left={"152px"} />
           ) : (
             <button
               className="reg-button"

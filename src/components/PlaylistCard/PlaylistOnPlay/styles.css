@@ -34,10 +34,10 @@
 }
 
 .playlist-song_container {
-  width: 300px;
   height: 200px;
   overflow-y: auto;
   overflow-x: hidden;
+  border-radius: 10px;
 }
 
 .playlist-song_container::-webkit-scrollbar,

@@ -9,6 +9,7 @@ import {
   setCurrentTrackIndex,
   setAlbumIsOn,
   setPlaylistIsOpened,
+  setAlbumsAndArtistsSongs,
 } from "../../redux/actions";
 
 const Albums = ({
@@ -21,17 +22,19 @@ const Albums = ({
   setCurrentTrackIndex,
   setAlbumIsOn,
   setPlaylistIsOpened,
+  setAlbumsAndArtistsSongs,
 }) => {
   const { handleMouseDown, handleMouseMove, handleMouseUp, handleMouseLeave } =
     useDragScroll();
 
-  const HandlePlayArtistSongs = (songs) => {
+  const HandlePlayAlbumSongs = (songs) => {
     audioPlayer.current.pause();
     setSongUrl("");
     setSongId("");
     setIsPlaying(false);
     setSongId(songs[0]._id);
     addTodo(songs);
+    setAlbumsAndArtistsSongs(songs);
     setCurrentTrackIndex(0);
     setAlbumIsOn(true);
     setPlaylistIsOpened(false);
@@ -53,7 +56,7 @@ const Albums = ({
               <div class="album" key={index}>
                 <div class="album-frame">
                   <img
-                    onClick={() => HandlePlayArtistSongs(album.songs)}
+                    onClick={() => HandlePlayAlbumSongs(album.songs)}
                     src={
                       album.albumName === "Now the Moon’s Rising"
                         ? "https://t2.genius.com/unsafe/842x0/https%3A%2F%2Fimages.genius.com%2F3d76a6c01fde3e445b40246d45682eb1.877x877x1.png"
@@ -97,4 +100,5 @@ export default connect(mapStatetoProps, {
   setCurrentTrackIndex,
   setAlbumIsOn,
   setPlaylistIsOpened,
+  setAlbumsAndArtistsSongs,
 })(Albums);

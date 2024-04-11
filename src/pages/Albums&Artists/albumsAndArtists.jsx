@@ -8,10 +8,12 @@ import {
   setSongUrl,
   setIsPlaying,
   setCurrentTrackIndex,
+  setAlbumsAndArtistsSongs,
 } from "../../redux/actions";
 import { useEffect } from "react";
 import { useState } from "react";
 import "./styles.css";
+import { getSongs } from "../../util/getSongs";
 
 const AlbumsAndArtists = ({
   todosRedux,
@@ -24,17 +26,34 @@ const AlbumsAndArtists = ({
   setSongUrl,
   setIsPlaying,
   setCurrentTrackIndex,
+  setAlbumsAndArtistsSongs,
+  albumsAndArtistsSongs,
 }) => {
   const [sortedAlbums, setSortedAlbums] = useState();
   const [sortedArtists, setSortedArtists] = useState();
 
   useEffect(() => {
-    sortByAlbumName();
-    sortByArtist();
-  }, [todosRedux]);
+    if (albumIsOn || artistIsOn) {
+      return;
+    } else {
+      fetchSongs();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (albumsAndArtistsSongs.length > 0) {
+      sortByAlbumName();
+      sortByArtist();
+    }
+  }, [albumsAndArtistsSongs]);
+
+  const fetchSongs = async () => {
+    const songs = await getSongs();
+    setAlbumsAndArtistsSongs(songs);
+  };
 
   const sortByAlbumName = () => {
-    const sortedSongs = [...todosRedux].sort((song1, song2) =>
+    const sortedSongs = [...albumsAndArtistsSongs].sort((song1, song2) =>
       song1.album.localeCompare(song2.album)
     );
 
@@ -56,7 +75,7 @@ const AlbumsAndArtists = ({
   };
 
   const sortByArtist = () => {
-    const sortedSongs = [...todosRedux].sort((song1, song2) =>
+    const sortedSongs = [...albumsAndArtistsSongs].sort((song1, song2) =>
       song1.artist.localeCompare(song2.artist)
     );
 
@@ -76,9 +95,10 @@ const AlbumsAndArtists = ({
     setSortedArtists(artistsArray);
   };
 
-  const handleGoBack = () => {
+  const handleGoBack = async () => {
     setSortedAlbums([]);
     setSortedArtists([]);
+    fetchSongs();
     setArtistIsOn(false);
     setAlbumIsOn(false);
     setSongId("");
@@ -118,6 +138,7 @@ const mapStatetoProps = (state) => ({
   todosRedux: state.todos.todos,
   albumIsOn: state.playerReducer.albumIsOn,
   artistIsOn: state.playerReducer.artistIsOn,
+  albumsAndArtistsSongs: state.playerReducer.albumsAndArtistsSongs,
 });
 
 export default connect(mapStatetoProps, {
@@ -127,4 +148,5 @@ export default connect(mapStatetoProps, {
   setSongUrl,
   setIsPlaying,
   setCurrentTrackIndex,
+  setAlbumsAndArtistsSongs,
 })(AlbumsAndArtists);
