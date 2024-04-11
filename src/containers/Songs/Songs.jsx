@@ -87,7 +87,7 @@ const Songs = ({
   return (
     <>
       <div className="tracklist-title">
-        <h1>Songs</h1>
+        <h1>Tracklist</h1>
         <FontAwesomeIcon
           icon={faRotate}
           className="tracklist-reload"

@@ -1,21 +1,21 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import Login from "./components/Login/login";
+import Login from "./pages/Login/login";
 import Content from "./containers/Content/content";
 import { Suspense } from "react";
 import Menu from "./components/Navigation/menu";
-import MainPlayer from "./containers/Main-Player/main-player";
-import Registration from "./components/Registration/registration";
+import TrackList from "./containers/Tracklist/tracklist";
+import Registration from "./pages/Registration/registration";
 import UploadSong from "./pages/UploadSong/UploadSong";
 
-import PlayList from "./containers/Playlists/playlists";
+import PlayList from "./pages/Playlists/playlists";
 import PlaylistsSlider from "./components/PlaylistsSlider/plslider";
 import Settings from "./pages/Settings/settings";
 import PrivateRoute from "./privateRoute";
-import Mysongs from "./components/MySongs/mysongs";
+import Mysongs from "./pages/MySongs/mysongs";
 import { useRef } from "react";
 import AlbumsAndArtists from "./pages/Albums&Artists/albumsAndArtists";
 import Account from "./pages/Account/account";
-import PlayerDemo from "./components/Player/player-demo";
+import Player from "./components/Player/player";
 
 function RouterWrapper() {
   const token = localStorage.getItem("access_token");
@@ -56,8 +56,8 @@ function RouterWrapper() {
             </Route>
           </Routes>
         </div>
-        <MainPlayer audioPlayer={audioPlayer} />
-        <PlayerDemo audioPlayer={audioPlayer} canvasRef={canvasRef} />
+        <TrackList audioPlayer={audioPlayer} />
+        <Player audioPlayer={audioPlayer} canvasRef={canvasRef} />
       </section>
     </main>
   );

@@ -111,13 +111,13 @@ const AlbumsAndArtists = ({
   return (
     <>
       {artistIsOn || albumIsOn ? (
-        <button class="btn-go_back" title="Go Back" onClick={handleGoBack}>
+        <button className="btn-go_back" title="Go Back" onClick={handleGoBack}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="50px"
             height="50px"
             viewBox="0 0 24 24"
-            class="stroke-blue-300"
+            className="stroke-blue-300"
           >
             <path
               stroke-linejoin="round"

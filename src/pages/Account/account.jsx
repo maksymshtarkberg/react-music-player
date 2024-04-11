@@ -40,8 +40,6 @@ const Account = () => {
     const foundSongs = songs.filter(
       (userSong) => userSong.uploadedBy === decoded.id
     );
-    console.log(foundSongs);
-
     setUserSongs(foundSongs.length);
   };
 

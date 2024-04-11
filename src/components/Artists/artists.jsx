@@ -44,7 +44,7 @@ const Artists = ({
   };
 
   return (
-    <div class="artists">
+    <div className="artists">
       <h1>Featured Artists</h1>
       <div
         className="artist-container containers"
@@ -56,7 +56,7 @@ const Artists = ({
         {artists &&
           artists.map((artist, index) => {
             return (
-              <div class="artist" key={index}>
+              <div className="artist" key={index}>
                 <img
                   onClick={() => HandlePlayArtistSongs(artist.songs)}
                   src={

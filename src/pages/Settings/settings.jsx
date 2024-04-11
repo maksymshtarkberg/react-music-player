@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "../../components/Registration/styles.css";
+import "../Registration/styles.css";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { connect } from "react-redux";
@@ -36,7 +36,6 @@ const Settings = ({ sessionId }) => {
           "X-Auth-Token": localStorage.getItem("access_token"),
         };
         const user = await getUser(headers);
-        console.log(headers, user);
         if (user) {
           setValue("username", user.name);
           setValue("email", user.email);

@@ -7,9 +7,9 @@ const BtnLoader = ({ top, left }) => {
   };
 
   return (
-    <div style={loaderStyle} class="btn-loader">
-      <div class="btn-loader_cube btn-loader_cube--color"></div>
-      <div class="btn-loader_cube btn-loader_cube--glowing"></div>
+    <div style={loaderStyle} className="btn-loader">
+      <div className="btn-loader_cube btn-loader_cube--color"></div>
+      <div className="btn-loader_cube btn-loader_cube--glowing"></div>
     </div>
   );
 };

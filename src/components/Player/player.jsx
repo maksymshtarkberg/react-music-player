@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import { styled, Typography, Slider, Paper, Stack, Box } from "@mui/material";
 import { connect } from "react-redux";
 import axios from "axios";
 import * as THREE from "three";
@@ -74,10 +73,10 @@ const Player = ({
    * Fetching current song by current track id
    */
   useEffect(() => {
-    if (isLoaded && songId && todosRedux) {
+    if (isLoaded && songId && todosRedux.length > 0) {
       fetchSong();
     }
-  }, [todosRedux, isLoaded, songId]);
+  }, [songId, isLoaded]);
 
   const fetchSong = async () => {
     try {
@@ -130,7 +129,7 @@ const Player = ({
    * Set song file to audioRef of component
    */
   useEffect(() => {
-    if (songUrl && !isLoadingSong) {
+    if (songId && songUrl && !isLoadingSong) {
       audioPlayer.current.src = songUrl;
       audioPlayer.current.load();
 

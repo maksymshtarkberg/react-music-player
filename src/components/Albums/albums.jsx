@@ -41,10 +41,10 @@ const Albums = ({
   };
 
   return (
-    <div class="albums">
+    <div className="albums">
       <h1>Recommended Albums</h1>
       <div
-        class="album-container containers"
+        className="album-container containers"
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
@@ -53,8 +53,8 @@ const Albums = ({
         {albums &&
           albums.map((album, index) => {
             return (
-              <div class="album" key={index}>
-                <div class="album-frame">
+              <div className="album" key={index}>
+                <div className="album-frame">
                   <img
                     onClick={() => HandlePlayAlbumSongs(album.songs)}
                     src={

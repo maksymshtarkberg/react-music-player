@@ -1,9 +1,7 @@
-import { useRef } from "react";
-import Player from "../../components/Player/player-demo";
 import Songs from "../Songs/Songs";
-import "./main-player.css";
+import "./styles.css";
 
-const MainPlayer = ({ audioPlayer }) => {
+const TrackList = ({ audioPlayer }) => {
   return (
     <div className="main-player">
       {/* <div className="vizualizer-container">
@@ -14,4 +12,4 @@ const MainPlayer = ({ audioPlayer }) => {
   );
 };
 
-export default MainPlayer;
+export default TrackList;

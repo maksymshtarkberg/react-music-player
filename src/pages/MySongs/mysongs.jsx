@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { decodeToken } from "react-jwt";
 import { connect } from "react-redux";
-import Songcard from "../SongCard/songcard";
+import Songcard from "../../components/SongCard/songcard";
 import { getSongs } from "../../util/getSongs";
 import "./styles.css";
 import { getPlaylists } from "../../util/getPlaylists";
@@ -29,8 +29,6 @@ const MySongs = ({
     const foundSongs = songs.filter(
       (userSong) => userSong.uploadedBy === decoded.id
     );
-    console.log(foundSongs);
-
     setSongsUploadedByUser(foundSongs);
   };
 

@@ -1,15 +1,9 @@
 import React, { useState } from "react";
-import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
-import AddIcon from "@mui/icons-material/Add";
-import PlayList from "../../containers/Playlists/playlists";
 import "./styles.css";
 import { connect } from "react-redux";
 import axios from "axios";
 import { getPlaylists } from "../../util/getPlaylists";
 import { setPlaylist } from "../../redux/actions";
-import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
-import { decodeToken } from "react-jwt";
 import { getSongs } from "../../util/getSongs";
 
 const style = {
