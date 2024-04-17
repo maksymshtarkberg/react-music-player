@@ -206,10 +206,33 @@
 }
 
 
+@media (max-width:910px) {
+  .song-volume {
+    width: 50%;
+    margin: 20px 0;
+  }
 
+  .music-player {
+    position: static;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 700px) {
+  .music-player {
+    grid-column: span 1;
+  }
+
+}
+
+/* @media (max-width:580px) {} */
 
 @media (max-width: 450px) {
   .controls button {
     margin: 7px;
+  }
+
+  .song-volume {
+    width: 80%;
   }
 }

@@ -12,7 +12,12 @@ import { connect } from "react-redux";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
-const PlaylistsSlider = ({ audioPlayer, setPlaylist, playlists }) => {
+const PlaylistsSlider = ({
+  audioPlayer,
+  setPlaylist,
+  playlists,
+  playlistCurrentId,
+}) => {
   useEffect(() => {
     fetchPlaylists();
   }, []);
@@ -22,6 +27,10 @@ const PlaylistsSlider = ({ audioPlayer, setPlaylist, playlists }) => {
     const data = await getPlaylists();
     setPlaylist(data);
   };
+
+  const currentPlaylistIndex = playlists.findIndex(
+    (playlist) => playlist._id === playlistCurrentId
+  );
 
   return (
     <div className="slider-container">
@@ -48,9 +57,7 @@ const PlaylistsSlider = ({ audioPlayer, setPlaylist, playlists }) => {
           modifier: 1,
           slideShadows: false,
         }}
-        initialSlide={
-          playlists.length > 0 ? Math.floor(playlists.length / 2) : null
-        }
+        initialSlide={currentPlaylistIndex !== -1 ? currentPlaylistIndex : null}
       >
         <div className="swiper-wrapper">
           {playlists !== undefined &&
@@ -79,6 +86,7 @@ const PlaylistsSlider = ({ audioPlayer, setPlaylist, playlists }) => {
 const mapStatetoProps = (state) => ({
   playlists: state.playlistReducer.playlists,
   playlistsisLoaded: state.playlistReducer.playlistsisLoaded,
+  playlistCurrentId: state.playlistReducer.playlistCurrentId,
 });
 
 export default connect(mapStatetoProps, { setPlaylist, setPlaylistLoaded })(

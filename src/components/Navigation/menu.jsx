@@ -38,13 +38,14 @@ import UserInfo from "../User/userInfo";
 import Logout from "../../util/logout";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import { getPlaylists } from "../../util/getPlaylists";
 
 const Menu = ({
   setPlaylist,
   setPlaylistLoaded,
   playlists,
-  playlistsisLoaded,
+  playlistIsOpened,
+  artistIsOn,
+  albumIsOn,
 }) => {
   const [activeNavItem, setActiveNavItem] = useState(0);
   const [userInfo, setUserInfo] = useState({ name: "", email: "" });
@@ -84,13 +85,6 @@ const Menu = ({
   }, [token]);
 
   useEffect(() => {
-    if (token && playlists && playlists.length === 0) {
-      fetchPlaylists();
-      setPlaylistLoaded(false);
-    }
-  }, [playlists, playlistsisLoaded]);
-
-  useEffect(() => {
     const activeIndex = Object.values(routes).indexOf(currentPath);
     setActiveNavItem(activeIndex);
   }, [currentPath]);
@@ -105,30 +99,6 @@ const Menu = ({
     } else if (typeof route === "function") {
       route();
       navigate("/signin");
-    }
-  };
-
-  const fetchPlaylists = async () => {
-    const data = await getPlaylists();
-    setPlaylist(data);
-    setPlaylistLoaded(true);
-  };
-
-  // delete playlist
-  const deletePlaylist = async (id) => {
-    const { data, status } = await axios.delete(
-      `http://localhost:1337/api/v1/playlist/delete/${id}`
-    );
-    if (status === 200) {
-      alert("Playlist deleted successfully");
-      fetchPlaylists();
-    }
-  };
-
-  // confirm delete and handle delete
-  const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this playlist?")) {
-      deletePlaylist(id);
     }
   };
 
@@ -186,6 +156,8 @@ const Menu = ({
                 text="Albums"
                 activeIndex={activeNavItem}
                 onClick={handleNavItemClick}
+                albumIsOn={albumIsOn}
+                artistIsOn={artistIsOn}
               />
               <NavItem
                 index={3}
@@ -193,6 +165,7 @@ const Menu = ({
                 text="Playlist"
                 activeIndex={activeNavItem}
                 onClick={handleNavItemClick}
+                playlistIsOpened={playlistIsOpened}
               />
               <NavItem
                 index={4}
@@ -236,17 +209,33 @@ const Menu = ({
   );
 };
 
-const NavItem = ({ icon, text, index, activeIndex, onClick }) => {
+const NavItem = ({
+  icon,
+  text,
+  index,
+  activeIndex,
+  onClick,
+  artistIsOn,
+  albumIsOn,
+  playlistIsOpened,
+}) => {
   const handleClick = () => {
     onClick(index);
   };
+  const isAlbumsArtistIsOn = albumIsOn || artistIsOn;
+
   return (
     <li
       className={`nav-item ${activeIndex === index ? "active" : ""}`}
       onClick={handleClick}
     >
       <div className="nav-element">
-        <FontAwesomeIcon icon={icon} className="nav-icon" />
+        <FontAwesomeIcon
+          icon={icon}
+          className={`nav-icon ${
+            isAlbumsArtistIsOn || playlistIsOpened ? "green" : ""
+          }`}
+        />
         <span className="nav-text">{text}</span>
       </div>
     </li>
@@ -257,7 +246,9 @@ const mapStatetoProps = (state) => ({
   todosRedux: state.todos.todos,
   playlists: state.playlistReducer.playlists,
   playlistsisLoaded: state.playlistReducer.playlistsisLoaded,
-  playlistCurrentId: state.playlistReducer.playlistCurrentId,
+  playlistIsOpened: state.playlistReducer.playlistIsOpened,
+  albumIsOn: state.playerReducer.albumIsOn,
+  artistIsOn: state.playerReducer.artistIsOn,
 });
 
 export default connect(mapStatetoProps, {

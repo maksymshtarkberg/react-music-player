@@ -156,13 +156,6 @@
 
 @media (max-width: 1110px) {
   .playlist-card_inner {
-    width: 70%;
-  }
-}
-
-
-@media (max-width: 1110px) {
-  .playlist-card_inner {
-    width: 80%;
+    width: 100%;
   }
 }

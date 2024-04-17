@@ -242,7 +242,6 @@ const SongCard = ({
               style={{
                 alignSelf: "center",
                 cursor: "pointer",
-                zIndex: 1,
                 border: "none",
                 background: "transparent",
               }}

@@ -19,6 +19,7 @@ import {
   setPlaylistIsOpened,
   addTodo,
   setPlaylistSongHasBeenDeleted,
+  setAlbumsAndArtistsSongs,
 } from "../../../redux/actions";
 import SpotifySvg from "./PlaylistUiComponents/spotifysvg";
 import PlayingInPlaylist from "./PlaylistUiComponents/playinginplaylist";
@@ -49,6 +50,7 @@ const PlaylistOnPlay = ({
   isLoadingSong,
   addTodo,
   setPlaylistSongHasBeenDeleted,
+  setAlbumsAndArtistsSongs,
 }) => {
   const goBackToPlaylistMain = async () => {
     setIsPlaying(false);
@@ -64,7 +66,7 @@ const PlaylistOnPlay = ({
   const handlePlay = async (songIdCur, title, artistName, album, songIndex) => {
     setSongId(songIdCur);
     setCurrentTrackIndex(songIndex);
-
+    setAlbumsAndArtistsSongs([]);
     if (songIdCur === songId) {
       if (isPlaying) {
         audioPlayer.current.pause();
@@ -187,4 +189,5 @@ export default connect(mapStatetoProps, {
   setIsLoadingSong,
   setPlaylistIsOpened,
   setPlaylistSongHasBeenDeleted,
+  setAlbumsAndArtistsSongs,
 })(PlaylistOnPlay);
