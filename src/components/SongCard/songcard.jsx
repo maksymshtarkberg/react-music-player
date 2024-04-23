@@ -151,7 +151,7 @@ const SongCard = ({
     setPlaylist(data);
   };
 
-  const handleDeletePlaylistSong = async (
+  const handleDeleteSong = async (
     event,
     file,
     songIdCur,
@@ -264,7 +264,7 @@ const SongCard = ({
           <div className="song-delete">
             <IconButton
               onClick={(event) =>
-                handleDeletePlaylistSong(
+                handleDeleteSong(
                   event,
                   file,
                   songIdCur,

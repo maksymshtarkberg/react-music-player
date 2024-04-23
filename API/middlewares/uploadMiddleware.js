@@ -5,11 +5,12 @@ import mongodb from "mongodb";
 
 const uploadMiddleware = (collectionName) => (req, res, next) => {
   let filesToProcess = [];
-  console.log(req.files);
+  // console.log(req.files, "файлы в запросе");
+  // console.log(req.file, "файл в запросе");
 
-  if (req.files && req.files.length > 0) {
-    filesToProcess.push(req.files["songFile"][0], req.files["albumCover"][0]);
-    console.log(filesToProcess);
+  if (req.files && Object.keys(req.files).length > 0) {
+    filesToProcess.push(...req.files["songFile"], ...req.files["albumCover"]);
+    // console.log(filesToProcess, "файлы в обработке");
   } else if (req.file && req.file.path) {
     filesToProcess.push(req.file);
   }
@@ -38,7 +39,8 @@ const uploadMiddleware = (collectionName) => (req, res, next) => {
         console.error("Failed to upload file:", err);
       });
 
-      fs.createReadStream(file.path).pipe(uploadStream);
+      const readStream = fs.createReadStream(file.path);
+      readStream.pipe(uploadStream);
     });
   }
   next();

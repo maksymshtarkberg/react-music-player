@@ -58,6 +58,24 @@ export const addSong = async (req, res) => {
       albumCoverUploadStream.on("finish", async () => {
         console.log("Album cover uploaded successfully");
 
+        // deleting temp files
+        fs.unlink(req.files["songFile"][0].path, (err) => {
+          if (err) {
+            console.error("Failed to delete song file:", err);
+          } else {
+            console.log("Song file deleted successfully");
+          }
+        });
+
+        // deleting temp files
+        fs.unlink(req.files["albumCover"][0].path, (err) => {
+          if (err) {
+            console.error("Failed to delete album cover file:", err);
+          } else {
+            console.log("Album cover file deleted successfully");
+          }
+        });
+
         const song = await collection.insertOne({
           title,
           artist,
@@ -92,7 +110,6 @@ export const addSong = async (req, res) => {
 //@access Private
 export const deleteSong = async (req, res) => {
   try {
-    console.log(req.query.file);
     const { id } = req.params;
     if (!id) {
       res.status(400);
@@ -119,7 +136,7 @@ export const deleteSong = async (req, res) => {
     });
     if (deleteSong) {
       await Promise.all([
-        bucket.delete(new mongodb.ObjectId(req.query.file)),
+        bucket.delete(new mongodb.ObjectId(song.file)),
         bucket.delete(new mongodb.ObjectId(song.coverfile)),
       ]);
       res
