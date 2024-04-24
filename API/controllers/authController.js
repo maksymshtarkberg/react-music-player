@@ -24,12 +24,14 @@ export const login = async (req, res) => {
       throw new Error("User does not exists");
     }
     if (user && bcrypt.compareSync(password, user.password)) {
+      const { token, token_expiration } = generateToken(user._id);
       res.status(200).json({
         message: "User logged in",
         status: "success",
         name: user.fullName,
         email: user.email,
-        token: generateToken(user._id),
+        token: token,
+        token_expiration: token_expiration,
       });
     } else {
       res.status(400);
@@ -80,12 +82,13 @@ export const register = async (req, res) => {
 
     if (user) {
       const userId = user.insertedId.toHexString();
-      const token = generateToken(userId);
+      const { token, token_expiration } = generateToken(user._id);
       console.log(userId);
       res.status(200).json({
         message: "user registered",
         status: "success",
         token: token,
+        token_expiration: token_expiration,
       });
     } else {
       res.status(400);
@@ -99,7 +102,9 @@ export const register = async (req, res) => {
 
 //Generate JWT for the user
 const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
+  const tokenExpiration = new Date().getTime() + 7 * 24 * 60 * 60 * 1000; // Текущее время + 7 дней (в миллисекундах)
+  const token = jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: "7d",
   });
+  return { token, token_expiration: tokenExpiration };
 };

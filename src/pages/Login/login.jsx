@@ -38,6 +38,7 @@ const Login = ({ setUserSession }) => {
         setValue("password", "");
 
         localStorage.setItem("access_token", response.data.token);
+        localStorage.setItem("Exp", new Date(response.data.token_expiration));
         const token = localStorage.getItem("access_token");
         token && setSubmitted(true);
 

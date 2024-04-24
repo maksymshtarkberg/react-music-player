@@ -73,6 +73,8 @@ const PlayList = ({
 
   return (
     <>
+      <h1 className="playlist-title">Create new playlist</h1>
+
       <div className="playlist-create">
         <div className="playlist-name">
           <label className="reg-label" htmlFor="playlistName">
@@ -99,18 +101,16 @@ const PlayList = ({
             accept="image/*"
           />
         </div>
-        <div className="playlists-create_btn">
-          {loading ? (
-            <BtnLoader top={"10px"} left={"-100px"} />
-          ) : (
-            <button
-              className="reg-button playlist-button"
-              onClick={createPlaylist}
-            >
-              Create Playlist
-            </button>
-          )}
-        </div>
+        {loading ? (
+          <BtnLoader top={"10px"} left={"-100px"} />
+        ) : (
+          <button
+            className="reg-button playlist-button"
+            onClick={createPlaylist}
+          >
+            Create Playlist
+          </button>
+        )}
       </div>
 
       {playlistsisLoaded && playlists.length > 0 ? (

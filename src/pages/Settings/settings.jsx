@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import "../Registration/styles.css";
 import { useForm } from "react-hook-form";
 import axios from "axios";
@@ -8,16 +8,40 @@ import { useEffect } from "react";
 import { uploadAvatar } from "../../util/uploadAvatar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import avatarPrewDefault from "../../assets/avatar-default-icon.png";
 import "./styles.css";
+import { getAvatar } from "../../util/getAvatar";
+import { decodeToken } from "react-jwt";
 
 const Settings = ({ sessionId }) => {
   const [submitted, setSubmitted] = useState(false);
-  const [userAvatar, setUserAvatar] = useState();
+  const [userAvatar, setUserAvatar] = useState(null);
   const [userName, setUserName] = useState("");
   const [userEmail, setUserEmail] = useState("");
 
   const [editOnName, setEditOnName] = useState(false);
   const [editOnEmail, setEditOnEmail] = useState(false);
+
+  const avatarPreview = useRef();
+
+  useEffect(() => {
+    const fetchAvatar = async () => {
+      const token = localStorage.getItem("access_token");
+      const decoded = decodeToken(token);
+      try {
+        const avatar = await getAvatar();
+        if (avatar) {
+          avatarPreview.current.src = `http://localhost:1337/api/v1/avatar/${decoded.id}`;
+        } else {
+          avatarPreview.current.src = avatarPrewDefault;
+        }
+      } catch (error) {
+        console.error("Error fetching avatar:", error);
+      }
+    };
+
+    fetchAvatar();
+  }, []);
 
   const { handleSubmit, register, formState, setValue } = useForm({
     mode: "onChange",
@@ -51,7 +75,32 @@ const Settings = ({ sessionId }) => {
   }, []);
 
   const handleUserAvatarChange = (e) => {
-    setUserAvatar(e.target.files[0]);
+    const file = e.target.files[0];
+
+    if (file) {
+      const reader = new FileReader();
+
+      reader.onload = function (event) {
+        const img = new Image();
+        img.onload = function () {
+          const width = img.width;
+          const height = img.height;
+
+          if (width > 600 || height > 600) {
+            alert("File size exceeds the limit. Please choose a smaller file.");
+            e.target.value = "";
+            setUserAvatar(null);
+            avatarPreview.current.src = avatarPrewDefault;
+          } else {
+            setUserAvatar(file);
+            avatarPreview.current.src = event.target.result;
+          }
+        };
+        img.src = event.target.result;
+      };
+
+      reader.readAsDataURL(file);
+    }
   };
 
   const onSubmit = handleSubmit(async (data) => {
@@ -169,13 +218,24 @@ const Settings = ({ sessionId }) => {
           <label className="reg-label" htmlFor="avatar">
             Photo
           </label>
-          <input
-            onChange={handleUserAvatarChange}
-            className="reg-input"
-            type="file"
-            name="avatar"
-            accept="image/*"
-          />
+          <div className="settings-photo">
+            <input
+              onChange={handleUserAvatarChange}
+              className="reg-input"
+              type="file"
+              name="avatar"
+              accept="image/*"
+              capture="environment"
+              style={{ maxWidth: "600px", maxHeight: "600px" }}
+              maxSize={2 * 1024 * 1024}
+            />
+            <img
+              className="settings-avatar_prew"
+              ref={avatarPreview || avatarPrewDefault}
+              id="previewImg"
+              alt="Avatar preview"
+            />
+          </div>
         </div>
 
         <button

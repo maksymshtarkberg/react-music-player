@@ -18,14 +18,12 @@
 }
 
 .music-player-info {
-  margin: auto 30px;
-  height: 60px;
-  width: 137px;
+  padding: 12px;
 }
 
 .music-player-info h2 {
   text-align: center;
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: 500;
 }
 
@@ -216,6 +214,7 @@
     position: static;
     flex-direction: column;
   }
+
 }
 
 @media (max-width: 700px) {

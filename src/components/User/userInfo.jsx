@@ -16,6 +16,7 @@ const UserInfo = ({ userInfo }) => {
       try {
         const avatar = await getAvatar();
         setUserAvatar(avatar);
+        console.log(avatar);
       } catch (error) {
         console.error("Error fetching avatar:", error);
       }

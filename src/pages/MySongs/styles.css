@@ -1,11 +1,11 @@
 .mysongs-box {
-  height: 99vh;
+  height: 90vh;
   overflow-y: auto;
   overflow-x: hidden;
 }
 
 .mysongs-title {
-  margin-bottom: 40px;
+  margin-bottom: 24px;
 }
 
 /* Containers Scrollbar Style */
