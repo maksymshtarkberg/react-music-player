@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import "../Registration/styles.css";
-import { useForm } from "react-hook-form";
+import { useForm, setError } from "react-hook-form";
 import axios from "axios";
 import { connect } from "react-redux";
 import { getUser } from "../../util/getUser";
@@ -13,16 +13,46 @@ import "./styles.css";
 import { getAvatar } from "../../util/getAvatar";
 import { decodeToken } from "react-jwt";
 
-const Settings = ({ sessionId }) => {
+import { setUserName, setUserEmail } from "../../redux/actions";
+
+const Settings = ({ setUserName, setUserEmail, userName, email }) => {
   const [submitted, setSubmitted] = useState(false);
   const [userAvatar, setUserAvatar] = useState(null);
-  const [userName, setUserName] = useState("");
-  const [userEmail, setUserEmail] = useState("");
+  const [userNameLocal, setUserNameLocal] = useState(userName);
+  const [userEmailLocal, setUserEmailLocal] = useState(email);
 
   const [editOnName, setEditOnName] = useState(false);
   const [editOnEmail, setEditOnEmail] = useState(false);
 
   const avatarPreview = useRef();
+
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+    setValue,
+    setError,
+    clearErrors,
+  } = useForm({
+    mode: "onChange",
+    defaultValues: {
+      username: userNameLocal,
+      userEmail: userEmailLocal,
+    },
+  });
+
+  useEffect(() => {
+    if (errors) {
+      setTimeout(() => {
+        clearErrors("userEmail");
+      }, 5000);
+    }
+    if (submitted) {
+      setTimeout(() => {
+        setSubmitted(false);
+      }, 5000);
+    }
+  }, [submitted, errors]);
 
   useEffect(() => {
     const fetchAvatar = async () => {
@@ -43,15 +73,6 @@ const Settings = ({ sessionId }) => {
     fetchAvatar();
   }, []);
 
-  const { handleSubmit, register, formState, setValue } = useForm({
-    mode: "onChange",
-    defaultValues: {
-      username: userName,
-      email: userEmail,
-    },
-  });
-  // const { username, email } = formState;
-
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
@@ -63,8 +84,8 @@ const Settings = ({ sessionId }) => {
         if (user) {
           setValue("username", user.name);
           setValue("email", user.email);
-          setUserName(user.name);
-          setUserEmail(user.email);
+          setUserNameLocal(user.name);
+          setUserEmailLocal(user.email);
         }
       } catch (error) {
         console.error("No user logged in", error);
@@ -108,39 +129,59 @@ const Settings = ({ sessionId }) => {
       const headers = {
         "X-Auth-token": localStorage.getItem("access_token"),
       };
-
-      const [nameResponse, emailResponse, avatarResponse] = await Promise.all([
-        axios.put(
-          `http://localhost:1337/api/v1/user/changename`,
-          { fullName: data.username },
-          { headers }
-        ),
-        axios.put(
-          `http://localhost:1337/api/v1/user/changemail`,
-          { email: data.email },
-          { headers }
-        ),
-        uploadAvatar(userAvatar, headers),
-      ]);
-
-      if (
-        nameResponse.status === 200 ||
-        emailResponse.status === 200 ||
-        avatarResponse.status === 200
-      ) {
+      const promises = [];
+      if (data.username !== userName) {
+        promises.push(
+          axios.put(
+            `http://localhost:1337/api/v1/user/changename`,
+            { fullName: data.username },
+            { headers }
+          )
+        );
+      }
+      if (data.email !== email) {
+        promises.push(
+          axios.put(
+            `http://localhost:1337/api/v1/user/changemail`,
+            { email: data.email },
+            { headers }
+          )
+        );
+      }
+      if (userAvatar) {
+        promises.push(uploadAvatar(userAvatar, headers));
+      }
+      const responses = await Promise.all(promises);
+      const allChangesSuccessful = responses.every(
+        (response) => response.status === 200
+      );
+      if (allChangesSuccessful) {
         setSubmitted(true);
+        setUserName(data.username);
+        setUserEmail(data.email);
       } else {
-        console.error("Error changing name or email");
+        console.error("Error changing name, email or avatar");
       }
     } catch (error) {
-      console.error("Error changing name, email or avatar:", error);
+      if (error.response.status === 400) {
+        setError("userEmail", {
+          type: "manual",
+          message: "Email already exists",
+        });
+        setSubmitted(false);
+      } else {
+        console.error("Error changing name, email or avatar:", error);
+        setSubmitted(false);
+      }
     }
   });
 
-  const handleClickEditName = () => {
+  const handleClickEditName = (e) => {
+    e.stopPropagation();
     setEditOnName((prevValue) => !prevValue);
   };
-  const handleClickEditEmail = () => {
+  const handleClickEditEmail = (e) => {
+    e.stopPropagation();
     setEditOnEmail((prevValue) => !prevValue);
   };
 
@@ -162,17 +203,17 @@ const Settings = ({ sessionId }) => {
                 {...register("username", {
                   required: false,
                 })}
-                onChange={(e) => setUserName(e.target.value)}
+                onChange={(e) => setUserNameLocal(e.target.value)}
               />
               <FontAwesomeIcon
                 icon={faCheck}
-                className="edit-icon"
-                onClick={handleClickEditName}
+                className="approve-icon"
+                onClick={(e) => handleClickEditName(e)}
               />
             </div>
           ) : (
-            <div className="input-box">
-              <p className="user-info">{userName}</p>
+            <div className="input-box" onClick={handleClickEditName}>
+              <p className="user-info">{userNameLocal}</p>
               <FontAwesomeIcon
                 icon={faPenToSquare}
                 className="edit-icon"
@@ -195,21 +236,23 @@ const Settings = ({ sessionId }) => {
                 {...register("email", {
                   required: false,
                 })}
-                onChange={(e) => setUserEmail(e.target.value)}
+                onChange={(e) => setUserEmailLocal(e.target.value)}
               />
               <FontAwesomeIcon
                 icon={faCheck}
-                className="edit-icon"
+                className="approve-icon"
                 onClick={handleClickEditEmail}
               />
             </div>
           ) : (
-            <div className="input-box">
-              <p className="user-info">{userEmail}</p>
+            <div className="input-box" onClick={handleClickEditEmail}>
+              <p className={`user-info ${errors.userEmail && "input-error"}`}>
+                {userEmailLocal}
+              </p>
               <FontAwesomeIcon
                 icon={faPenToSquare}
                 className="edit-icon"
-                onClick={handleClickEditEmail}
+                onClick={(e) => handleClickEditEmail(e)}
               />
             </div>
           )}
@@ -227,7 +270,6 @@ const Settings = ({ sessionId }) => {
               accept="image/*"
               capture="environment"
               style={{ maxWidth: "600px", maxHeight: "600px" }}
-              maxSize={2 * 1024 * 1024}
             />
             <img
               className="settings-avatar_prew"
@@ -247,9 +289,12 @@ const Settings = ({ sessionId }) => {
         </button>
       </form>
 
+      {errors.userEmail && (
+        <span className="error">{errors.userEmail.message}</span>
+      )}
       {submitted && (
         <div className="message">
-          <p>Changes successfully apply!🎉</p>
+          <p>Changes successfully saved!🎉</p>
         </div>
       )}
     </section>
@@ -258,6 +303,10 @@ const Settings = ({ sessionId }) => {
 
 const mapStatetoProps = (state) => ({
   sessionId: state.userReducer.sessionId,
+  userName: state.userReducer.userName,
+  email: state.userReducer.email,
 });
 
-export default connect(mapStatetoProps, {})(Settings);
+export default connect(mapStatetoProps, { setUserName, setUserEmail })(
+  Settings
+);

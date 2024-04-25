@@ -53,7 +53,7 @@ export const register = async (req, res) => {
     //if any of the fields are empty
     if (!fullName || !email || !password) {
       res.status(400);
-      throw new Error("Please add all fields");
+      return res.status(400).json({ message: "Please add all fields" });
     }
 
     const db = dbConnect.db("music_streaming");
@@ -62,8 +62,7 @@ export const register = async (req, res) => {
     // Check if user exists
     const userExists = await collection.findOne({ email });
     if (userExists) {
-      res.status(400);
-      throw new Error("User already exists");
+      return res.status(400).json({ message: "User already exists" });
     }
 
     // Hash password
@@ -80,10 +79,10 @@ export const register = async (req, res) => {
       registrationDate: currentDate,
     });
 
-    if (user) {
+    if (user.insertedId) {
       const userId = user.insertedId.toHexString();
-      const { token, token_expiration } = generateToken(user._id);
-      console.log(userId);
+      const { token, token_expiration } = generateToken(userId);
+      console.log(user._id);
       res.status(200).json({
         message: "user registered",
         status: "success",

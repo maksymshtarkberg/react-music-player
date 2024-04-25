@@ -1,0 +1,11 @@
+div .log-in_error {
+  padding: 20px 0;
+  bottom: -20xp;
+  text-wrap: nowrap;
+}
+
+.input-controll {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}

@@ -30,6 +30,8 @@ import {
   setCurrentTrackIndex,
   setSongUrl,
   setIsLoadingSong,
+  setUserName,
+  setUserEmail,
 } from "../../redux/actions";
 
 import "./menu.css";
@@ -38,6 +40,7 @@ import UserInfo from "../User/userInfo";
 import Logout from "../../util/logout";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import { decodeToken } from "react-jwt";
 
 const Menu = ({
   setPlaylist,
@@ -46,9 +49,12 @@ const Menu = ({
   playlistIsOpened,
   artistIsOn,
   albumIsOn,
+  setUserName,
+  setUserEmail,
+  userName,
+  email,
 }) => {
   const [activeNavItem, setActiveNavItem] = useState(0);
-  const [userInfo, setUserInfo] = useState({ name: "", email: "" });
 
   const token = localStorage.getItem("access_token");
 
@@ -74,8 +80,14 @@ const Menu = ({
           "Content-Type": "application/json",
           "X-Auth-token": localStorage.getItem("access_token"),
         };
+        const decoded = decodeToken(token);
+
+        console.log(decoded);
         const user = await getUser(headers);
-        user && setUserInfo({ name: user.name, email: user.email });
+        if (user) {
+          setUserName(user.name);
+          setUserEmail(user.email);
+        }
       } catch (error) {
         console.error("No user logged in", error);
       }
@@ -105,7 +117,7 @@ const Menu = ({
   return (
     <nav className="main-menu">
       <div>
-        <UserInfo userInfo={userInfo} />
+        <UserInfo />
 
         <ul>
           {!token && (
@@ -249,6 +261,8 @@ const mapStatetoProps = (state) => ({
   playlistIsOpened: state.playlistReducer.playlistIsOpened,
   albumIsOn: state.playerReducer.albumIsOn,
   artistIsOn: state.playerReducer.artistIsOn,
+  userName: state.userReducer.userName,
+  email: state.userReducer.email,
 });
 
 export default connect(mapStatetoProps, {
@@ -261,4 +275,6 @@ export default connect(mapStatetoProps, {
   setCurrentTrackIndex,
   setSongUrl,
   setIsLoadingSong,
+  setUserName,
+  setUserEmail,
 })(Menu);

@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./styles.css";
-import { useForm } from "react-hook-form";
+import { useForm, setError } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
-const Registration = () => {
+import { connect } from "react-redux";
+import { setUserName, setUserEmail } from "../../redux/actions";
+const Registration = ({ setUserName, setUserEmail }) => {
   const [submitted, setSubmitted] = useState(false);
   const {
     handleSubmit,
@@ -12,6 +13,8 @@ const Registration = () => {
     formState: { errors },
     setValue,
     watch,
+    setError,
+    clearErrors,
   } = useForm({
     mode: "onChange",
     defaultValues: {
@@ -24,10 +27,35 @@ const Registration = () => {
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    let clearErrorsTimeout;
+
+    if (
+      errors.confirmPassword ||
+      errors.email ||
+      errors.password ||
+      errors.username
+    ) {
+      clearErrorsTimeout = setTimeout(() => {
+        clearErrors("confirmPassword");
+        clearErrors("email");
+        clearErrors("password");
+        clearErrors("username");
+      }, 5000);
+    }
+
+    return () => {
+      clearTimeout(clearErrorsTimeout);
+    };
+  }, [errors, clearErrors, errors.email]);
+
   const onSubmit = handleSubmit(async (data) => {
     try {
       if (data.password !== data.confirmPassword) {
-        console.error("Passwords do not match");
+        setError("confirmPassword", {
+          type: "manual",
+          message: "Passwords do not match",
+        });
         return;
       }
 
@@ -44,16 +72,28 @@ const Registration = () => {
         setValue("password", "");
         setValue("confirmPassword", "");
         localStorage.setItem("access_token", response.data.token);
-        const token = localStorage.getItem("access_token");
-        token && setSubmitted(true);
+        localStorage.setItem("Exp", new Date(response.data.token_expiration));
 
-        setTimeout(() => {
-          token && navigate("/feed");
-        }, 2000);
+        const token = localStorage.getItem("access_token");
+        console.log(response, token);
+
+        if (token) {
+          setSubmitted(true);
+
+          setTimeout(() => {
+            token && navigate("/feed");
+          }, 2000);
+        }
       } else {
         console.error("Error during registration:", response.statusText);
       }
     } catch (error) {
+      if (error.response.data.message === "User already exists") {
+        setError("email", {
+          type: "manual",
+          message: "User already exists",
+        });
+      }
       console.error("Error during registration:", error);
     }
   });
@@ -69,75 +109,98 @@ const Registration = () => {
           <label className="reg-label" htmlFor="username">
             Username
           </label>
-          <input
-            type="text"
-            placeholder="username"
-            id="username"
-            className="reg-input"
-            {...register("username", {
-              required: true,
-            })}
-          />
-          {errors.username && errors.username.type === "required" && (
-            <small>{errors.username.message}</small>
-          )}
+          <div className="input-controll">
+            <input
+              type="text"
+              placeholder="username"
+              id="username"
+              className={`reg-input ${errors.username && "input-error"}`}
+              {...register("username", {
+                required: { value: true, message: "Username is required" },
+              })}
+            />
+            {errors.username && (
+              <span className="error log-in_error">
+                {errors.username.message}
+              </span>
+            )}
+          </div>
         </div>
 
         <div className="input-control">
           <label htmlFor="email" className="reg-label">
             Email
           </label>
-          <input
-            type="email"
-            placeholder="info@email.com"
-            id="email"
-            className="reg-input"
-            {...register("email", {
-              required: true,
-            })}
-          />
-          {errors.email && errors.email.type === "required" && (
-            <small>{errors.email.message}</small>
-          )}
+          <div className="input-controll">
+            <input
+              type="email"
+              placeholder="info@email.com"
+              id="email"
+              className={`reg-input ${errors.email && "input-error"}`}
+              {...register("email", {
+                required: { value: true, message: "Email is required" },
+              })}
+            />
+            {errors.email && (
+              <span className="error log-in_error">{errors.email.message}</span>
+            )}
+          </div>
         </div>
 
         <div className="input-control">
           <label htmlFor="password" className="reg-label">
             Password
           </label>
-          <input
-            type="password"
-            placeholder="password"
-            id="password"
-            className="reg-input"
-            {...register("password", {
-              required: true,
-              minLength: 6,
-            })}
-          />
-          {errors.password && errors.password.type === "required" && (
-            <small>{errors.password.message}</small>
-          )}
+          <div className="input-controll">
+            <input
+              type="password"
+              placeholder="password"
+              id="password"
+              className={`reg-input ${errors.password && "input-error"}`}
+              {...register("password", {
+                required: { value: true, message: "Password is required" },
+                minLength: {
+                  value: 6,
+                  message: "Password must be at least 6 characters long",
+                },
+              })}
+            />
+            {errors.password && (
+              <span className="error log-in_error">
+                {errors.password.message}
+              </span>
+            )}
+          </div>
         </div>
 
         <div className="input-control">
           <label htmlFor="confirmPassword" className="reg-label">
             Confirm Password
           </label>
-          <input
-            type="password"
-            placeholder="confirm password"
-            id="confirmPassword"
-            className="reg-input"
-            {...register("confirmPassword", {
-              required: true,
-              validate: (value) =>
-                value === password || "Passwords do not match",
-            })}
-          />
-          {errors.confirmPassword && (
-            <small>{errors.confirmPassword.message}</small>
-          )}
+          <div className="input-controll">
+            <input
+              type="password"
+              placeholder="confirm password"
+              id="confirmPassword"
+              className={`reg-input ${errors.confirmPassword && "input-error"}`}
+              {...register("confirmPassword", {
+                required: {
+                  value: true,
+                  message: "Password confirmation is required",
+                },
+                minLength: {
+                  value: 6,
+                  message:
+                    "Password confirmation must be at least 6 characters long",
+                },
+              })}
+            />
+            {errors.confirmPassword && (
+              <span className="error log-in_error">
+                {errors.confirmPassword.message}
+              </span>
+            )}
+          </div>
         </div>
 
         <button className="reg-button" type="submit">
@@ -154,4 +217,11 @@ const Registration = () => {
   );
 };
 
-export default Registration;
+const mapStatetoProps = (state) => ({
+  userName: state.userReducer.userName,
+  email: state.userReducer.email,
+});
+
+export default connect(mapStatetoProps, { setUserName, setUserEmail })(
+  Registration
+);

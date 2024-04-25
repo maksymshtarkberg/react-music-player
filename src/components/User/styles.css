@@ -1,8 +1,14 @@
-.user-profile-name p {
+.user-profile-name h2 {
   color: #fff;
   font-size: clamp(0.8rem, 3vw, 1rem);
   font-weight: 500;
   text-align: center;
   line-height: 1;
   padding: 0 6px 32px;
+}
+
+.user-profile-name {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }

@@ -22,6 +22,7 @@
 /* FORM  */
 .reg-form {
   padding: 30px 40px;
+  width: 33.3%;
 }
 
 .reg-label {
@@ -82,20 +83,13 @@
   visibility: visible;
 }
 
-.input-control.error i.fa-exclamation-circle {
+.input-control.pass-error i.fa-exclamation-circle {
   color: #b02546;
   visibility: visible;
 }
 
-.input-control small {
+.pass-error {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  font-weight: 800;
-  visibility: hidden;
-}
-
-.input-control.error small {
   color: #b02546;
   visibility: visible;
 }
@@ -137,13 +131,15 @@
 /* SHOW MESSAGE AFTER SUBMITTING  */
 
 .message {
+  position: absolute;
   font-size: 1.4rem;
   font-weight: 600;
   color: #e0e8ef;
   text-align: center;
   text-transform: uppercase;
-  padding: 50px 30px;
   animation: fade-in 1.5s ease-in-out forwards alternate;
+  bottom: 0;
+  z-index: 10;
 }
 
 .hidden {
@@ -157,5 +153,17 @@
 
   to {
     transform: rotate(0deg) scale(1) skew(0deg) translateY(0);
+  }
+}
+
+@media (max-width: 1500px) {
+  .reg-form {
+    width: 50%;
+  }
+}
+
+@media (max-width: 1100px) {
+  .reg-form {
+    width: 100%;
   }
 }

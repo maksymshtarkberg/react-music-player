@@ -1,20 +1,23 @@
-import { useForm } from "react-hook-form";
+import { useForm, setError } from "react-hook-form";
 import "../Registration/styles.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { decodeToken } from "react-jwt";
 
 import { connect } from "react-redux";
-import { setUserSession } from "../../redux/actions";
+import { setUserSession, setUserName, setUserEmail } from "../../redux/actions";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import "./styles.css";
 
-const Login = ({ setUserSession }) => {
+const Login = ({ setUserSession, setUserName, setUserEmail }) => {
   const [submitted, setSubmitted] = useState(false);
   const {
     handleSubmit,
     register,
     formState: { errors },
     setValue,
+    setError,
+    clearErrors,
   } = useForm({
     mode: "onChange",
     defaultValues: {
@@ -25,7 +28,19 @@ const Login = ({ setUserSession }) => {
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (errors.email || errors.password) {
+      setTimeout(() => {
+        clearErrors("email");
+        clearErrors("password");
+      }, 7000);
+    }
+  }, [errors, clearErrors]);
+
   const onSubmit = handleSubmit(async (data) => {
+    if (!data.email || !data.password) {
+      return;
+    }
     try {
       const apiUrl = "http://localhost:1337/api/v1/auth/login";
       const response = await axios.post(apiUrl, {
@@ -34,21 +49,38 @@ const Login = ({ setUserSession }) => {
       });
 
       if (response.status === 200 && response.data.status === "success") {
-        setValue("username", "");
+        setValue("email", "");
         setValue("password", "");
 
         localStorage.setItem("access_token", response.data.token);
         localStorage.setItem("Exp", new Date(response.data.token_expiration));
         const token = localStorage.getItem("access_token");
-        token && setSubmitted(true);
 
-        setTimeout(() => {
-          token && navigate("/feed");
-        }, 2000);
+        if (token) {
+          setSubmitted(true);
+          setUserName(response.data.username);
+          setUserEmail(response.data.email);
+          setTimeout(() => {
+            token && navigate("/feed");
+          }, 2000);
+        }
       } else {
         console.error("Error during login:", response.statusText);
       }
     } catch (error) {
+      console.log(error, error.response.status);
+      if (error.response.status === 400) {
+        setValue("email", "");
+        setValue("password", "");
+        setError("password", {
+          type: "manual",
+          message: "Invalid login or password",
+        });
+        setError("email", true);
+
+        setSubmitted(false);
+      }
+
       console.error("Error during login:", error);
     }
   });
@@ -61,37 +93,46 @@ const Login = ({ setUserSession }) => {
           <label className="reg-label" htmlFor="username">
             Email
           </label>
-          <input
-            type="text"
-            placeholder="email"
-            id="email"
-            className="reg-input"
-            {...register("email", {
-              required: true,
-            })}
-          />
-          {errors.email && errors.email.type === "required" && (
-            <small>{errors.email.message}</small>
-          )}
+          <div className="input-controll">
+            <input
+              type="text"
+              placeholder="email"
+              id="email"
+              className={`reg-input ${errors.email && "input-error"}`}
+              {...register("email", {
+                required: { value: true, message: "Email is required" },
+              })}
+            />
+            {errors.email && (
+              <span className="error log-in_error">{errors.email.message}</span>
+            )}
+          </div>
         </div>
 
         <div className="input-control">
           <label htmlFor="password" className="reg-label">
             Password
           </label>
-          <input
-            type="password"
-            placeholder="password"
-            id="password"
-            className="reg-input"
-            {...register("password", {
-              required: true,
-              minLength: 4,
-            })}
-          />
-          {errors.password && errors.password.type === "required" && (
-            <small>{errors.password.message}</small>
-          )}
+          <div className="input-controll">
+            <input
+              type="password"
+              placeholder="password"
+              id="password"
+              className={`reg-input ${errors.password && "input-error "}`}
+              {...register("password", {
+                required: { value: true, message: "Password is required" },
+                minLength: {
+                  value: 6,
+                  message: "Password must be at least 6 characters long",
+                },
+              })}
+            />
+            {errors.password && (
+              <span className="error log-in_error">
+                {errors.password.message}
+              </span>
+            )}
+          </div>
         </div>
 
         <button className="reg-button" type="submit">
@@ -112,4 +153,8 @@ const mapStatetoProps = (state) => ({
   sessionId: state.userReducer.sessionId,
 });
 
-export default connect(mapStatetoProps, { setUserSession })(Login);
+export default connect(mapStatetoProps, {
+  setUserSession,
+  setUserName,
+  setUserEmail,
+})(Login);

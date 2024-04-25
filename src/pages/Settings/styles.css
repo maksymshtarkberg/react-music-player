@@ -1,4 +1,5 @@
 .input-box {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -11,11 +12,22 @@
   cursor: pointer;
 }
 
-.user-info {
-  /* padding: 8px 30px;
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    border-radius: 8px; */
+.edit-icon:hover path {
+  fill: rgb(213, 149, 31)
+}
 
+.approve-icon {
+  margin-left: 20px;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.approve-icon:hover path {
+  fill: rgb(35, 182, 54)
+}
+
+.user-info {
   width: 100%;
   background: transparent;
   color: #e0e8efb8;
@@ -26,6 +38,13 @@
   border: 0;
   padding: 10px;
   transition: all 0.2s;
+  cursor: pointer;
+}
+
+.input-box svg {
+  position: absolute;
+  right: -25px;
+  top: 7px;
 }
 
 .settings-photo {
@@ -41,4 +60,24 @@
   border-radius: 50%;
   top: -20px;
   right: -100px;
+}
+
+.error {
+  position: absolute;
+  bottom: -43px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #d21616;
+  text-align: center;
+  text-transform: uppercase;
+  padding: 50px 30px;
+  animation: fade-in 1.5s ease-in-out forwards alternate;
+}
+
+.input-error {
+  outline: 1px solid #d21616;
+}
+
+.input-error:focus {
+  outline: 3px dotted #d21616;
 }
