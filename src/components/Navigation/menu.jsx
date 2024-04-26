@@ -32,6 +32,7 @@ import {
   setIsLoadingSong,
   setUserName,
   setUserEmail,
+  setAvatarUrl,
 } from "../../redux/actions";
 
 import "./menu.css";
@@ -53,6 +54,8 @@ const Menu = ({
   setUserEmail,
   userName,
   email,
+  setAvatarUrl,
+  avatarURL,
 }) => {
   const [activeNavItem, setActiveNavItem] = useState(0);
 
@@ -70,7 +73,7 @@ const Menu = ({
     4: "/mysongs",
     5: "/account",
     6: "/settings",
-    7: () => Logout(),
+    7: () => handleLogout(),
   };
 
   useEffect(() => {
@@ -82,11 +85,11 @@ const Menu = ({
         };
         const decoded = decodeToken(token);
 
-        console.log(decoded);
         const user = await getUser(headers);
         if (user) {
           setUserName(user.name);
           setUserEmail(user.email);
+          setAvatarUrl(`http://localhost:1337/api/v1/avatar/${decoded.id}`);
         }
       } catch (error) {
         console.error("No user logged in", error);
@@ -94,7 +97,7 @@ const Menu = ({
     };
 
     token && fetchUserInfo();
-  }, [token]);
+  }, [token, avatarURL]);
 
   useEffect(() => {
     const activeIndex = Object.values(routes).indexOf(currentPath);
@@ -113,6 +116,12 @@ const Menu = ({
       navigate("/signin");
     }
   };
+
+  function handleLogout() {
+    setUserEmail("");
+    setUserName("");
+    Logout();
+  }
 
   return (
     <nav className="main-menu">
@@ -263,6 +272,7 @@ const mapStatetoProps = (state) => ({
   artistIsOn: state.playerReducer.artistIsOn,
   userName: state.userReducer.userName,
   email: state.userReducer.email,
+  avatarURL: state.userReducer.avatarURL,
 });
 
 export default connect(mapStatetoProps, {
@@ -277,4 +287,5 @@ export default connect(mapStatetoProps, {
   setIsLoadingSong,
   setUserName,
   setUserEmail,
+  setAvatarUrl,
 })(Menu);

@@ -4,26 +4,32 @@ import { useEffect } from "react";
 import { useState } from "react";
 import "./styles.css";
 import { connect } from "react-redux";
+import { setAvatarUpdated } from "../../redux/actions";
 
-const UserInfo = ({ userName, email }) => {
+const UserInfo = ({
+  userName,
+  email,
+  avatarURL,
+  avatarUpdated,
+  setAvatarUpdated,
+}) => {
   const token = localStorage.getItem("access_token");
   const decoded = decodeToken(token);
   const [userAvatar, setUserAvatar] = useState(null);
 
-  // console.log(userInfo);
+  const fetchAvatar = async () => {
+    try {
+      const avatar = await getAvatar();
+      setUserAvatar(avatar);
+      setAvatarUpdated(false);
+    } catch (error) {
+      console.error("Error fetching avatar:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchAvatar = async () => {
-      try {
-        const avatar = await getAvatar();
-        setUserAvatar(avatar);
-      } catch (error) {
-        console.error("Error fetching avatar:", error);
-      }
-    };
-
     fetchAvatar();
-  }, []);
+  }, [avatarUpdated]);
 
   return (
     <div className="user-profile-name">
@@ -31,7 +37,7 @@ const UserInfo = ({ userName, email }) => {
         <>
           {userAvatar ? (
             <img
-              src={`http://localhost:1337/api/v1/avatar/${decoded.id}`}
+              src={`${avatarURL}?${new Date().getTime()}`}
               alt="user"
               className="user-info_img"
             />
@@ -70,6 +76,8 @@ const mapStatetoProps = (state) => ({
   sessionId: state.userReducer.sessionId,
   userName: state.userReducer.userName,
   email: state.userReducer.email,
+  avatarURL: state.userReducer.avatarURL,
+  avatarUpdated: state.userReducer.avatarUpdated,
 });
 
-export default connect(mapStatetoProps, {})(UserInfo);
+export default connect(mapStatetoProps, { setAvatarUpdated })(UserInfo);

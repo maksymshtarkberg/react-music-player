@@ -17,11 +17,6 @@ const upload = multer({
 router.get("/getuser", getUser);
 router.put("/changename", changeName);
 router.put("/changemail", changeEmail);
-router.post(
-  "/avatar/upload",
-  upload.single("avatar"),
-  uploadMiddleware("avatars"),
-  uploadAvatar
-);
+router.post("/avatar/upload", upload.single("avatar"), uploadAvatar);
 
 export default router;

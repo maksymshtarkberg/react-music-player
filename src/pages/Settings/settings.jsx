@@ -13,9 +13,19 @@ import "./styles.css";
 import { getAvatar } from "../../util/getAvatar";
 import { decodeToken } from "react-jwt";
 
-import { setUserName, setUserEmail } from "../../redux/actions";
+import {
+  setUserName,
+  setUserEmail,
+  setAvatarUpdated,
+} from "../../redux/actions";
 
-const Settings = ({ setUserName, setUserEmail, userName, email }) => {
+const Settings = ({
+  setUserName,
+  setUserEmail,
+  userName,
+  email,
+  setAvatarUpdated,
+}) => {
   const [submitted, setSubmitted] = useState(false);
   const [userAvatar, setUserAvatar] = useState(null);
   const [userNameLocal, setUserNameLocal] = useState(userName);
@@ -159,6 +169,7 @@ const Settings = ({ setUserName, setUserEmail, userName, email }) => {
         setSubmitted(true);
         setUserName(data.username);
         setUserEmail(data.email);
+        setAvatarUpdated(true);
       } else {
         console.error("Error changing name, email or avatar");
       }
@@ -307,6 +318,8 @@ const mapStatetoProps = (state) => ({
   email: state.userReducer.email,
 });
 
-export default connect(mapStatetoProps, { setUserName, setUserEmail })(
-  Settings
-);
+export default connect(mapStatetoProps, {
+  setUserName,
+  setUserEmail,
+  setAvatarUpdated,
+})(Settings);

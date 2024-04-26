@@ -1,9 +1,17 @@
-import { SET_USER_NAME, SET_USER_EMAIL, SET_USER_SESSION_ID } from "../actionTypes";
+import {
+  SET_USER_NAME,
+  SET_USER_EMAIL,
+  SET_USER_SESSION_ID,
+  SET_AVATAR_URL,
+  SET_AVATAR_UPDATED,
+} from "../actionTypes";
 
 const initialState = {
-  userName: '',
-  email: '',
-  sessionId: ''
+  userName: "",
+  email: "",
+  sessionId: "",
+  avatarURL: "",
+  avatarUpdated: false,
 };
 
 const userReducer = (state = initialState, action) => {
@@ -18,6 +26,18 @@ const userReducer = (state = initialState, action) => {
       return {
         ...state,
         email: action.payload,
+      };
+    }
+    case SET_AVATAR_URL: {
+      return {
+        ...state,
+        avatarURL: action.payload,
+      };
+    }
+    case SET_AVATAR_UPDATED: {
+      return {
+        ...state,
+        avatarUpdated: action.payload,
       };
     }
     case SET_USER_SESSION_ID: {

@@ -21,6 +21,8 @@ import {
   SET_IS_LOADING_SONG,
   SET_USER_NAME,
   SET_USER_EMAIL,
+  SET_AVATAR_URL,
+  SET_AVATAR_UPDATED,
   SET_USER_SESSION_ID,
   SET_SONGS_UPLOADED_BY_USER,
   SET_ALBUM_IS_ON,
@@ -127,6 +129,14 @@ export const setUserName = (userName) => ({
 export const setUserEmail = (email) => ({
   type: SET_USER_EMAIL,
   payload: email,
+});
+export const setAvatarUrl = (avatarURL) => ({
+  type: SET_AVATAR_URL,
+  payload: avatarURL,
+});
+export const setAvatarUpdated = (avatarUpdated) => ({
+  type: SET_AVATAR_UPDATED,
+  payload: avatarUpdated,
 });
 export const setUserSession = (sessionId) => ({
   type: SET_USER_SESSION_ID,

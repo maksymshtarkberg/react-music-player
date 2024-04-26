@@ -81,45 +81,60 @@ export const uploadAvatar = async (req, res) => {
 
     if (existingAvatar) {
       await bucket.delete(new mongodb.ObjectId(existingAvatar.avatar));
+    }
 
-      const uploadStream = bucket.openUploadStream(req.file.filename);
-      fs.createReadStream(req.file.path).pipe(uploadStream);
+    const uploadStream = bucket.openUploadStream(req.file.filename);
+    fs.createReadStream(req.file.path).pipe(uploadStream);
 
-      uploadStream.on("error", (error) => {
-        throw error;
+    uploadStream.on("error", (error) => {
+      console.error("Error uploading file:", error);
+      res.status(500).json({
+        error: "Error uploading file",
+        status: 500,
       });
+    });
 
-      uploadStream.on("finish", async () => {
-        await collection.updateOne(
-          { uploadedBy: req.userId },
-          { $set: { avatar: uploadStream.id } }
-        );
-
-        res.status(200).json({
-          message: "User avatar updated successfully",
-          status: "success",
+    uploadStream.on("finish", async () => {
+      try {
+        // Удаление файла из директории после успешной загрузки
+        fs.unlink(req.file.path, (err) => {
+          if (err) {
+            console.error("Failed to delete file:", err);
+          } else {
+            console.log("File deleted successfully:", req.file.path);
+          }
         });
-      });
-    } else {
-      const uploadStream = bucket.openUploadStream(req.file.filename);
-      fs.createReadStream(req.file.path).pipe(uploadStream);
 
-      uploadStream.on("error", (error) => {
-        throw error;
-      });
-
-      uploadStream.on("finish", async () => {
-        await collection.insertOne({
+        // Обновление или вставка записи в базу данных
+        const avatarData = {
           uploadedBy: req.userId,
           avatar: uploadStream.id,
-        });
+        };
+        if (existingAvatar) {
+          await collection.updateOne(
+            { uploadedBy: req.userId },
+            { $set: { avatar: uploadStream.id } }
+          );
+          console.log("User avatar updated successfully");
+        } else {
+          await collection.insertOne(avatarData);
+          console.log("User avatar added successfully");
+        }
 
         res.status(200).json({
-          message: "User avatar added successfully",
-          status: "success",
+          message: existingAvatar
+            ? "User avatar updated successfully"
+            : "User avatar added successfully",
+          status: 200,
         });
-      });
-    }
+      } catch (error) {
+        console.error("Error updating or adding avatar:", error);
+        res.status(500).json({
+          error: "Error updating or adding avatar",
+          status: 500,
+        });
+      }
+    });
   } catch (error) {
     console.log(error.message);
     return res.status(500).json({ error: error.message, status: "error" });
