@@ -28,6 +28,14 @@ export const addPlaylist = async (req, res) => {
     playlistCoverUploadStream.on("finish", async () => {
       console.log("Playlist cover uploaded successfully");
 
+      fs.unlink(req.file.path, (err) => {
+        if (err) {
+          console.error("Failed to delete file:", err);
+        } else {
+          console.log("File deleted successfully:", req.file.path);
+        }
+      });
+
       // Inserting the playlist to the database
       const playlist = await collection.insertOne({
         playlistName: req.body.playlistName,

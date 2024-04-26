@@ -18,6 +18,7 @@ import {
   setUserEmail,
   setAvatarUpdated,
 } from "../../redux/actions";
+import LoaderSettings from "../../components/LoaderSettings/loader-settings";
 
 const Settings = ({
   setUserName,
@@ -31,6 +32,7 @@ const Settings = ({
   const [userNameLocal, setUserNameLocal] = useState(userName);
   const [userEmailLocal, setUserEmailLocal] = useState(email);
 
+  const [loading, setLoading] = useState(false);
   const [editOnName, setEditOnName] = useState(false);
   const [editOnEmail, setEditOnEmail] = useState(false);
 
@@ -135,6 +137,8 @@ const Settings = ({
   };
 
   const onSubmit = handleSubmit(async (data) => {
+    setLoading(true);
+
     try {
       const headers = {
         "X-Auth-token": localStorage.getItem("access_token"),
@@ -170,10 +174,13 @@ const Settings = ({
         setUserName(data.username);
         setUserEmail(data.email);
         setAvatarUpdated(true);
+        setLoading(false);
       } else {
         console.error("Error changing name, email or avatar");
+        setLoading(false);
       }
     } catch (error) {
+      setLoading(false);
       if (error.response.status === 400) {
         setError("userEmail", {
           type: "manual",
@@ -296,7 +303,13 @@ const Settings = ({
           type="submit"
           disabled={editOnEmail || (editOnName && true)}
         >
-          Save
+          {loading ? (
+            <div className="loader-container">
+              <LoaderSettings />
+            </div>
+          ) : (
+            "Save"
+          )}
         </button>
       </form>
 

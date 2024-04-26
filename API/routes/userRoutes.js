@@ -6,7 +6,6 @@ import {
   uploadAvatar,
 } from "../controllers/userController.js";
 import multer from "multer";
-import uploadMiddleware from "../middlewares/uploadMiddleware.js";
 
 const router = express.Router();
 

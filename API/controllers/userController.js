@@ -96,7 +96,6 @@ export const uploadAvatar = async (req, res) => {
 
     uploadStream.on("finish", async () => {
       try {
-        // Удаление файла из директории после успешной загрузки
         fs.unlink(req.file.path, (err) => {
           if (err) {
             console.error("Failed to delete file:", err);
@@ -105,7 +104,6 @@ export const uploadAvatar = async (req, res) => {
           }
         });
 
-        // Обновление или вставка записи в базу данных
         const avatarData = {
           uploadedBy: req.userId,
           avatar: uploadStream.id,
