@@ -89,7 +89,9 @@ const Menu = ({
         if (user) {
           setUserName(user.name);
           setUserEmail(user.email);
-          setAvatarUrl(`http://localhost:1337/api/v1/avatar/${decoded.id}`);
+          setAvatarUrl(
+            `${process.env.REACT_APP_URL}/api/v1/avatar/${decoded.id}`
+          );
         }
       } catch (error) {
         console.error("No user logged in", error);

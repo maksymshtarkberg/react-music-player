@@ -147,7 +147,7 @@ const PlaylistOnPlay = ({
                   className="playlist-albumcover"
                   src={
                     song.coverfile
-                      ? `http://localhost:1337/api/v1/${song.coverfile}/cover`
+                      ? `${process.env.REACT_APP_URL}/api/v1/${song.coverfile}/cover`
                       : SongDefault
                   }
                   alt="cover"

@@ -63,7 +63,7 @@ const PlaylistCard = ({
     };
 
     const { data, status } = await axios.delete(
-      `http://localhost:1337/api/v1/playlist/delete/${id}`,
+      `${process.env.REACT_APP_URL}/api/v1/playlist/delete/${id}`,
       { headers }
     );
     if (status === 200) {
@@ -123,7 +123,7 @@ const PlaylistCard = ({
           <div className="playlist-card_box">
             <img
               className="playlist-card_cover"
-              src={`http://localhost:1337/api/v1/playlistcover/${cover}`}
+              src={`${process.env.REACT_APP_URL}/api/v1/playlistcover/${cover}`}
               alt="playlist-cover"
             />
           </div>

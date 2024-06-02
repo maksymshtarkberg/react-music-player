@@ -48,7 +48,7 @@ const PlayList = ({
       };
 
       const response = await axios.post(
-        "http://localhost:1337/api/v1/playlist/create",
+        `${process.env.REACT_APP_URL}/api/v1/playlist/create`,
         formData,
         { headers }
       );

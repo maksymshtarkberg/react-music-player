@@ -8,7 +8,7 @@ export const getAvatar = async () => {
   if (token) {
     try {
       const response = await axios.get(
-        `http://localhost:1337/api/v1/avatar/${decoded.id}`
+        `${process.env.REACT_APP_URL}/api/v1/avatar/${decoded.id}`
       );
       if (response.status === 404) {
         const userAvatar = null;

@@ -3,8 +3,10 @@ import axios from "axios";
 export const getUser = async (headers) => {
   try {
     const response = await axios.get(
-      `http://localhost:1337/api/v1/user/getuser`,
-      { headers }
+      `${process.env.REACT_APP_URL}/api/v1/user/getuser`,
+      {
+        headers,
+      }
     );
     if (response.status === 200) {
       const userInfo = response.data;

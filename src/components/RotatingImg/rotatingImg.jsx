@@ -47,7 +47,7 @@ const RotateImg = ({
     cancelAnimationFrame(animationFrameId);
     setAnimationFrameId(null);
   };
-  const __URL__ = "http://localhost:1337";
+  const __URL__ = process.env.REACT_APP_URL;
 
   const coverURL = songImg ? `${__URL__}/api/v1/${songImg}/cover` : default_img;
 

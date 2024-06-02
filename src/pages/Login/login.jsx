@@ -42,7 +42,7 @@ const Login = ({ setUserSession, setUserName, setUserEmail }) => {
       return;
     }
     try {
-      const apiUrl = "http://localhost:1337/api/v1/auth/login";
+      const apiUrl = `${process.env.REACT_APP_URL}/api/v1/auth/login`;
       const response = await axios.post(apiUrl, {
         email: data.email,
         password: data.password,

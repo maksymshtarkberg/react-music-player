@@ -179,7 +179,7 @@ const SongCard = ({
         // }
       }
 
-      const __URL__ = "http://localhost:1337";
+      const __URL__ = process.env.REACT_APP_URL;
       const { data, status } = await axios.delete(
         `${__URL__}/api/v1/song/delete/${songIdCur}`,
         { headers }
@@ -192,7 +192,7 @@ const SongCard = ({
 
       setSongDeleteRenderind(false);
     } else {
-      const __URL__ = "http://localhost:1337";
+      const __URL__ = process.env.REACT_APP_URL;
       const { data, status } = await axios.delete(
         `${__URL__}/api/v1/song/delete/${songIdCur}`,
         { headers }
@@ -215,7 +215,7 @@ const SongCard = ({
             cover !== undefined && cover !== null
               ? showPlayingImage
                 ? playingImg
-                : `http://localhost:1337/api/v1/${cover}/cover`
+                : `${process.env.REACT_APP_URL}/api/v1/${cover}/cover`
               : showPlayingImage
               ? playingImg
               : musicbg

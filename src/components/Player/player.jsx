@@ -89,7 +89,7 @@ const Player = ({
         "X-Auth-token": localStorage.getItem("access_token"),
       };
 
-      const __URL__ = "http://localhost:1337";
+      const __URL__ = process.env.REACT_APP_URL;
       const URL = `${__URL__}/api/v1/${songId}/file`;
       const { data } = await axios.get(URL, {
         headers: headers,

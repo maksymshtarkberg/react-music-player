@@ -73,7 +73,7 @@ const Settings = ({
       try {
         const avatar = await getAvatar();
         if (avatar) {
-          avatarPreview.current.src = `http://localhost:1337/api/v1/avatar/${decoded.id}`;
+          avatarPreview.current.src = `${process.env.REACT_APP_URL}/api/v1/avatar/${decoded.id}`;
         } else {
           avatarPreview.current.src = avatarPrewDefault;
         }
@@ -147,7 +147,7 @@ const Settings = ({
       if (data.username !== userName) {
         promises.push(
           axios.put(
-            `http://localhost:1337/api/v1/user/changename`,
+            `${process.env.REACT_APP_URL}/api/v1/user/changename`,
             { fullName: data.username },
             { headers }
           )
@@ -156,7 +156,7 @@ const Settings = ({
       if (data.email !== email) {
         promises.push(
           axios.put(
-            `http://localhost:1337/api/v1/user/changemail`,
+            `${process.env.REACT_APP_URL}/api/v1/user/changemail`,
             { email: data.email },
             { headers }
           )

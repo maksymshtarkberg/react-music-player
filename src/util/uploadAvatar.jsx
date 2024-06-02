@@ -6,7 +6,7 @@ export const uploadAvatar = async (avatar, headers) => {
     formData.append("avatar", avatar);
 
     const response = await axios.post(
-      `http://localhost:1337/api/v1/user/avatar/upload`,
+      `${process.env.REACT_APP_URL}/api/v1/user/avatar/upload`,
       formData,
       { headers }
     );

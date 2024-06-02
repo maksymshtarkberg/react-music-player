@@ -58,7 +58,7 @@ const UploadSong = ({ addTodo }) => {
       createdAt: Date.now(),
     };
 
-    const __URL__ = "http://localhost:1337";
+    const __URL__ = process.env.REACT_APP_URL;
     const result = await axios.post(
       `${__URL__}/api/v1/song/upload`,
       formData,

@@ -4,7 +4,7 @@ export const deleteSongFromPlaylist = async (playlistId, title) => {
   const headers = {
     "X-Auth-Token": localStorage.getItem("access_token"),
   };
-  const __URL__ = "http://localhost:1337";
+  const __URL__ = process.env.REACT_APP_URL;
   const { data, status } = await axios.delete(
     `${__URL__}/api/v1/playlist/remove/${playlistId}?song=${title}`,
     { headers }

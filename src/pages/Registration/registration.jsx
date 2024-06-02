@@ -59,7 +59,7 @@ const Registration = ({ setUserName, setUserEmail }) => {
         return;
       }
 
-      const apiUrl = "http://localhost:1337/api/v1/auth/register";
+      const apiUrl = `${process.env.REACT_APP_URL}/api/v1/auth/register`;
       const response = await axios.post(apiUrl, {
         fullName: data.username,
         email: data.email,

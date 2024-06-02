@@ -11,7 +11,7 @@ const AudioDownloader = ({ songIdTrack, fileName }) => {
     try {
       setIsDownloading(true);
 
-      const __URL__ = "http://localhost:1337";
+      const __URL__ = process.env.REACT_APP_URL;
       const URL = `${__URL__}/api/v1/${songIdTrack}/file`;
       const { data } = await axios.get(URL, {
         responseType: "blob",
