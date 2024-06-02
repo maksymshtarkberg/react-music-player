@@ -95,3 +95,9 @@
 .img-animation {
   animation: fadeIn 0.5s;
 }
+
+@media (max-width: 375px) {
+  .song {
+    grid-template-columns: 35% 35% 45%;
+  }
+}

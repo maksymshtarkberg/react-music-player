@@ -10,7 +10,6 @@
 }
 
 .user-info_img {
-  /* padding: 12px 24px; */
   border-radius: 50%;
   height: 50%;
   width: 50%;
@@ -76,5 +75,11 @@
   .nav-icon {
     text-align: center;
     transform: translateY(2px);
+  }
+}
+
+@media (max-width: 450px) {
+  .user-info_img {
+    width: 70%;
   }
 }
