@@ -3,7 +3,7 @@ import "./styles.css";
 
 export default function AboutProject() {
   const technologies = [
-    ["React", "Redux", "CSS"],
+    ["React", "Redux", "CSS", "THREE.js"],
     ["Node.js", "Multer", "MongoDB"],
   ];
   const borderref = useRef(null);
@@ -56,7 +56,7 @@ export default function AboutProject() {
             <div className="technologies-list">
               <div className="tech-column">
                 <div className="tech-items">
-                  <p className="text">Front-End</p>
+                  <p className="text">Front-End:</p>
                   {technologies[0].map((tech, index) => (
                     <div key={index} className="tech-item">
                       <span className="tech-text">{tech}</span>
@@ -66,7 +66,7 @@ export default function AboutProject() {
               </div>
               <div className="tech-column">
                 <div className="tech-items">
-                  <p className="text">Back-end</p>
+                  <p className="text">Back-end:</p>
                   {technologies[1].map((tech, index) => (
                     <div key={index} className="tech-item">
                       <span className="tech-text">{tech}</span>

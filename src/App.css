@@ -4,10 +4,12 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
+  background-color: rgba(16, 21, 61, 0.5);
   background-image: url("../public/back.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   position: relative;
+
 }
 
 *,
