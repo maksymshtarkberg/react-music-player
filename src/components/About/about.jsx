@@ -84,7 +84,7 @@ export default function AboutProject() {
             <div ref={borderref} className="image-border"></div>
             <div className="image-wrapper">
               <div className="image-overlay"></div>
-              <img src={""} className="image" alt="Not Found" />
+              <img src={"/me.jpg"} className="image" alt="Not Found" />
             </div>
           </div>
         </div>

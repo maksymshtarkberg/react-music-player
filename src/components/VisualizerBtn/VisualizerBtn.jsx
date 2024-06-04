@@ -3,7 +3,11 @@ import "./styles.css";
 
 const VisualizerBtn = ({ handleVisualizerOn, visualizerOn }) => {
   return (
-    <button className="btn" type="button" onClick={handleVisualizerOn}>
+    <button
+      className="visualizer-btn"
+      type="button"
+      onClick={handleVisualizerOn}
+    >
       {visualizerOn ? (
         <strong>VIZUALIZER OFF</strong>
       ) : (

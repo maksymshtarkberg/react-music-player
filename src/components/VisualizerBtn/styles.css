@@ -1,4 +1,4 @@
-.btn {
+.visualizer-btn {
   position: absolute;
   top: -20px;
   left: 20px;
@@ -61,23 +61,23 @@ strong {
   background: rgba(142, 81, 234, 0.704);
 }
 
-.btn:hover #container-stars {
+.visualizer-btn:hover #container-stars {
   z-index: 1;
   background-color: #212121;
 }
 
-.btn:hover {
+.visualizer-btn:hover {
   transform: scale(1.1)
 }
 
-.btn:active {
+.visualizer-btn:active {
   border: double 4px #FE53BB;
   background-origin: border-box;
   background-clip: content-box, border-box;
   animation: none;
 }
 
-.btn:active .circle {
+.visualizer-btn:active .circle {
   background: #FE53BB;
 }
 
@@ -167,5 +167,11 @@ strong {
   100% {
     transform: scale(0.75);
     box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+  }
+}
+
+@media (max-width: 910px) {
+  .visualizer-btn {
+    top: -40px;
   }
 }
