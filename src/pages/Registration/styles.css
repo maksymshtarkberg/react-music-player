@@ -97,7 +97,6 @@
 .reg-button {
   width: 100%;
   filter: blur(.04px);
-  /* background: linear-gradient(135deg, #1afbf0, #da00ff); */
   background-color: #4a3fad;
   background-image: linear-gradient(135deg, #16b0fd, #f50bed);
   color: #fff;

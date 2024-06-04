@@ -34,6 +34,10 @@ const PlayList = ({
       alert("Please enter a playlist name");
       return;
     }
+    if (!playlistCover) {
+      alert("Please choose playlist cover image");
+      return;
+    }
 
     setLoading(true);
 
@@ -101,16 +105,11 @@ const PlayList = ({
             accept="image/*"
           />
         </div>
-        {loading ? (
-          <BtnLoader top={"10px"} left={"-100px"} />
-        ) : (
-          <button
-            className="reg-button playlist-button"
-            onClick={createPlaylist}
-          >
-            Create Playlist
-          </button>
-        )}
+
+        <button className="reg-button playlist-button" onClick={createPlaylist}>
+          Create Playlist
+          {loading && <BtnLoader top={"0px"} left={"40%"} />}
+        </button>
       </div>
 
       {playlistsisLoaded && playlists.length > 0 ? (

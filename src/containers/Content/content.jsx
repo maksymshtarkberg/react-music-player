@@ -1,20 +1,12 @@
-import PlaylistsSlider from "../../components/PlaylistsSlider/plslider";
+import AboutProject from "../../components/About/about";
 import "./content.css";
-import { connect } from "react-redux";
 
-const Content = ({ audioPlayer, playlists }) => {
+const Content = () => {
   return (
     <div className="main-content">
-      {playlists.length > 0 && (
-        <PlaylistsSlider audioPlayer={audioPlayer} playlists={playlists} />
-      )}
-      {/* <AlbumsAndArtists /> */}
+      <AboutProject />
     </div>
   );
 };
 
-const mapStatetoProps = (state) => ({
-  playlists: state.playlistReducer.playlists,
-});
-
-export default connect(mapStatetoProps, {})(Content);
+export default Content;

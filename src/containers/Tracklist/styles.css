@@ -20,15 +20,3 @@
   font-family: Titillium Web;
   font-size: 20px;
 }
-
-.vizualizer-container {
-  position: relative;
-}
-
-.vizualizer {
-  display: none;
-  position: absolute;
-  border-radius: 12px;
-  top: 395px;
-  right: 2px;
-}

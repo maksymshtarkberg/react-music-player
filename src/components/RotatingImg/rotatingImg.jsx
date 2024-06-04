@@ -16,16 +16,11 @@ const RotateImg = ({
   const currentRotation = useRef(0);
 
   useEffect(() => {
-    if (isPlaying) {
+    if (isPlaying || isLoadingSong) {
       startRotation();
-    } else {
-      pauseRotation();
     }
-
-    return () => {
-      pauseRotation();
-    };
-  }, [isPlaying, currTime.sec, isLoadingSong, audioPlayer.current]);
+    pauseRotation();
+  }, [isPlaying, isLoadingSong]);
 
   const rotateImage = () => {
     setAnimationFrameId(

@@ -29,6 +29,7 @@ import {
   SET_ARTIST_IS_ON,
   SET_PLAYLIST_SONG_HAS_BEEN_DELETED,
   SET_ALBUMS_AND_ARTISTS_SONGS,
+  SET_VISUALISER,
 } from "./actionTypes";
 
 export const addTodo = (todos) => ({
@@ -162,4 +163,8 @@ export const setPlaylistSongHasBeenDeleted = (songDelete) => ({
 export const setAlbumsAndArtistsSongs = (songs) => ({
   type: SET_ALBUMS_AND_ARTISTS_SONGS,
   payload: songs,
+});
+export const setVisualizerOn = (visualizerOn) => ({
+  type: SET_VISUALISER,
+  payload: visualizerOn,
 });

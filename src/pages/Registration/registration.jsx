@@ -28,6 +28,13 @@ const Registration = ({ setUserName, setUserEmail }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    if (token) {
+      navigate("/about");
+    }
+  }, []);
+
+  useEffect(() => {
     let clearErrorsTimeout;
 
     if (
@@ -81,7 +88,7 @@ const Registration = ({ setUserName, setUserEmail }) => {
           setSubmitted(true);
 
           setTimeout(() => {
-            token && navigate("/feed");
+            token && navigate("/about");
           }, 2000);
         }
       } else {

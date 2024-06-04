@@ -66,9 +66,9 @@ const Menu = ({
   const currentPath = location.pathname;
 
   const routes = {
-    0: !token ? "/signin" : "/feed",
+    0: !token ? "/signin" : "/about",
     1: !token ? "/signup" : "/upload",
-    2: !token ? "/feed" : "/albums",
+    2: !token ? "/about" : "/albums",
     3: "/playlists",
     4: "/mysongs",
     5: "/account",
@@ -162,7 +162,7 @@ const Menu = ({
               <NavItem
                 index={0}
                 icon={faMap}
-                text="Feed"
+                text="About"
                 activeIndex={activeNavItem}
                 onClick={handleNavItemClick}
               />

@@ -1,0 +1,169 @@
+.about-container {
+  display: flex;
+  justify-content: center;
+}
+
+.about-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 1rem;
+  width: 100%;
+  max-width: 900px;
+}
+
+.title-bar {
+  display: flex;
+  align-items: center;
+}
+
+.title-wrapper {
+  display: flex;
+  align-items: center;
+  margin-right: 1rem;
+}
+
+.title-text {
+  color: #e5e7eb;
+  opacity: 0.85;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+  font-size: 1.25rem;
+}
+
+.description-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.description-text {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  font-size: 0.875rem;
+}
+
+.description-paragraph .text {
+  color: #9ca3af;
+}
+
+.highlight {
+  color: #a855f7;
+}
+
+.technologies-intro .text {
+  color: #9ca3af;
+}
+
+.technologies-list {
+  display: flex;
+  gap: 4rem;
+}
+
+.tech-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.tech-item .tech-text {
+  color: #9ca3af;
+  font-size: 0.75rem;
+}
+
+.image-desktop {
+  position: relative;
+  width: 24rem;
+  height: 24rem;
+}
+
+.image-border {
+  position: absolute;
+  width: 80%;
+  height: 80%;
+  border: 2px solid #a855f7;
+  border-radius: 0.25rem;
+  transform: translate(20%, 20%);
+  transition: transform 0.3s;
+}
+
+.image-wrapper {
+  position: absolute;
+  width: 80%;
+  height: 80%;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+.image-overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: #a855f7;
+  opacity: 0.1;
+  transition: opacity 0.3s;
+  border-radius: 0.25rem;
+}
+
+.image-wrapper:hover .image-overlay {
+  opacity: 0;
+}
+
+.image-border-hover {
+  position: absolute;
+  width: 80%;
+  height: 80%;
+  border: 2px solid #a855f7;
+  border-radius: 0.25rem;
+  transition: transform 0.3s;
+  transform: translate(0%, 0%);
+}
+
+.image {
+  object-fit: contain;
+  border-radius: 0.25rem;
+}
+
+.image-mobile {
+  position: relative;
+  width: 100%;
+  height: 12rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (min-width: 768px) {
+  .description-section {
+    flex-direction: row;
+    gap: 2rem;
+  }
+
+  .description-text {
+    width: 58.333333%;
+    font-size: 1rem;
+  }
+
+  .image-desktop {
+    display: block;
+    position: relative;
+    width: 24rem;
+    height: 24rem;
+  }
+
+  .image-mobile {
+    display: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  .about-content {
+    max-width: 900px;
+  }
+
+  .title-text {
+    font-size: 1.5rem;
+  }
+}

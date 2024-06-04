@@ -29,6 +29,13 @@ const Login = ({ setUserSession, setUserName, setUserEmail }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    if (token) {
+      navigate("/about");
+    }
+  }, []);
+
+  useEffect(() => {
     if (errors.email || errors.password) {
       setTimeout(() => {
         clearErrors("email");
@@ -61,7 +68,7 @@ const Login = ({ setUserSession, setUserName, setUserEmail }) => {
           setUserName(response.data.username);
           setUserEmail(response.data.email);
           setTimeout(() => {
-            token && navigate("/feed");
+            token && navigate("/about");
           }, 2000);
         }
       } else {

@@ -17,6 +17,7 @@ import {
   setIsLoadingSong,
   setSongId,
   setVolume,
+  setVisualizerOn,
 } from "../../redux/actions";
 import Loader from "../Loader/loader";
 import RotateImg from "../RotatingImg/rotatingImg";
@@ -33,6 +34,7 @@ import FastForwardIcon from "@mui/icons-material/FastForward";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import SkipNextIcon from "@mui/icons-material/SkipNext";
 import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
+import VisualizerBtn from "../VisualizerBtn/VisualizerBtn";
 
 const Player = ({
   songUrl,
@@ -63,6 +65,8 @@ const Player = ({
   canvasRef,
   audioPlayer,
   playlistSongHasBeenDeleted,
+  setVisualizerOn,
+  visualizerOn,
 }) => {
   const currTimeRef = useRef(currTime);
 
@@ -194,102 +198,101 @@ const Player = ({
    * Visualizer THREE.js
    */
 
-  // useEffect(() => {
-  //   let audioContext;
-  //   let analyser;
-  //   let source;
+  useEffect(() => {
+    let audioContext;
+    let analyser;
+    let source;
 
-  //   const canvasWidth = 1307;
-  //   const canvasHeight = 300;
+    const canvasWidth = window.innerWidth;
+    const canvasHeight = window.innerHeight;
 
-  //   const listener = new THREE.AudioListener();
-  //   const sound = new THREE.Audio(listener);
-  //   const canvas = canvasRef.current;
-  //   const scene = new THREE.Scene();
-  //   const camera = new THREE.PerspectiveCamera(
-  //     75,
-  //     canvasWidth / canvasHeight,
-  //     0.1,
-  //     1000
-  //   );
-  //   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-  //   const sphereGeometry = new THREE.SphereGeometry(1, 64, 64);
-  //   const sphereMaterial = new THREE.MeshBasicMaterial({
-  //     color: 0xffffff, // white color
-  //     envMap: scene.background, // using the scene's background as an environment map (for reflections)
-  //   });
-  //   const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-  //   sphere.castShadow = true; // apply swadows
-  //   sphere.receiveShadow = true;
-  //   renderer.setSize(canvasWidth, canvasHeight);
+    const listener = new THREE.AudioListener();
+    const sound = new THREE.Audio(listener);
+    const canvas = canvasRef.current;
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(
+      75,
+      canvasWidth / canvasHeight,
+      0.1,
+      1000
+    );
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+    const sphereGeometry = new THREE.SphereGeometry(1, 64, 64);
+    const sphereMaterial = new THREE.MeshBasicMaterial({
+      color: 0xffffff,
+      envMap: scene.background,
+    });
+    const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+    sphere.castShadow = true;
+    sphere.receiveShadow = true;
+    renderer.setSize(canvasWidth, canvasHeight);
 
-  //   scene.background = new THREE.Color(0x000000);
-  //   scene.add(camera);
-  //   scene.add(sphere);
+    scene.background = new THREE.Color(0x000000);
+    scene.add(camera);
+    scene.add(sphere);
 
-  //   // sphere.position.set(0, 0, 0);
+    camera.position.z = 4;
 
-  //   camera.position.z = 4;
+    const wireframe = new THREE.WireframeGeometry(sphereGeometry);
+    const lineMaterial = new THREE.LineBasicMaterial({
+      color: 0x000000,
+      linewidth: 50,
+    });
 
-  //   const wireframe = new THREE.WireframeGeometry(sphereGeometry);
-  //   const lineMaterial = new THREE.LineBasicMaterial({
-  //     color: 0x000000, // color of lines (segments)
-  //     linewidth: 50,
-  //   });
+    const lineSegments = new THREE.LineSegments(wireframe, lineMaterial);
+    sphere.add(lineSegments);
 
-  //   const lineSegments = new THREE.LineSegments(wireframe, lineMaterial);
-  //   sphere.add(lineSegments);
+    const connectAudio = () => {
+      source = audioContext.createMediaElementSource(audioPlayer.current);
+      source.connect(analyser);
+      analyser.connect(audioContext.destination);
+    };
 
-  //   const connectAudio = async () => {
-  //     source = audioContext.createMediaElementSource(audioPlayer.current);
-  //     source.connect(analyser);
-  //     analyser.connect(audioContext.destination);
+    if (songUrl) {
+      const audioLoader = new THREE.AudioLoader();
+      audioLoader.load(songUrl, function (buffer) {
+        sound.setBuffer(buffer);
 
-  //     console.log(source);
-  //   };
+        audioContext = new window.AudioContext();
+        analyser = audioContext.createAnalyser();
+        connectAudio();
 
-  //   // Loading and playback of audio
-  //   if (songUrl) {
-  //     const audioLoader = new THREE.AudioLoader();
-  //     audioLoader.load(songUrl, function (buffer) {
-  //       sound.setBuffer(buffer);
+        const animateSphere = () => {
+          requestAnimationFrame(animateSphere);
 
-  //       audioContext = new window.AudioContext();
-  //       analyser = audioContext.createAnalyser();
-  //       connectAudio();
+          if (analyser) {
+            const frequencyData = new Uint8Array(analyser.frequencyBinCount);
+            analyser.getByteFrequencyData(frequencyData);
 
-  //       // Animation of analyser
-  //       const animateSphere = () => {
-  //         requestAnimationFrame(animateSphere);
+            const averageFrequency =
+              frequencyData.reduce((a, b) => a + b, 0) / frequencyData.length;
+            const scaleFactor = 1 + averageFrequency / 256;
 
-  //         if (analyser) {
-  //           const frequencyData = new Uint8Array(analyser.frequencyBinCount);
-  //           analyser.getByteFrequencyData(frequencyData);
+            sphere.scale.set(scaleFactor, scaleFactor, scaleFactor);
+            sphere.rotation.y += 0.003 + averageFrequency / 500;
+          }
 
-  //           const averageFrequency =
-  //             frequencyData.reduce((a, b) => a + b, 0) / frequencyData.length;
-  //           const scaleFactor = 1 + averageFrequency / 256; // Масштабируем шар в зависимости от средней частоты
+          renderer.render(scene, camera);
+        };
 
-  //           sphere.scale.set(scaleFactor, scaleFactor, scaleFactor);
-  //           sphere.rotation.y += 0.003 + averageFrequency / 500;
-  //         }
+        animateSphere();
+      });
+    }
 
-  //         // Zone to add animation with sphere
+    return () => {
+      if (audioContext && audioContext.state === "running") {
+        audioContext.close();
+      }
+    };
+  }, [songUrl, audioPlayer, canvasRef]);
 
-  //         renderer.render(scene, camera);
-  //       };
-
-  //       animateSphere();
-  //     });
-  //   }
-
-  //   // Clearing the audio context upon component unmounting
-  //   return () => {
-  //     if (audioContext && audioContext.state === "running") {
-  //       audioContext.close();
-  //     }
-  //   };
-  // }, [songUrl]);
+  const handleVisualizerOn = () => {
+    if (visualizerOn) {
+      setVisualizerOn(false);
+    } else {
+      setVisualizerOn(true);
+    }
+  };
 
   /**
    * Creating a time format
@@ -481,14 +484,17 @@ const Player = ({
           <div>{formatTime(time.min * 60 + time.sec - seconds)}</div>
         </div>
       </div>
-      <div className="song-volume">
-        <VolumeBtns />
-        <input
-          id="volume"
-          type="range"
-          value={volume}
-          onChange={(e) => handleVolumeChange(e.target.value)}
-        />
+      <div className="buttons-container">
+        {isPlaying && <VisualizerBtn handleVisualizerOn={handleVisualizerOn} />}
+        <div className="song-volume">
+          <VolumeBtns />
+          <input
+            id="volume"
+            type="range"
+            value={volume}
+            onChange={(e) => handleVolumeChange(e.target.value)}
+          />
+        </div>
       </div>
     </div>
   );
@@ -510,6 +516,7 @@ const mapStatetoProps = (state) => ({
   isLoadedSong: state.songReducer.isLoadedSong,
   isLoadingSong: state.playerReducer.isLoadingSong,
   playlistSongHasBeenDeleted: state.playlistReducer.playlistSongHasBeenDeleted,
+  visualizerOn: state.playerReducer.visualizerOn,
 });
 
 export default connect(mapStatetoProps, {
@@ -525,4 +532,5 @@ export default connect(mapStatetoProps, {
   setIsLoadingSong,
   setSongId,
   setVolume,
+  setVisualizerOn,
 })(Player);

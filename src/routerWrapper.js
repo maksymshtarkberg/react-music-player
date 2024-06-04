@@ -23,9 +23,8 @@ import Account from "./pages/Account/account";
 import Player from "./components/Player/player";
 import { checkTokenExpiration } from "./util/checkTokenExpiration";
 
-function RouterWrapper() {
+function RouterWrapper({ canvasRef }) {
   const audioPlayer = useRef();
-  const canvasRef = useRef();
   const token = localStorage.getItem("access_token");
   const navigate = useNavigate();
 
@@ -44,11 +43,11 @@ function RouterWrapper() {
         <div className="main-content">
           <Routes>
             {!token && <Route path="/" element={<Navigate to="/signin" />} />}
-            {token && <Route path="/" element={<Navigate to="/feed" />} />}
+            {token && <Route path="/" element={<Navigate to="/about" />} />}
             <Route path="/signin" element={<Login />} />
             <Route path="/signup" element={<Registration />} />
             <Route
-              path="/feed"
+              path="/about"
               element={<Content audioPlayer={audioPlayer} />}
             />
 
@@ -71,7 +70,7 @@ function RouterWrapper() {
             </Route>
           </Routes>
         </div>
-        <TrackList audioPlayer={audioPlayer} />
+        <TrackList audioPlayer={audioPlayer} canvasRef={canvasRef} />
         <Player audioPlayer={audioPlayer} canvasRef={canvasRef} />
       </section>
     </main>

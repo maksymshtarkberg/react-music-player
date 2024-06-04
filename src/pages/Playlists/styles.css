@@ -1,6 +1,7 @@
 .playlist-create .playlist-button {
   width: auto;
   align-self: flex-end;
+  position: relative;
 }
 
 .playlist-title {

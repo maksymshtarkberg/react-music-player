@@ -34,7 +34,7 @@ const PlaylistsSlider = ({
 
   return (
     <div className="slider-container">
-      {location.pathname === "/feed" ? (
+      {location.pathname === "/about" ? (
         <h1>Popular Playlists</h1>
       ) : (
         <h1>My Playlists</h1>

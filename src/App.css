@@ -7,6 +7,7 @@
   background-image: url("../public/back.jpg");
   background-repeat: no-repeat;
   background-size: cover;
+  position: relative;
 }
 
 *,
@@ -60,6 +61,20 @@ main {
 
 img {
   width: 100%;
+}
+
+.vizualizer {
+  display: none;
+  position: absolute;
+  border-radius: 12px;
+  top: 0;
+  right: 0;
+  z-index: 1;
+  filter: blur(2px);
+}
+
+.vizualizer-active {
+  display: block;
 }
 
 /* MEDIA QUERIES */

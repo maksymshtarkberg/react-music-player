@@ -8,6 +8,7 @@ import {
   SET_ALBUM_IS_ON,
   SET_ARTIST_IS_ON,
   SET_ALBUMS_AND_ARTISTS_SONGS,
+  SET_VISUALISER,
 } from "../actionTypes";
 
 const initialState = {
@@ -26,6 +27,7 @@ const initialState = {
   albumIsOn: false,
   artistIsOn: false,
   albumsAndArtistsSongs: [],
+  visualizerOn: false,
 };
 
 const playerReducer = (state = initialState, action) => {
@@ -74,6 +76,11 @@ const playerReducer = (state = initialState, action) => {
       return {
         ...state,
         albumsAndArtistsSongs: action.payload,
+      };
+    case SET_VISUALISER:
+      return {
+        ...state,
+        visualizerOn: action.payload,
       };
     default:
       return state;

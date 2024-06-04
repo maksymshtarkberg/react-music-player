@@ -134,7 +134,6 @@
 }
 
 .song-volume {
-  width: 25%;
   display: flex;
   align-items: center;
   justify-content: space-around;
@@ -158,6 +157,10 @@
   box-shadow: 0 4px 8px rgba(200, 187, 255, 0.3);
   cursor: pointer;
   transition: all 0.3s linear;
+}
+
+.buttons-container {
+  position: relative;
 }
 
 #volume {

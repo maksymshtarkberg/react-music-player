@@ -1,12 +1,9 @@
 import Songs from "../Songs/Songs";
 import "./styles.css";
 
-const TrackList = ({ audioPlayer }) => {
+const TrackList = ({ audioPlayer, canvasRef }) => {
   return (
     <div className="main-player">
-      {/* <div className="vizualizer-container">
-        <canvas ref={canvasRef} className="vizualizer" />
-      </div> */}
       <Songs audioPlayer={audioPlayer} />
     </div>
   );
