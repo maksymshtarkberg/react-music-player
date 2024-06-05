@@ -33,19 +33,45 @@ export default function AboutProject() {
               </span>
             </div>
             <div className="description-paragraph">
-              <span className="text">
-                The development process included working with{" "}
-                <span className="highlight">audio context</span>, creating a
-                backend in{" "}
-                <span className="highlight">MVC pattern structure</span>,
-                receiving data from the backend, processing{" "}
-                <span className="highlight">file uploads</span> to the database,{" "}
-                <span className="highlight">deleting temporary files</span> on
-                the server, <span className="highlight">authentication</span> of
-                users, editing a profile,{" "}
-                <span className="highlight">creating playlists</span> and adding
-                songs to them.
-              </span>
+              <p className="text">
+                <span className="highlight">Audio Context Management:</span>{" "}
+                Full integration and control of audio files to ensure
+                high-quality playback.
+              </p>
+              <p className="text">
+                <span className="highlight">MVC Structure:</span> Creation of a
+                robust backend based on the MVC pattern, ensuring clean and
+                maintainable code.
+              </p>
+              <p className="text">
+                <span className="highlight">Data Processing:</span> Retrieving
+                and processing data from the server for smooth application
+                performance.
+              </p>
+              <p className="text">
+                <span className="highlight">File Handling:</span> Uploading
+                files to the database and deleting temporary files on the server
+                to optimize space.
+              </p>
+              <p className="text">
+                <span className="highlight">User Authentication:</span> Secure
+                authentication system to ensure user safety and personalization.
+              </p>
+              <p className="text">
+                <span className="highlight">Profile Editing:</span> Ability to
+                edit user profiles to enhance the user experience.
+              </p>
+              <p className="text">
+                <span className="highlight">Playlist Creation:</span> Easy
+                creation of playlists and adding songs to them for user
+                convenience.
+              </p>
+            </div>
+            <div className="description-paragraph">
+              <p className="text">
+                This project demonstrates my ability to develop functional and
+                user-friendly applications focused on the end user.
+              </p>
             </div>
 
             <div className="technologies-intro">
@@ -81,11 +107,17 @@ export default function AboutProject() {
             onMouseEnter={handleHoverImgBorder}
             onMouseLeave={removeHover}
           >
-            <div ref={borderref} className="image-border"></div>
-            <div className="image-wrapper">
-              <div className="image-overlay"></div>
-              <img src={"/me.jpg"} className="image" alt="Not Found" />
-            </div>
+            <a
+              href="https://www.linkedin.com/in/maksym-shtarkberg/"
+              target={"_blank"}
+              rel="noreferrer"
+            >
+              <div ref={borderref} className="image-border"></div>
+              <div className="image-wrapper">
+                <div className="image-overlay"></div>
+                <img src={"/me.jpg"} className="image" alt="Not Found" />
+              </div>
+            </a>
           </div>
         </div>
       </div>
