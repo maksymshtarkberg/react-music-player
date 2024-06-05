@@ -5,6 +5,7 @@ import { getSongs } from "../../util/getSongs";
 import { decodeToken } from "react-jwt";
 import { getPlaylists } from "../../util/getPlaylists";
 import "./styles.css";
+import SkeletonLoader from "../../components/SkeletonLoader/skeletonLoader";
 
 const Account = () => {
   const [user, setUser] = useState();
@@ -57,7 +58,7 @@ const Account = () => {
   const formattedDate = moment(date).format("DD/MM/YYYY");
   return (
     <div>
-      {user && (
+      {user ? (
         <div className="reg-container">
           <h1 className="reg-title">Account Info</h1>
           <div className="reg-form reg-form_account">
@@ -72,6 +73,8 @@ const Account = () => {
             </p>
           </div>
         </div>
+      ) : (
+        <SkeletonLoader count={1} height="300px" width={{ base: "full" }} />
       )}
     </div>
   );

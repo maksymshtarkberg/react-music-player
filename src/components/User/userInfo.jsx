@@ -5,6 +5,7 @@ import { useState } from "react";
 import "./styles.css";
 import { connect } from "react-redux";
 import { setAvatarUpdated } from "../../redux/actions";
+import SkeletonLoader from "../SkeletonLoader/skeletonLoader";
 
 const UserInfo = ({
   userName,
@@ -16,14 +17,18 @@ const UserInfo = ({
   const token = localStorage.getItem("access_token");
   const decoded = decodeToken(token);
   const [userAvatar, setUserAvatar] = useState(null);
+  const [loadingAvatar, setLoadingAvatar] = useState(true);
 
   const fetchAvatar = async () => {
     try {
+      setLoadingAvatar(true);
       const avatar = await getAvatar();
       setUserAvatar(avatar);
       setAvatarUpdated(false);
     } catch (error) {
       console.error("Error fetching avatar:", error);
+    } finally {
+      setLoadingAvatar(false);
     }
   };
 
@@ -35,7 +40,11 @@ const UserInfo = ({
     <div className="user-profile-name">
       {token ? (
         <>
-          {userAvatar ? (
+          {loadingAvatar ? (
+            <div className="avatar-loader">
+              <SkeletonLoader count={1} height="40px" width="40px" />
+            </div>
+          ) : userAvatar ? (
             <img
               src={`${avatarURL}?${new Date().getTime()}`}
               alt="user"

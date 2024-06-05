@@ -34,7 +34,7 @@ const PlaylistsSlider = ({
 
   return (
     <div className="slider-container">
-      {location.pathname === "/about" ? (
+      {location.pathname === "/feed" ? (
         <h1>Popular Playlists</h1>
       ) : (
         <h1>My Playlists</h1>
@@ -60,7 +60,7 @@ const PlaylistsSlider = ({
         initialSlide={currentPlaylistIndex !== -1 ? currentPlaylistIndex : null}
       >
         <div className="swiper-wrapper">
-          {playlists !== undefined &&
+          {playlists &&
             playlists.map((item, index) => {
               const songsQuantity = item.songs.length;
               return (

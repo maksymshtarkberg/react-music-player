@@ -7,6 +7,7 @@ import "./styles.css";
 import { getPlaylists } from "../../util/getPlaylists";
 import PlaylistsSlider from "../../components/PlaylistsSlider/plslider";
 import BtnLoader from "../../components/BtnLoader/btnloader";
+import SkeletonLoader from "../../components/SkeletonLoader/skeletonLoader";
 
 const PlayList = ({
   audioPlayer,
@@ -115,7 +116,9 @@ const PlayList = ({
       {playlistsisLoaded && playlists.length > 0 ? (
         <PlaylistsSlider audioPlayer={audioPlayer} playlists={playlists} />
       ) : (
-        <h2>No playlists </h2>
+        <div className="playlist-preloader">
+          <SkeletonLoader count={3} height="80px" width="150px" />
+        </div>
       )}
     </>
   );

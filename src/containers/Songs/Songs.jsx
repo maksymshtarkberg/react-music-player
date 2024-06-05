@@ -21,6 +21,7 @@ import { connect } from "react-redux";
 import { getPlaylists } from "../../util/getPlaylists";
 import { faRotate } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import SkeletonLoader from "../../components/SkeletonLoader/skeletonLoader";
 
 const Songs = ({
   addTodo,
@@ -95,8 +96,8 @@ const Songs = ({
         />
       </div>
       <div className="song-container">
-        {setIsLoaded && todosRedux === null ? (
-          <div>loading...</div>
+        {setIsLoaded && todosRedux.length === 0 ? (
+          <SkeletonLoader count={7} height="80px" />
         ) : todosRedux && todosRedux.length > 0 ? (
           todosRedux.map((song, index) => {
             return (
@@ -118,7 +119,7 @@ const Songs = ({
             );
           })
         ) : (
-          <h2>No songs found</h2>
+          <SkeletonLoader count={7} height="80px" />
         )}
       </div>
     </>

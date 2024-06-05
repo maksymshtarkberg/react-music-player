@@ -12,3 +12,7 @@
   flex-direction: column;
   justify-content: center;
 }
+
+.avatar-loader {
+  align-self: center;
+}

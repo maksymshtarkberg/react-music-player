@@ -11,6 +11,9 @@ import {
   setPlaylistIsOpened,
   setAlbumsAndArtistsSongs,
 } from "../../redux/actions";
+import SkeletonLoader from "../SkeletonLoader/skeletonLoader";
+import { useState } from "react";
+import { useEffect } from "react";
 
 const Albums = ({
   audioPlayer,
@@ -23,9 +26,17 @@ const Albums = ({
   setAlbumIsOn,
   setPlaylistIsOpened,
   setAlbumsAndArtistsSongs,
+  todosRedux,
 }) => {
+  const [loading, setLoading] = useState(true);
   const { handleMouseDown, handleMouseMove, handleMouseUp, handleMouseLeave } =
     useDragScroll();
+
+  useEffect(() => {
+    if (albums && albums.length > 0) {
+      setLoading(false);
+    }
+  }, [albums]);
 
   const HandlePlayAlbumSongs = (songs) => {
     audioPlayer.current.pause();
@@ -39,7 +50,6 @@ const Albums = ({
     setAlbumIsOn(true);
     setPlaylistIsOpened(false);
   };
-
   return (
     <div className="albums">
       <h1>Recommended Albums</h1>
@@ -50,7 +60,7 @@ const Albums = ({
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseLeave}
       >
-        {albums &&
+        {!loading && todosRedux.length !== 0 ? (
           albums.map((album, index) => {
             return (
               <div className="album" key={index}>
@@ -82,7 +92,10 @@ const Albums = ({
                 </div>
               </div>
             );
-          })}
+          })
+        ) : (
+          <SkeletonLoader count={7} height="80px" width="150px" />
+        )}
       </div>
     </div>
   );
@@ -90,6 +103,7 @@ const Albums = ({
 
 const mapStatetoProps = (state) => ({
   albumIsOn: state.playerReducer.artistIsOn,
+  todosRedux: state.todos.todos,
 });
 
 export default connect(mapStatetoProps, {

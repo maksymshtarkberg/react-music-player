@@ -7,6 +7,7 @@ import { getSongs } from "../../util/getSongs";
 import "./styles.css";
 import { getPlaylists } from "../../util/getPlaylists";
 import { setSongsUploadedByUser, setPlaylistLoaded } from "../../redux/actions";
+import SkeletonLoader from "../../components/SkeletonLoader/skeletonLoader";
 
 const MySongs = ({
   setSongsUploadedByUser,
@@ -80,7 +81,7 @@ const MySongs = ({
             );
           })
         ) : (
-          <h2>No songs, that were uploaded by the user.</h2>
+          <SkeletonLoader count={5} height="80px" />
         )}
       </div>
     </div>

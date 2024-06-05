@@ -12,6 +12,7 @@ import {
   setPlaylistIsOpened,
   setAlbumsAndArtistsSongs,
 } from "../../redux/actions";
+import SkeletonLoader from "../SkeletonLoader/skeletonLoader";
 
 const Artists = ({
   audioPlayer,
@@ -26,9 +27,17 @@ const Artists = ({
   artistIsOn,
   setPlaylistIsOpened,
   setAlbumsAndArtistsSongs,
+  todosRedux,
 }) => {
+  const [loading, setLoading] = useState(true);
   const { handleMouseDown, handleMouseMove, handleMouseUp, handleMouseLeave } =
     useDragScroll();
+
+  useEffect(() => {
+    if (artists && artists.length > 0) {
+      setLoading(false);
+    }
+  }, [artists]);
 
   const HandlePlayArtistSongs = (songs) => {
     audioPlayer.current.pause();
@@ -53,7 +62,7 @@ const Artists = ({
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseLeave}
       >
-        {artists &&
+        {!loading && todosRedux.length !== 0 ? (
           artists.map((artist, index) => {
             return (
               <div className="artist" key={index}>
@@ -79,7 +88,10 @@ const Artists = ({
                 <p>{artist.artistName}</p>
               </div>
             );
-          })}
+          })
+        ) : (
+          <SkeletonLoader count={7} height="80px" width="150px" />
+        )}
       </div>
     </div>
   );
@@ -88,6 +100,7 @@ const Artists = ({
 const mapStatetoProps = (state) => ({
   songUrl: state.songReducer.songUrl,
   artistIsOn: state.playerReducer.artistIsOn,
+  todosRedux: state.todos.todos,
 });
 
 export default connect(mapStatetoProps, {
