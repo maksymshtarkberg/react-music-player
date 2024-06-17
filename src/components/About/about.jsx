@@ -102,7 +102,7 @@ export default function AboutProject() {
               </div>
             </div>
           </div>
-          <div
+          {/* <div
             className="image-desktop"
             onMouseEnter={handleHoverImgBorder}
             onMouseLeave={removeHover}
@@ -118,7 +118,7 @@ export default function AboutProject() {
                 <img src={"/me.jpg"} className="image" alt="Not Found" />
               </div>
             </a>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
