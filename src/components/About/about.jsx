@@ -6,14 +6,7 @@ export default function AboutProject() {
     ["React", "Redux", "CSS", "THREE.js"],
     ["Node.js", "Multer", "MongoDB"],
   ];
-  const borderref = useRef(null);
 
-  const handleHoverImgBorder = () => {
-    borderref.current.className = "image-border-hover";
-  };
-  const removeHover = () => {
-    borderref.current.className = "image-border";
-  };
   return (
     <div id="aboutSection" className="about-container">
       <div className="about-content">

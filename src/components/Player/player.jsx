@@ -198,93 +198,93 @@ const Player = ({
    * Visualizer THREE.js
    */
 
-  useEffect(() => {
-    let audioContext;
-    let analyser;
-    let source;
+  // useEffect(() => {
+  //   let audioContext;
+  //   let analyser;
+  //   let source;
 
-    const canvasWidth = window.innerWidth;
-    const canvasHeight = window.innerHeight;
+  //   const canvasWidth = window.innerWidth;
+  //   const canvasHeight = window.innerHeight;
 
-    const listener = new THREE.AudioListener();
-    const sound = new THREE.Audio(listener);
-    const canvas = canvasRef.current;
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(
-      75,
-      canvasWidth / canvasHeight,
-      0.1,
-      1000
-    );
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-    const sphereGeometry = new THREE.SphereGeometry(1, 64, 64);
-    const sphereMaterial = new THREE.MeshBasicMaterial({
-      color: 0xffffff,
-      envMap: scene.background,
-    });
-    const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-    sphere.castShadow = true;
-    sphere.receiveShadow = true;
-    renderer.setSize(canvasWidth, canvasHeight);
+  //   const listener = new THREE.AudioListener();
+  //   const sound = new THREE.Audio(listener);
+  //   const canvas = canvasRef.current;
+  //   const scene = new THREE.Scene();
+  //   const camera = new THREE.PerspectiveCamera(
+  //     75,
+  //     canvasWidth / canvasHeight,
+  //     0.1,
+  //     1000
+  //   );
+  //   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+  //   const sphereGeometry = new THREE.SphereGeometry(1, 64, 64);
+  //   const sphereMaterial = new THREE.MeshBasicMaterial({
+  //     color: 0xffffff,
+  //     envMap: scene.background,
+  //   });
+  //   const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+  //   sphere.castShadow = true;
+  //   sphere.receiveShadow = true;
+  //   renderer.setSize(canvasWidth, canvasHeight);
 
-    scene.background = new THREE.Color(0x000000);
-    scene.add(camera);
-    scene.add(sphere);
+  //   scene.background = new THREE.Color(0x000000);
+  //   scene.add(camera);
+  //   scene.add(sphere);
 
-    camera.position.z = 4;
+  //   camera.position.z = 4;
 
-    const wireframe = new THREE.WireframeGeometry(sphereGeometry);
-    const lineMaterial = new THREE.LineBasicMaterial({
-      color: 0x000000,
-      linewidth: 50,
-    });
+  //   const wireframe = new THREE.WireframeGeometry(sphereGeometry);
+  //   const lineMaterial = new THREE.LineBasicMaterial({
+  //     color: 0x000000,
+  //     linewidth: 50,
+  //   });
 
-    const lineSegments = new THREE.LineSegments(wireframe, lineMaterial);
-    sphere.add(lineSegments);
+  //   const lineSegments = new THREE.LineSegments(wireframe, lineMaterial);
+  //   sphere.add(lineSegments);
 
-    const connectAudio = () => {
-      source = audioContext.createMediaElementSource(audioPlayer.current);
-      source.connect(analyser);
-      analyser.connect(audioContext.destination);
-    };
+  //   const connectAudio = () => {
+  //     source = audioContext.createMediaElementSource(audioPlayer.current);
+  //     source.connect(analyser);
+  //     analyser.connect(audioContext.destination);
+  //   };
 
-    if (songUrl) {
-      const audioLoader = new THREE.AudioLoader();
-      audioLoader.load(songUrl, function (buffer) {
-        sound.setBuffer(buffer);
+  //   if (songUrl) {
+  //     const audioLoader = new THREE.AudioLoader();
+  //     audioLoader.load(songUrl, function (buffer) {
+  //       sound.setBuffer(buffer);
 
-        audioContext = new window.AudioContext();
-        analyser = audioContext.createAnalyser();
-        connectAudio();
+  //       audioContext = new window.AudioContext();
+  //       analyser = audioContext.createAnalyser();
+  //       connectAudio();
 
-        const animateSphere = () => {
-          requestAnimationFrame(animateSphere);
+  //       const animateSphere = () => {
+  //         requestAnimationFrame(animateSphere);
 
-          if (analyser) {
-            const frequencyData = new Uint8Array(analyser.frequencyBinCount);
-            analyser.getByteFrequencyData(frequencyData);
+  //         if (analyser) {
+  //           const frequencyData = new Uint8Array(analyser.frequencyBinCount);
+  //           analyser.getByteFrequencyData(frequencyData);
 
-            const averageFrequency =
-              frequencyData.reduce((a, b) => a + b, 0) / frequencyData.length;
-            const scaleFactor = 1 + averageFrequency / 256;
+  //           const averageFrequency =
+  //             frequencyData.reduce((a, b) => a + b, 0) / frequencyData.length;
+  //           const scaleFactor = 1 + averageFrequency / 256;
 
-            sphere.scale.set(scaleFactor, scaleFactor, scaleFactor);
-            sphere.rotation.y += 0.003 + averageFrequency / 500;
-          }
+  //           sphere.scale.set(scaleFactor, scaleFactor, scaleFactor);
+  //           sphere.rotation.y += 0.003 + averageFrequency / 500;
+  //         }
 
-          renderer.render(scene, camera);
-        };
+  //         renderer.render(scene, camera);
+  //       };
 
-        animateSphere();
-      });
-    }
+  //       animateSphere();
+  //     });
+  //   }
 
-    return () => {
-      if (audioContext && audioContext.state === "running") {
-        audioContext.close();
-      }
-    };
-  }, [songUrl, audioPlayer, canvasRef]);
+  //   return () => {
+  //     if (audioContext && audioContext.state === "running") {
+  //       audioContext.close();
+  //     }
+  //   };
+  // }, [songUrl, audioPlayer, canvasRef]);
 
   const handleVisualizerOn = () => {
     if (visualizerOn) {
