@@ -485,7 +485,7 @@ const Player = ({
         </div>
       </div>
       <div className="buttons-container">
-        {isPlaying && <VisualizerBtn handleVisualizerOn={handleVisualizerOn} />}
+        {/* {isPlaying && <VisualizerBtn handleVisualizerOn={handleVisualizerOn} />} */}
         <div className="song-volume">
           <VolumeBtns />
           <input
